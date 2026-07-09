@@ -1,0 +1,259 @@
+﻿# Signaturtyp C — Bell-liknande korrelation under specifik filtrering
+
+
+## Fullständig rapport och protokollspecifikation, version 0.1 (konsoliderad)
+
+
+*Status: utkast för intern granskning. Konsoliderar C-materialet (definitionsdokument, protokollspec v0.1 med analysmall, kvantintegrations-tillägg) med teknisk granskning av inferenslogiken, motståndardesignen och kodmallen. Granskningsfynd markeras löpande. Följer samma format som rapporterna för Signaturtyp A och B och förutsätter deras resultat, särskilt B-rapportens §12 (arvsregeln).*
+
+
+---
+
+
+## 1. Sammanfattning
+
+
+Signaturtyp C föreligger när tvåpartskorrelationer mellan två separata mätarmar, under förregistrerad filtrering och med valbara analysinställningar per arm, bryter CHSH-olikhetens klassiska gräns |S| ≤ 2. C är katalogens teoretiskt starkaste vittne: Bell-brott utesluter hela klassen av lokala dolda-variabel-modeller, inte bara klassiska fältmodeller, och kvantmekanikens maximum är Tsirelsons gräns 2√2 ≈ 2,828. C är samtidigt katalogens mest krävande signatur, och denna rapport fastslår tre saker som ändrar dess status.
+
+
+För det första har C ett **par-golv** som är kvadratiskt värre än A:s kontrastgolv: CHSH kräver koincidenser mellan armar som mäter samma fotonpar, och för en astronomisk källa skalar sannolikheten att bägge parmedlemmarna når två givna aperturer som den dubbla rymdvinkelutspädningen. Passiv astronomisk C saknar därmed definierat mål tills en astrofysikalisk parmekanism med beräknad parbudget föreslagits. För det andra svarar protokollets surrogat-p på fel fråga: shufflade nullfördelningar testar förekomst av korrelation, inte brott mot den klassiska gränsen — Bell-inferensen måste vara avståndet över 2 i skattningsosäkerhetens enheter, med surrogaten och motståndaren i en separat, andra roll: att visa att selektion och artefakter inte klassiskt kan knuffa skattningen över 2 (vilket post-selection bevisligen kan, upp till S = 4). För det tredje omdefinieras C:s roll i katalogen: från förstahandssignatur för astronomiskt ljus till (a) katalogens kalibreringsstandard — den enda signatur där äkta sanna positiva kan produceras på beställning i labb — och (b) tillämpbar signatur för konstruerade fri-rymd- och satellitlänkar, där entanglement-distribution är experimentellt demonstrerad.
+
+
+Kvantintegrations-tillägget granskas i §6: vinkelberoende-fitten införlivas i korrigerad form (synligheten V > 1/√2 är diskriminatorn, inte cos(2θ)-formen, som klassisk Malus-korrelation också uppvisar), medan den föreslagna "kvantmedvetna S4-motståndaren" avvisas som kategorifel — motståndaren måste förbli klassisk för att testet ska behålla falsifierbarhet — och depolariseringsmodellen flyttas till injection-testerna där den hör hemma.
+
+
+## 2. Definition och scope
+
+
+### 2.1 Operational definition
+
+
+En C-signatur föreligger när det finns en förregistrerad filtrering f (bandpass, tidsgate, spatial mod) och en förregistrerad CHSH-uppställning med två inställningar per arm, x ∈ {0,1} för arm A och y ∈ {0,1} för arm B, sådan att
+
+
+|S(τ; f)| > 2
+
+
+med replikerbarhet och robusthet mot rimliga analysvariationer, där S byggs ur koincidensräkningar enligt §4. Filterberoendet är definierande: signaturen söks som en karta (τ, f) ↦ S(τ, f) över en liten, förregistrerad filterfamilj — aldrig genom fri filterjakt i efterhand.
+
+
+### 2.2 Avgränsningar
+
+
+Bell-korrelationer möjliggör ingen signalering: även en äkta C-signatur ger ingen information snabbare än ljuset, eftersom korrelationerna endast framträder vid klassisk jämförelse av loggarna från båda armarna (no-signaling). Vidare gör v0.1 uttryckligen inte loophole-fria anspråk; protokollet levererar ett Bell-liknande vittne med hård falsk-positiv-disciplin, och avståndet till riktiga loophole-hårda claims dokumenteras i §7.4.
+
+
+### 2.3 Relation till B
+
+
+B:s Cauchy–Schwarz-vittne R_CS är C:s inställningsfria lillasyskon: det utesluter klassiska fältmodeller utan att kräva valbara analysvinklar, men stänger inga loopholes och når inte LHV-klassens uteslutningskraft. Beslutshierarkin är därmed: A utesluter klassiska fält via fotonstatistik, B-2 via korskorrelationsstyrka, C utesluter lokala dolda variabler. Varje nivå kostar mer instrument och mer fotonbudget än den föregående.
+
+
+## 3. Par-golvet — C:s fundamentala begränsning
+
+
+### 3.1 Problemet
+
+
+CHSH-koincidenser måste komma från händelser där arm A och arm B mäter var sin medlem av samma korrelerade par. I laboratorium arrangeras detta trivialt: en SPDC-källa emitterar par med känd geometri, en foton per arm. För en astronomisk källa på avstånd d gäller att varje parmedlem oberoende måste träffa sin respektive apertur med sannolikhet ~A/(4πd²); parkoincidensflödet skalar därmed som produkten — en dubbel rymdvinkelutspädning som gör paruppsamling från astronomiska avstånd radiometriskt hopplös för varje känd källgeometri. Där A:s kontrastgolv kunde attackeras med multiplexering (√N-vinst) finns för C ingen motsvarande hävstång: multiplexering hjälper inte den som inte har några par att samla.
+
+
+### 3.2 Inversionen i etablerad forskning
+
+
+De publicerade "Cosmic Bell"-testen använder astronomiskt ljus som slumpgenerator för mätinställningarna — settings-oberoende garanteras av att fotonernas färg avgjordes för århundraden sedan — medan de entanglade paren produceras i laboratoriet. Etablerad forskning använder alltså astronomin för exakt den komponent detta program har gratis (inställningar) och laboratoriet för den komponent programmet saknar (par). Denna inversion är den skarpaste tillgängliga formuleringen av varför passiv astronomisk C i nuläget saknar mål: fältets främsta experimentalister har, ställda inför samma fysik, valt att vända pilen åt andra hållet.
+
+
+### 3.3 Konsekvens
+
+
+Passiv astronomisk C vilandeförklaras som sökmål tills en kandidatmekanism för astrofysikalisk parproduktion med beräknad parbudget ovanför detektionströskeln föreslagits (jämför motsvarande öppna fråga i A §12 och B §13). C:s aktiva roller definieras i §11.
+
+
+## 4. Matematisk form och inferens
+
+
+### 4.1 Dataobjekt
+
+
+Per detekterad händelse loggas arm (A/B), inställning (x respektive y), utfall a, b ∈ {+1, −1}, tidsstämpel t_ps och filtermetadata. Koincidensräkningarna N_ab^xy(τ; f) byggs inom förregistrerat fönster, korrelationsfunktionen är
+
+
+E(x, y; τ, f) = (N₊₊ + N₋₋ − N₊₋ − N₋₊) / (N₊₊ + N₋₋ + N₊₋ + N₋₊)
+
+
+och CHSH-parametern S(τ, f) = E(0,0) + E(0,1) + E(1,0) − E(1,1), med klassisk gräns |S| ≤ 2 och kvantmaximum 2√2.
+
+
+### 4.2 Max-statistiken och trial-kontroll
+
+
+Sammanfattningen över τ och filterfamilj förregistreras: S_max(f) = max över förregistrerat τ-fönster av |S(τ, f)|, och S_global = max över filterfamiljen av S_max(f). När nullfördelningar byggs med exakt samma max-statistik erhålls automatisk korrektion för multipla tester. Detta är protokollets bästa statistiska konstruktion och behålls oförändrad.
+
+
+### 4.3 Granskningsfynd (kritiskt): surrogat-p:et svarar på fel fråga
+
+
+v0.1 beräknar p_global = P(S_null ≥ S_obs) där nullen genereras av shufflade/tidsskiftade surrogat. Sådana surrogat förstör all korrelation (E ≈ 0, S ≈ 0), och testet besvarar därmed frågan "finns korrelation överhuvudtaget?" — inte "bryts den klassiska gränsen?". Klassiskt korrelerat ljus når legitimt |S| = 2; en observation S = 1,5 kan få godtyckligt litet surrogat-p utan minsta kvantinnehåll. Klassningsvillkoret S_global > 2 fungerar i v0.1 som grind, men signifikansen är felplacerad.
+
+
+Korrigerad inferens (bindande i v0.1-konsoliderad) är tvådelad:
+
+
+**Del 1 — primärtest mot den klassiska gränsen.** Skatta σ_S för S_global via bootstrap över koincidenser (eller deltametod på räknetalen) och kräv S_global − 2 > k·σ_S med förregistrerat k (förslag: k = 5 för strong-nivå). Detta är Bell-inferensen.
+
+
+**Del 2 — selektions- och artefaktkontroll.** Surrogaten S1–S3 och motståndaren S4 används för att visa att pipelinen, med identisk estimatorkedja inklusive max-statistik, inte klassiskt kan producera S̃ > 2. Detta är inte redundant med del 1: post-selection och koincidensfönster-manipulation tillåter bevisligen lokala klassiska modeller att nå S upp till 4 (detection- och coincidence-time-loopholes), så en pipeline som inte stresstestats mot detta har inget försvar för att dess S > 2 betyder något.
+
+
+### 4.4 Kalibreringsstatus för simuleringen
+
+
+Den tidiga simuleringens S = 2,828 är exakt Tsirelsons gräns: en maximalt entanglad modell in, läroboksvärdet ut. Detta är kodvalidering — pipelinen räknar rätt på ideal indata — och ingen evidens. Samma status som motsvarande resultat i A och B.
+
+
+## 5. Den kvantmekaniska hypotesen (§1.1, korrigerad)
+
+
+### 5.1 Tillägget och dess kärnidé
+
+
+Kvantintegrations-tillägget föreslår att C-strong ska kräva inte bara S > 2 utan konsistens med kvantmekanisk tillståndsmodell: korrelationen E som funktion av relativ analysvinkel θ = θ_A − θ_B ska följa formen V·cos(2θ) (för singlett/triplett-komponenter), skattad genom vinkelskanning utöver CHSH:s fyra inställningar. Kärnidén är riktig och stärker protokollet: en fullständig synlighetskurva är betydligt mer informativ än fyra punkter och är standardpraxis vid karakterisering av parkällor.
+
+
+### 5.2 Granskningsfynd (kritiskt): formen diskriminerar inte — synligheten gör det
+
+
+Tilläggets formulering "klassiska eller termiska artefakter förväntas visa en plattare eller oberoende vinkel-respons" är felaktig och farlig som beslutskriterium. Malus lag ger att klassisk polarisationskorrelation — inklusive banal polarisator-läcka och klassiskt korrelerade källor — också producerar perfekt cos(2θ)-form. Formen är alltså gemensam för klassiskt och kvant; det som skiljer är amplituden: klassiska (separabla) modeller begränsas till synlighet V ≤ 1/√2 ≈ 0,707, medan Bell-brott kräver V > 1/√2 (ekvivalent med S = 2√2·V > 2). Som tillägget står skrivet skulle en läckande polarisator klassas som kvantkonsistent.
+
+
+Korrigerad §1.1 (bindande): C-strong kräver (i) S_global − 2 > k·σ_S enligt §4.3, samt (ii) att en förregistrerad vinkelskanning fittas mot E(θ) = V·cos(2θ + φ) med V > 1/√2 signifikant (samma k-disciplin), där formavvikelse från cos(2θ) är en röd flagga för instrumentstruktur men formöverensstämmelse i sig är evidensneutral.
+
+
+## 6. Motståndardesign — varför S4 måste förbli klassisk
+
+
+### 6.1 Granskningsfynd (kategorifel): den "kvantmedvetna motståndaren"
+
+
+Tillägget föreslår att S4 uppgraderas till en dekoherensmodell: en depolariseringskanal Λ(ρ) = pρ + (1−p)·I/4 appliceras på det ideala tillståndet, och fyndet nedklassas om det inte "överträffar" denna modell. Detta är ett kategorifel med två delar. För det första är en depolariserad Werner-stat inte en nollhypotes utan signalmodellen H1 med reducerad fidelity — den ger S = 2√2·p och bryter Bell-gränsen så snart p > 1/√2. Att kräva att data "slår" en kvantmodell för att bevisa kvantinnehåll testar kvant mot kvant och har tappat falsifierbarheten. För det andra skulle en motståndare som själv kan bryta S ≤ 2 göra nullfördelningen meningslös: ingen observation kan då någonsin överstiga nullen av rätt skäl.
+
+
+Bindande regel: **motståndaren S4 är och förblir klassisk** — lokala dolda variabler/klassiska fält, plus fullt instrumentlager (Mueller-mixing, dödtid, afterpulsing, detektor-crosstalk, jitter, klockdrift), plus selektionsstress (variation av koincidensfönster, effektivitetsobalans, post-selection-strategier) aktivt trimmad för att maximera S̃. En pipeline vars klassiska motståndare inte kan nå över 2 trots selektionsstress har ett försvarbart vittne; en som kan det har en identifierad loophole.
+
+
+### 6.2 Werner-modellens rätta plats: injection och power
+
+
+Depolariseringsmodellen är däremot utmärkt som injektionsmodell: syntetiska (och i labb verkliga) par med känt p injiceras över intervallet p ∈ [0,6, 1,0], och pipelinens detektionseffektivitet, skattade S-värden och falsklarmsnivåer rapporteras som funktion av fidelity. Detta ger C:s ROC-karakteristik och besvarar den operativa frågan "hur degraderat får ett tillstånd vara innan protokollet tappar det?" — dvs. exakt den "kvantbudget" tillägget efterfrågar, placerad i rätt logisk låda. Tröskeln p > 1/√2 markerar var Bell-brott alls är möjligt; området strax ovanför är pipelinens känslighetsgräns och ska kartläggas.
+
+
+### 6.3 Surrogaten S1–S3
+
+
+S1 (utfalls-shuffle inom arm och inställning, bevarar tidsstämplar och rates), S2 (time-slide av arm B relativt A, accidental-skattning) och S3 (blockbootstrap) behålls från B-disciplinen. B-rapportens fynd §8.1 gäller analogt: tidsskift ska vara relativa mellan armar, aldrig gemensamma. S1:s roll i C är viktigare än i B: eftersom utfallsetiketterna bär hela korrelationen medan tidsstrukturen bär artefakterna, isolerar S1 exakt den komponent CHSH lever på.
+
+
+## 7. Instrumentkrav
+
+
+### 7.1 Miniminivå (för meningsfull C-analys)
+
+
+Två separata armar med time-tagging och synkroniserad tidsbas (sub-ns i praktiken); tvåutfallsdetektion per arm (PBS-utgångar); valbara analysinställningar per arm (HWP/QWP, EOM/Pockels) med loggade settings; Mueller/Jones-kalibrering med versionshantering; förregistrerad filterfamilj (3–8 filter-ID), fixa koincidensfönster och τ-grid. B-rapportens §4.2 gäller i tillämpliga delar: autokorrelationstermer förekommer inte i CHSH:s E, men dödtid och afterpulsing förvränger N_ab^xy-räkningarna och ingår i S4:s instrumentlager.
+
+
+### 7.2 Setting-disciplin
+
+
+Räknebalans över de fyra (x,y)-kombinationerna kontrolleras (obalans är röd flagga); inställningsval loggas händelsevis; för högre ambitionsnivå randomiseras inställningarna snabbt och oberoende per arm. Notera att inställningarna är den komponent programmet fullt kontrollerar även för astronomiskt ljus — settings är inte C:s problem, paren är (§3).
+
+
+### 7.3 No-signalling-sanity
+
+
+Marginalerna p(a|x,y) får inte bero märkbart på motpartens inställning: NS_A = max|p(a|x,y=0) − p(a|x,y=1)| och motsvarande NS_B hålls under förregistrerad tolerans. Hög NS bevisar inte signalering utan indikerar instrumentfel, selektionsbias eller bugg — det är en röd flagga, inte fysik. v0.1.1-planen att bygga NS-måtten koincidensbaserat i stället för ur eventmarginaler är korrekt och antas.
+
+
+### 7.4 Avstånd till loophole-hårda anspråk
+
+
+För riktiga Bell-claims krävs därutöver: hög total detektionseffektivitet (detection loophole), rumslig separation och snabb slumpmässig settings-switch (locality loophole), event-ready/heralding-arkitektur, och fullständig förlustbudget. v0.1 gör inget av detta och säger det öppet; klassningen C-strong betyder "starkt vittne med hård artefaktdisciplin", aldrig "loophole-fritt Bell-brott".
+
+
+## 8. Dataformat
+
+
+Eventtabellen utökar B-schemat med arm, setting, outcome och filter_id: session_id, run_id, arm (A/B), setting (0/1), det_id, outcome (+/−), t_ps (int64, monoton), filter_id, quality_flags. Metadata per run: mappning setting→analysvinkel per arm, filterdefinitioner, TDC-upplösning och jitter, dödtids- och afterpulsingmodell, Mueller/Jones-kalibreringsversion, samt settings-genereringsmetod (schemalagd/randomiserad). Preprocessing i låst ordning enligt B-disciplinen med tillägg av setting-sanity (§7.2) och klockjustering A↔B (fast offset plus driftmodell).
+
+
+## 9. Kodgranskning av analysmallen v0.1
+
+
+Mallen är ärligt deklarerad som mall; följande fynd har ändå blockerande status inför varje skarp körning.
+
+
+**Fynd 1 (blockerande): motståndaren är en spegel.** S3- och S4-generatorerna är stubbar som returnerar kopior av indata. Med surrogatmixen S1–S4 blir därmed ungefär hälften av nullproverna identiska med observationen, vilket strukturellt ger p_global ≳ 0,25 oavsett data — pipelinen kan i nuvarande skick aldrig klassa något som C-strong, inklusive perfekta singlettpar. Detta är fail-safe åt det konservativa hållet men gör mallen icke-funktionell som beslutsverktyg tills S3 implementeras (blockpermutation per arm) och S4 implementeras enligt §6.1.
+
+
+**Fynd 2: no-signalling-proxyn är död kod.** Funktionen returnerar hårdkodat NS = 0,0; flaggan kan aldrig utlösas. Ersätts med koincidensbaserad skattning.
+
+
+**Fynd 3: S2-generatorns offsetberäkning refererar en odefinierad funktion** (placeholder); offset ska vara förregistrerad konstant ≫ τ_max med wrap inom run, applicerad på endast en arm.
+
+
+**Fynd 4: inferensen implementerar felfrågan** enligt §4.3; primärtestet S − 2 > k·σ_S saknas helt och ska in som huvudväg, med surrogatgrenen omdirigerad till del 2-rollen.
+
+
+**Fynd 5 (accepterat): koincidensberäkningen är O(N²)** brute force; two-pointer/streaming krävs för verkliga flöden. Klassningslogiken saknar replikerings- och robusthetsgrindarna (dokumenterat som "riktig implementation"); de är obligatoriska i skarp version.
+
+
+## 10. Klassning (v0.1-konsoliderad)
+
+
+**C-none.** S_global ≤ 2, eller primärtestet S_global − 2 > k·σ_S ej uppfyllt på suspect-nivå, eller röda flaggor.
+
+
+**C-suspect.** S_global − 2 > 3σ_S; replikering i minst två runs (helst två sessioner); NS inom tolerans; robust mot binning ±2×, fönsterperturbation och jackknife (10–20 % databortfall); inga starka röda flaggor; men utan fullständig S4-stress eller utan passerad vinkelskanning.
+
+
+**C-strong.** S_global − 2 > 5σ_S, replikerat i minst två oberoende sessioner; vinkelskanning fittad med V > 1/√2 signifikant (§5.2); klassisk motståndare S4 inklusive selektionsstress når ej över 2 i samma pipeline; dokumenterad polarimetrisk kalibrering, settings-logg och förlustbudget; alla kontrollmätningar (blank, LED, opolariserad standard) passerade. C-strong gör inte loophole-fria anspråk (§7.4).
+
+
+**Röda flaggor (automatisk nedklassning):** effekten försvinner eller byter tecken vid minimal ändring av koincidensfönster; stark (x,y)-obalans; NS-mått över tolerans; signaturen följer det_id snarare än setting/outcome; samma S_max på blank- eller LED-kontroll; filterval som inte matchar förregistrerad familj; vinkelrespons vars form avviker starkt från cos(2θ) (instrumentstruktur-indikation, §5.2).
+
+
+## 11. C:s roll i katalogen (omdefinierad)
+
+
+**Roll 1 — kalibreringsstandard för hela katalogen.** C är den enda signaturen där äkta sanna positiva kan produceras på beställning: en SPDC-parkälla i laboratorium ger kontrollerbart entanglade fotonpar med justerbar fidelity (Werner-p via avsiktlig depolarisering). Därmed blir C-uppställningen platsen där katalogens hela metodkedja — eventformat, surrogatdisciplin, injection-logik, rödflaggssystem, blindanalys — valideras mot verklig kvantdata i stället för enbart simulerad. En katalog vars pipeline aldrig sett ett äkta positivt är okalibrerad; C åtgärdar detta. Detta gör C-labbet till obligatorisk infrastruktur även om astronomisk C aldrig får ett mål.
+
+
+**Roll 2 — länksignatur.** För konstruerade länkar (fri rymd, satellit–mark, fiber) är entanglement-distribution över stora avstånd experimentellt demonstrerad, och C-protokollet är direkt tillämpbart som kvalitetsmått och vittne på sådana länkar.
+
+
+**Roll 3 — vilande astronomiskt sökmål.** Aktiveras endast om en astrofysikalisk parproduktionsmekanism med beräknad parbudget ovanför detektionströskeln föreslås (§3.3). Till dess hänvisas passiv icke-klassicitetsjakt i astronomiskt ljus till A och B-2, som inte kräver par.
+
+
+**Arvsregeln.** Enligt B-rapportens §12: C delar eventformat och delar av instrumentkedjan med B; C-utfall och B-utfall räknas som oberoende endast vid disjunkta detektoruppsättningar och separata kalibreringskedjor.
+
+
+## 12. Terminologi
+
+
+Tilläggets terminologiförslag antas selektivt. "Icke-lokala korrelationer som bryter lokal realism" är korrekt och antas för C-strong-kontext. "State preparation/filtering" antas för filterfamiljen där kvanttolkningen är avsiktlig. Förslaget att ersätta "instrumentell artefakt" med "dekoherens-kanal" **avvisas**: afterpulsing, crosstalk och dödtid är elektronik och detektorfysik, inte dekoherens; att språkligt omklassa artefakter till fysik inbjuder till systematisk feltolkning av felkällor som fynd. Dekoherensspråk reserveras för fysikaliska kanaler (depolarisering i medium/optik) i signal- och injektionsmodellerna.
+
+
+## 13. Öppna frågor och åtgärdslista
+
+
+I prioritetsordning: (1) implementera primärinferensen S − 2 > k·σ_S med bootstrap-σ (blockerande; §4.3); (2) implementera S3 och klassisk S4 med instrumentlager och selektionsstress (blockerande; §9 fynd 1); (3) koincidensbaserad NS-skattning (§9 fynd 2); (4) vinkelskannings-fit med V-kriterium enligt korrigerad §1.1 (§5.2); (5) injection-program med Werner-p-svep och ROC-rapport (§6.2); (6) replikerings- och robusthetsgrindar i klassningslogiken; (7) two-pointer-koincidensmotor; (8) laboratorie-C-uppställning som katalogens kalibreringsstandard (§11, roll 1) med förregistrerat valideringsprotokoll; (9) formell parbudget-kalkyl som dokumenterar §3:s dom kvantitativt för minst en tänkt källgeometri.
+
+
+Öppen forskningsfråga av principiell natur: existerar någon astrofysikalisk process som producerar polarisationsentanglade fotonpar med bevarad koherens och en geometri som ger icke-försumbar sannolikhet att båda parmedlemmarna når terrestra aperturer? Utan ett ja med siffror förblir roll 3 vilande — och det är inget misslyckande för protokollet, utan protokollets ärligaste resultat.
+
+
+## 14. Slutsats
+
+
+Signaturtyp C är katalogens skarpaste teoretiska vittne och dess mest missriktade praktiska sökmål: CHSH utesluter en större modellklass än något annat i katalogen, men par-golvet gör passiv astronomisk C mållös på ett sätt som ingen statistik kan reparera. Granskningen har korrigerat tre systemfel — surrogat-p:ets felfråga, synlighets- kontra formkriteriet, och den kvantmedvetna motståndarens kategorifel — och omdefinierat C:s värde: som katalogens enda källa till äkta sanna positiva är C-labbet den plats där alla andra signaturers trovärdighet i slutänden förankras. C:s viktigaste bidrag till programmet är därmed inte ett framtida astronomiskt fynd, utan att tvinga fram den kalibrerings- och falsifieringsdisciplin utan vilken A, B och de kommande signaturerna bara är välskrivna önskningar.

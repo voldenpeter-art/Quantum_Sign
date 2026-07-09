@@ -1,0 +1,3 @@
+
+Effektiv dimension (klassisk data): 6.17
+Effektiv dimension (korrelerad data): 5.42

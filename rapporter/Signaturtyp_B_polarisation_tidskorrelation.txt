@@ -1,0 +1,210 @@
+﻿# Signaturtyp B — Polarisation–tids-korrelation
+
+
+## Fullständig rapport och protokollspecifikation, version 0.1 (konsoliderad)
+
+
+*Status: utkast för intern granskning. Konsoliderar B-materialet (definitionsdokument, protokollspec v0.1, analysmall v0.1.1) med den tekniska granskningen av kvantvittnet, surrogatmaskinen och kodmallen. Granskningsfynd markeras löpande. Följer samma format som Signaturtyp A-rapporten och förutsätter dess resultat.*
+
+
+---
+
+
+## 1. Sammanfattning
+
+
+Signaturtyp B definieras som reproducerbara tidskorrelationer i fotonflödet som beror av polarisationstillstånd, operationaliserat genom två mätobjekt: den polarisationsupplösta korrelationsmatrisen g²_ab(τ) över baserna HV, DA och RL, samt Stokes-fluktuationsmatrisen C_ij(τ). B skiljer sig fundamentalt från A på en punkt: B:s råobjekt har ingen klassisk gräns. Klassiskt ljus får uppvisa godtyckligt rik polarisation–tid-struktur, och struktur i B är därför i sig ett källfysikaliskt fynd, inte kvantevidens. Kvantinnehåll kräver ett explicit vittne, och det vittnet är Cauchy–Schwarz-kvoten R_CS: för varje klassisk fältmodell gäller R_CS ≤ 1, och ett signifikant R_CS > 1 är klassiskt omöjligt.
+
+
+Rapportens tre centrala slutsatser. För det första ärver R-vittnet som det är formulerat i v0.1.1 dödtidsartefakten från A i värsta möjliga position — autokorrelationerna vid τ = 0 sitter i vittnets nämnare, där dödtidsundertryckning blåser upp R och fejkar kvantevidens; nämnartermerna måste därför mätas dödtidsfritt (detektorsplitting per kanal) eller extraheras med A-protokollets matchade filter med propagerad osäkerhet. För det andra kan optisk instrumentblandning (Mueller-mixing) bevisligen aldrig bryta Cauchy–Schwarz — de enda vägarna till falskt R > 1 är detektornivå-artefakter, estimatorbias och icke-stationaritet, vilket skärper kravspecifikationen för den klassiska motståndaren S4 till detektornivå. För det tredje är B katalogens datainfrastruktur: D, E och F bygger på B-kedjans rådata, vilket betyder att ett systematiskt fel i B producerar korrelerade falsklarm i tre signaturer samtidigt — D/E/F får därför aldrig räknas som oberoende bekräftelse av varandra när de delar B-data.
+
+
+## 2. Definition och mätobjekt
+
+
+### 2.1 Tre nivåer
+
+
+**B-0 — polarisationsupplöst g².** För polarisationsutgångar a, b inom en analysbas mäts G²_ab(τ) = ⟨I_a(t)·I_b(t+τ)⟩ och normaliseras till g²_ab(τ). Detta är vektoriell HBT: samma metodkedja som A, med polarisationsprojektion före detektorn. Signaturen på denna nivå är ett icke-trivialt mönster i hela matrisen över flera baser och fördröjningar — inte bara en topp vid τ = 0.
+
+
+**B-1 — Stokes-korrelationsmatrisen.** Ur binnade räknetal per kanal byggs diskreta Stokes-serier S₁ = n_H − n_V, S₂ = n_D − n_A, S₃ = n_R − n_L (och S₀ = totalintensitet), varefter fluktuationskorrelationerna C_ij(τ) = ⟨ΔS_i(t)·ΔS_j(t+τ)⟩ beräknas för i, j ∈ {1,2,3}. Detta fångar polarisationstillståndets dynamik på Poincaré-sfären, inklusive korskopplingar mellan axlarna.
+
+
+**B-2 — kvantvittnesnivån.** Cauchy–Schwarz-vittnet R_CS (avsnitt 4) och, som teoretisk toppnivå, CHSH via koincidenser med valbara analysvinklar. CHSH behandlas i v0.1 som tier-3: i astronomisk miljö nästan alltid orealistisk, och den hör hemma i Signatur C:s protokoll.
+
+
+### 2.2 Baskravet
+
+
+Tre ömsesidigt obiaserade baser (HV, DA, RL) krävs för tomografisk komplett beskrivning; med en enda bas är två tredjedelar av Poincaré-sfären osynlig. Basmätningen sker antingen parallellt (SIM: fler detektorer, delad fotonbudget) eller sekventiellt (MOD: modulerad analysbas, kräver stationaritet över modulationscykeln). Valt läge loggas obligatoriskt per run — de två lägena har olika artefaktprofiler och får inte blandas i samma nullfördelning.
+
+
+## 3. Den klassiska tvetydigheten — varför rå B-struktur inte är kvantevidens
+
+
+A:s klassiska gräns (g²(0) ≥ 1) följer av en olikhet. B:s råobjekt saknar motsvarighet: en klassisk källa med roterande polarisation ger dramatisk C_ij-dynamik; tidsberoende Faraday-rotation ger tydliga polarisation–tid-mönster; delvis polariserat termiskt ljus ger via Siegert-relationen g²_ab(τ) = 1 + |γ_ab(τ)|² korsbunching mellan kanaler helt utan kvantinnehåll. Den tidiga simuleringens "svaga men märkbara topp vid noll fördröjning" i H/V-korskorrelationen är exakt vad klassiskt, delvis polariserat termiskt ljus producerar, och utgör därför ingen kvantevidens — den bekräftar endast att pipelinen kan se korrelationer.
+
+
+Konsekvensen är strukturell: B behöver en fyrgradig klassning där "intressant struktur" och "kvantindikation" hålls isär (avsnitt 10), och varje B-resultat utan passerat kvantvittne klassas som klassiskt oavsett hur reproducerbart mönstret är.
+
+
+## 4. Kvantvittnet R_CS
+
+
+### 4.1 Definition och klassisk gräns
+
+
+För två kanaler (t.ex. de två polarisationsutgångarna i en bas) definieras
+
+
+R_CS(τ) = [g²₁₂(τ)]² / (g²₁₁(0) · g²₂₂(0)).
+
+
+För varje klassisk stokastisk intensitetsmodell gäller Cauchy–Schwarz-olikheten [g²₁₂(τ)]² ≤ g²₁₁(0)·g²₂₂(0), alltså R_CS ≤ 1: korskanalen kan aldrig vara starkare korrelerad än det geometriska medelvärdet av autokanalerna. R_CS > 1 är klassiskt omöjligt och är ett etablerat icke-klassicitetskriterium, experimentellt demonstrerat för fotonparkällor. Vittnet kräver inga valbara mätinställningar och fungerar därmed på passivt ljus — B-2 är en "passiv halv-Bell": svagare evidens än CHSH (inga loopholes stängs), men mätbar på ljus man inte kontrollerar.
+
+
+### 4.2 Granskningsfynd 1 (kritiskt): dödtid i nämnaren
+
+
+R-vittnets nämnare består av autokorrelationer utvärderade vid τ = 0 — exakt den punkt där detektordödtid undertrycker koincidenser (Signaturtyp A, §4). Underskattad nämnare ger uppblåst R̂ och därmed falsk kvantevidens; artefakten från A återkommer alltså här i vittnets farligaste position. I analysmallen v0.1.1 är felet aktivt: kanaler aggregeras per (basis, pol) och auto-g² beräknas direkt ur den aggregerade strömmen.
+
+
+Två godkända åtgärder. (i) **Detektorsplitting per kanal:** varje polarisationsutgång delas på två detektorer och g²_aa(0) skattas som korskorrelation mellan dem (HBT-inom-kanal) — dödtidsfri per konstruktion, till priset av dubblerat detektorantal (fyra detektorer per baspar). (ii) **Modellextraktion:** g²_aa(0) skattas med A-protokollets matchade filter/profil-likelihood från fördröjningar utanför artefaktzonen, med skattningens osäkerhet propagerad in i R:s nullfördelning. Uttryckligen förbjudet: att golva nämnartermerna vid 1. Termiskt ljus har g²_aa(0) = 2; med golv vid 1 ger klassisk korsbunching (g²₁₂ upp till 2) ett falskt R = 4.
+
+
+### 4.3 Granskningsfynd 2: estimatorbias och look-elsewhere
+
+
+R̂ bildas som kvot av brusiga skattningar, vilket ger positiv bias (Jensen); accidental-normaliseringen i v0.1.1 använder dessutom en enda time-slide-realisering som nämnare, vilket adderar brus — flera oberoende slides ska medelvärdesbildas. Att vittnet tar max över ett τ-fönster skapar en look-elsewhere-effekt; detta hanteras korrekt i v0.1.1 genom att exakt samma max-statistika beräknas på surrogaten, men kravet ska stå explicit i specen: nullfördelningen måste genereras med identisk estimatorkedja, inklusive maxtagning, minsta räknetal per bin och antal accidental-slides.
+
+
+### 4.4 Ett skärpande teorem: vad som kan och inte kan fejka R > 1
+
+
+Cauchy–Schwarz-olikheten gäller för varje klassisk intensitetsmodell — inklusive varje optiskt blandad sådan. En Mueller-matris, hur felkalibrerad som helst, transformerar ett klassiskt fält till ett annat klassiskt fält; **optisk crosstalk, dubbelbrytning, basrotation och instrumentpolarisation kan därför aldrig i sanna statistiken producera R > 1.** Detta är goda nyheter med skarp konsekvens: de enda vägarna till falskt R > 1 är
+
+
+1. **detektornivå-artefakter** — korrelerade detektionshändelser som inte är fältintensiteter: crosstalk-blixtar mellan detektorer (breakdown flash), elektrisk afterpulse-koppling mellan kanaler, samt dödtidseffekten i nämnaren (§4.2);
+2. **estimatorbias** (§4.3);
+3. **icke-stationaritet** som bryter normaliseringens antaganden (drift som flyttar effekt mellan kanaler inom analysfönstret).
+
+
+Motståndarkravet följer direkt: S4 måste simulera på detektornivå, inte bara fältnivå (avsnitt 9).
+
+
+## 5. Mätarkitektur och kalibrering
+
+
+Baskrav: polarisationsanalys per kanal (PBS + HWP/QWP eller ekvivalent), minst två samtidiga fotonräknarkanaler, time-tagging med TDC, samt Mueller/Jones-kalibrering av instrumentpolarisation med loggad kalibreringsversion. För B-2-nivån tillkommer detektorsplitting per kanal (§4.2) eller dokumenterad modellextraktion av nämnartermerna. För C_ij krävs alla tre baser i SIM- eller MOD-läge med loggat lägesval.
+
+
+Polarisationsspecifika kalibreringsmoment utöver A:s kedja: utsläckningsförhållande per PBS-utgång, detektoreffektivitets-obalans mellan kanaler (biasar Stokes-serierna), fältrotation/parallaktisk vinkel som funktion av tid (altazimut-montering roterar polarisationsramen under observation), samt fiberväg — multimode-fiber polarisationsscramblar och är i praktiken diskvalificerande för B.
+
+
+Kontrollmätningar (minimum): rotation av HWP/QWP ska transformera mönstret förutsägbart; byte av fiber/optisk väg — signaturen får inte följa hårdvaran; blankpekning och intern LED; opolariserad standardkälla samt kända polarisationsstandarder för Mueller-modellering.
+
+
+## 6. Dataformat
+
+
+Eventtabellen är katalogens gemensamma språk och delas med D, E och F. Obligatoriska kolumner: session_id, run_id, setting_id (modulationsfas eller "SIM"), det_id, basis (HV/DA/RL), pol (+/−), t_ps (monoton int64), quality_flags. Metadata per run: mål, våglängdsband och filterbandbredd, våtplattevinklar/modulationsschema, TDC-upplösning, dödtids- och afterpulsing-modell, Mueller/Jones-kalibreringsversion. Parquet/Arrow rekommenderas för volym. Notera att det_id är obligatorisk i B trots att den var valfri i tidigare utkast — utan den kan röd flagga RF-DET (avsnitt 10) inte utvärderas, och detektorsplitting (§4.2) kan inte representeras.
+
+
+## 7. Metrics och scores
+
+
+### 7.1 g²-matrisen
+
+
+Koincidenshistogram H_ab(k) per kanalpar och τ-bin, normaliserat antingen mot rates (r_a·r_b·T·Δτ) eller mot accidentals via time-slide av ena kanalen (robustare mot ratedrift; flera slides medelvärdesbildas, §4.3). Output: matrisfunktionen τ ↦ [g²_ab(τ)].
+
+
+### 7.2 Stokes-blocket
+
+
+Binnade Stokes-serier med binbredd Δt_C (större än jitter, mindre än dynamiken), fluktuationskorrelationer C_ij(τ_m) över förregistrerat lag-set. Instrumentkorrigering via kalibrerad Mueller-modell före korrelationsberäkning.
+
+
+### 7.3 Skalära scores
+
+
+D_g aggregerar |ĝ²_ab(τ) − 1| normerat mot nullens spridning över kanalpar och τ-fönster; D_C gör motsvarande för C_ij. **Granskningsfynd 3:** D_g ska separeras i en auto-del och en kors-del (D_g^auto, D_g^cross). Termisk autobunching är förväntad för varje het källa och dominerar annars en gemensam score, varvid B-core-pass blir trivialt för vilken stjärna som helst och scoren tappar diskrimineringskraft. Kors-delen bär B-innehållet; auto-delen är diagnostik (och A:s domän).
+
+
+## 8. Surrogatmaskinen S1–S4
+
+
+**S1 — polarisationsetikett-shuffle (inom run, per basis och detektor, valfritt i tidsblock).** Tidsstämplarna lämnas orörda: rates, dödtidsmönster och all intensitetsdynamik bevaras exakt, medan kopplingen polarisation↔tid förstörs. Detta är katalogens hittills elegantaste surrogat och B:s primära null.
+
+
+**S2 — time-slide/accidentals.** Cirkulär skiftning av kanaler relativt varandra, offset ≫ τ_max: bevarar varje kanals internstatistik, förstör äkta korskorrelation.
+
+
+**S3 — blockbootstrap i tid.** Permuterad blockordning per kanal: bevarar korttidsstruktur, bryter långminne.
+
+
+**S4 — klassisk motståndare på detektornivå.** Klassisk Stokes-vektor som OU/AR-process med drift och Faraday-rotationsproxy, kanalräkning som inhomogen Poisson via λ_± = ½(S₀ ± S_i) — **plus obligatoriskt instrumentlager:** Mueller-mixing, dödtid per detektor, afterpulsing, detektor-crosstalk (inklusive korskanal-koppling) och timing-jitter, med parametrar dragna ur kalibreringens osäkerheter och aktivt trimmade för att maximera falska scores och falskt R. Utan detektorlagret kan S4 per teorem (§4.4) aldrig hota R-vittnet, och quantum-strong-tröskeln är då inte försvarbar.
+
+
+### 8.1 Granskningsfynd 4 (bugg): S2-generatorn i v0.1.1
+
+
+Implementationen skiftar samtliga kanaler med samma offset och wrap. Då bevaras alla parvisa tidsskillnader (utom över wrap-gränsen) och surrogatet blir i praktiken identiskt med riktig data — som null är den verkningslös och blåser upp mix-nullens trösklar. Riktningen är konservativ (försvårar pass), men den slösar surrogatbudget och förvränger tröskelsättningen. Fix: oberoende slumpoffset per (basis, pol)-kanal, alternativt skiftning av enbart b-sidan i varje kanalpar. Accidental-normaliseringen inuti g²-byggaren gör redan rätt (skiftar endast ena kanalen); buggen gäller enbart surrogatgeneratorn.
+
+
+### 8.2 Övriga kodfynd i v0.1.1
+
+
+Symmetriflaggan RF2 (g_ab(τ) mot g_ba(−τ)) är nära vakuös: de två objekten byggs ur samma koincidenser och är identiska per konstruktion upp till normaliseringsbrus; flaggan mäter estimatorbrus, inte timing-skew. Timing-skew testas i stället mot en extern referens (gemensam pulsad kalibreringskälla i båda kanalerna). S4:s driftterm är en ackumulerande slumpvandring som ger kraftig icke-stationaritet — acceptabelt som motståndare men ska dokumenteras. S4:s basmappning ger varje bas full intensitet S₀ samtidigt, vilket trippelräknar fotonbudgeten relativt SIM-läge — justeras med 1/3-faktor vid SIM-jämförelser. Koincidensberäkningen är O(N·log M) med Python-loop och kräver optimering (two-pointer streaming, Numba/C++) för verkliga dataflöden — känd och accepterad begränsning i mallen. Klassningslogiken i koden avviker slutligen från specens §9: specen nedklassar vid röda flaggor ovillkorligt, koden låter CS-pass med flaggor stanna på suspect — specens hårdare regel gäller i v0.1.
+
+
+## 9. Beslutslogik och trösklar
+
+
+Per run beräknas D_g^cross, D_g^auto, D_C och R_CS-max; nullfördelningar genereras med minst 300 (helst 1000) surrogat per typ, med identisk estimatorkedja som riktig data. Trösklar: Q99 av mix-nullen för core/Stokes-pass; Q99.9 av S4-nullen (detektornivå) för kvantvittnet. Replikeringskrav: minst två oberoende runs, helst två sessioner. Robusthetskrav: effekten ska överleva ändrad binning (Δτ, Δt_C), jackknife med 10–20 % databortfall, och rimliga variationer av fönsterval.
+
+
+## 10. Klassning (v0.1, fyra nivåer)
+
+
+**B-none.** Varken D_g^cross eller D_C överstiger mix-nullens tröskel med replikering.
+
+
+**B-classical.** Core- och/eller Stokes-pass föreligger, men mönstret reproduceras av S4 eller förklaras av instrument/atmosfär/propagation inom osäkerheterna, och inget kvantvittne passerar. Tolkning: källfysikaliskt eller propagationsfysikaliskt intressant (emissionens mikrofysik, magnetfält, Faraday-dynamik) — publicerbart som astrofysik, men inte kvantevidens.
+
+
+**B-quantum-suspect.** Pass som överlever hela S1–S4 (med detektornivå-S4), robust mot binning och jackknife, inga röda flaggor — men utan passerat kvantvittne. Kandidat för uppföljning.
+
+
+**B-quantum-strong.** Ovanstående plus R_CS > 1 med empiriskt p < 10⁻³ mot detektornivå-S4-null, replikerat över sessioner, med dokumenterad dödtidsfri eller modellkorrigerad nämnare (§4.2), dokumenterad polarimetrisk kalibrering och passerade kontrollmätningar. CHSH-pass (|S| > 2) hör till Signatur C och lyfts dit.
+
+
+**Röda flaggor (automatisk nedklassning till B-classical):** signaturen följer det_id snarare än polarisation; signaturen försvinner eller byter tecken vid minimal ändring av Δτ eller koincidensfönster; samma mönster vid blankpekning eller intern LED; parallaktisk vinkel/instrumentrotation förklarar mönstret; nämnartermer i R utan dödtidsfri mätning eller dokumenterad modellkorrektion.
+
+
+## 11. Astronomisk realism och kontrastbudget
+
+
+B ärver A:s kontrastproblem i polarisationsform: propagation genom turbulent/magnetiserat medium och modblandning depolariserar, vilket trycker polarisationskontrasten — och därmed alla B-avvikelser — mot noll. B:s kontrastbudget formuleras analogt med A:s (§8 i A-rapporten) med depolarisationsgraden som extra utspädningsfaktor. Sökstrategin ur definitionsdokumentet kvarstår som den bästa kända: smalbandsfilter på emissionslinjer (längre koherenstid, och objekt med möjlig stimulerad emission är extra intressanta), full trebasmätning från start, och en detektornivå-S4 byggd från dag ett. Scintillation korrelerar intensitet i båda kanaler och hanteras som gemensam-mod-term i nullmodellen; himmelsbakgrundens polarisation varierar med pekvinkel och tid och kräver blankpekningar insprängda i observationsschemat.
+
+
+## 12. Infrastrukturrollen och arvsproblemet
+
+
+B är inte bara en signatur utan katalogens datastomme: E:s feature-vektor är konkatenationen av B:s g²-block över tre baser plus Stokes-blocket; F söker minneseffekter i B:s korrelationskurvor; D:s invarianter byggs ur samma binnade Stokes-serier. Därav följer arvsproblemet: **ett systematiskt fel i B-kedjan producerar korrelerade falsklarm i D, E och F samtidigt**, vilket ytligt ser ut som flera oberoende vittnen men är ett enda instrumentfel. Bindande regel för katalogen: D-, E- och F-utfall räknas inte som oberoende bekräftelse av varandra eller av B när de delar B-kedjans rådata; oberoende kräver separat instrumentkedja eller åtminstone disjunkta detektoruppsättningar. Denna regel skrivs in i katalogens övergripande beslutslogik och gäller retroaktivt för alla korsreferenser av typen "E-strong kräver A/B/C-vittne".
+
+
+## 13. Öppna frågor och åtgärdslista
+
+
+I prioritetsordning: (1) implementera dödtidsfri nämnare för R-vittnet (detektorsplitting eller matchat-filter-extraktion med osäkerhetspropagering) — blockerande för all B-2-analys; (2) rätta S2-surrogatgeneratorn (oberoende offset per kanal); (3) uppgradera S4 till detektornivå (dödtid, afterpulsing, crosstalk, jitter ovanpå fält + Mueller) och trimma den aktivt mot R; (4) dela D_g i auto- och korsdel och uppdatera trösklarna; (5) medelvärdesbilda accidentals över flera slides och sätt minsta-räknetal-krav per bin; (6) ersätt RF2 med extern timing-referens; (7) skriv MOD-lägesvarianten av Stokes-byggaren (basschema + binjustering); (8) synkronisera kodens klassningslogik med specens hårdare rödflaggsregel; (9) genomför injection tests (syntetiskt R > 1 med känd styrka) och rapportera ROC-karakteristik, analogt med A §7.
+
+
+Öppen forskningsfråga av principiell natur: vilka astrofysikaliska processer kan plausibelt producera R_CS > 1 vid källan — parproduktionsliknande emission, korrelerade spridningsprocesser, maser-miljöer? — och vilken depolarisation/utspädning överlever sådana korrelationer till observatören? Som för A gäller: utan minst en kandidatkälla med beräknad kontrast ovanför budgetgolvet har B ett protokoll men inget definierat mål.
+
+
+## 14. Slutsats
+
+
+Signaturtyp B är katalogens rikaste råobjekt och dess mest missförstådda: struktur i B bevisar ingenting kvantmekaniskt förrän Cauchy–Schwarz-vittnet passerar, och vittnet självt bär en inbyggd fälla — A:s dödtidsartefakt i nämnaren — som måste desarmeras arkitektoniskt innan någon B-2-siffra får tolkas. Samtidigt ger teoremet i §4.4 B en ovanligt skarp försvarslinje: ingen optisk instrumentbrist kan fejka vittnet, bara detektorartefakter och statistikslarv, och båda är mätbara och simulerbara. Med korrigerad nämnare, lagad S2, detektornivå-S4 och delad D_g-score är B redo som både självständig signatur och som den infrastruktur resten av katalogen står på — med arvsregeln i §12 som permanent påminnelse om att gemensam grund inte är detsamma som oberoende evidens.
