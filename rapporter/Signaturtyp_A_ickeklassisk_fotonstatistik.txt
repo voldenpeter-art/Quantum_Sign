@@ -1,0 +1,247 @@
+﻿# Signaturtyp A — Icke-klassisk fotonstatistik
+
+
+## Fullständig rapport och protokollspecifikation, version 0.1
+
+
+*Status: utkast för intern granskning. Sammanställer allt etablerat material om Signaturtyp A: ursprungskatalogen (A–F), SignA-dokumentet, simuleringsresultaten samt den tekniska genomgången av dödtidsproblemet, teststatistikan och kontrastbudgeten.*
+
+
+---
+
+
+## 1. Sammanfattning
+
+
+Signaturtyp A definieras som statistiskt signifikanta avvikelser från klassisk fotonstatistik i tidsserier av enskilda fotondetektioner, med antibunching — g²(0) < 1 — som primärt vittne. A är katalogens starkaste signatur av tre skäl: dess klassiska gräns är matematiskt vattentät, dess mätteknik (Hanbury Brown–Twiss-interferometri med enfotondetektorer) är mogen och publicerad i modern astronomi, och den generaliserar naturligt från ljus till materia via kvantstatistik för identiska partiklar.
+
+
+Rapportens tre centrala slutsatser är följande. För det första måste A mätas via korskorrelation mellan minst två detektorer — endetektor-autokorrelation är förbjuden som evidenskälla, eftersom detektordödtid där skapar en falsk antibunching-dipp som är omöjlig att skilja okulärt från en äkta kvantsignatur. För det andra är den korrekta teststatistikan ett matchat filter (ekvivalent profil-likelihood) över ett förregistrerat fiducialfönster, där tecknet på dippdjupet ε utgör diskriminatorn mellan kvant och klassiskt: utspätt termiskt ljus kan aldrig ge ε < 0. För det tredje begränsas A i praktiken inte av matematiken utan av en radiometrisk kontrastbudget — vid stark modutspädning (ε ~ 10⁻⁵) kräver detektion med en enskild mätkanal mättider i storleksordningen årtusenden, vilket gör spektral multiplexering och teleskoparrayer till obligatoriska designparametrar, inte tillval.
+
+
+## 2. Fysikalisk grund
+
+
+### 2.1 Observabeln
+
+
+Det centrala observablet är andra ordningens korrelationsfunktion,
+
+
+g²(τ) = ⟨I(t)·I(t+τ)⟩ / ⟨I(t)⟩²,
+
+
+som i fotonräknande regim skattas ur koincidensstatistik. Vid noll fördröjning gäller ekvivalent g²(0) = ⟨n(n−1)⟩/⟨n⟩². Intuitivt besvarar g²(0) frågan: givet att en foton just detekterades, hur sannolikt är det att detektera ytterligare en samtidigt, jämfört med ren slump?
+
+
+### 2.2 De tre regimerna
+
+
+| Källtyp | g²(0) | Benämning | Klassisk? |
+|---|---|---|---|
+| Termisk/kaotisk (stjärnljus) | 2 (enmods) | Bunching | Ja |
+| Koherent (ideal laser) | 1 | Poisson | Ja (gränsfall) |
+| Enfotonkälla m.fl. | < 1 | Antibunching | **Nej** |
+
+
+### 2.3 Varför gränsen är vattentät
+
+
+För varje klassisk fältbeskrivning — godtycklig stokastisk intensitet I(t) ≥ 0 — följer av Cauchy–Schwarz-olikheten att ⟨I²⟩ ≥ ⟨I⟩², vilket ger g²(0) ≥ 1. Ingen klassisk intensitetsfluktuation, hur exotisk den än är, kan producera g²(0) < 1. Ett signifikant uppmätt värde under 1 är därmed ett binärt icke-klassicitetsvittne. Detta är A:s fundament och skälet till dess grindvaktsroll i katalogen: A kräver ingen kontroll över mätinställningar (till skillnad från CHSH), inga antaganden om källan, och ingen tolkning — bara korrekt hantering av instrumentet.
+
+
+Viktig asymmetri som hela protokollet vilar på: antibunching är ett *tillräckligt* men inte *nödvändigt* villkor för icke-klassicitet. Många icke-klassiska tillstånd passerar obemärkta genom ett ensamt g²-test. Därför byggs A som en signaturfamilj (avsnitt 3), och därför kan A aldrig användas för att *utesluta* kvantstruktur — bara för att påvisa den.
+
+
+## 3. Signaturfamiljen S_A
+
+
+A-signaturen definieras som en vektor av oberoende icke-klassicitetsvittnen, inte som ett enda tal:
+
+
+**S_A = [ g²(0) − 1,  Δ_anti,  F − 1,  Q,  κ₃ᶠ,  κ₄ᶠ ]**
+
+
+Komponenterna är: dippdjupet g²(0) − 1; formvittnet Δ_anti; Fano-faktorn F = Var(n)/⟨n⟩ (F < 1 innebär sub-Poisson-statistik, icke-klassiskt); Mandel-parametern Q = F − 1 (Q < 0 icke-klassiskt); samt tredje och fjärde ordningens faktoriella kumulanter κ₃ᶠ, κ₄ᶠ ur klickstatistiken, som fångar icke-klassicitet av högre ordning som g² missar.
+
+
+**Korrigering av Δ_anti (bindande ändring från tidigare material).** Den ursprungliga definitionen Δ_anti = min_{τ>0}(g²(τ) − g²(0)) är matematiskt degenererad: eftersom g²(τ) → g²(0) kontinuerligt när τ → 0⁺ går minimum mot noll oavsett hur djup dippen är, och statistiken mäter ingenting. Den korrigerade definitionen är
+
+
+Δ_anti = max over τ i det förregistrerade gridet {τ₁,…,τ_K} av (g²(τ) − g²(0)),
+
+
+utvärderad på ett fiducialgrid som exkluderar artefaktzonen (avsnitt 5). Positivt Δ_anti tillsammans med g²(0) < 1 bekräftar antibunching-*formen*, inte bara punktvärdet.
+
+
+Alla komponenter i S_A påverkas av modutspädning på samma sätt: avvikelsen från det klassiska referensvärdet krymper med faktorn 1/M där M är antalet inblandade moder, men avvikelsens *tecken* bevaras. Denna teckenbevarande egenskap är kärnan i teststatistikan (avsnitt 6).
+
+
+## 4. Mätarkitektur
+
+
+### 4.1 Bindande arkitekturkrav
+
+
+Evidens för Signaturtyp A får endast hämtas ur **korskorrelationer mellan fysiskt separata detektorer** (HBT-konfiguration: stråldelare eller pupilldelning, två eller fler enfotondetektorer av typ SPAD/SNSPD, gemensam tidsstämpling med pikosekundklass-upplösning). Endetektor-autokorrelation är förbjuden som evidenskälla och får endast användas diagnostiskt.
+
+
+Motiveringen är dödtidsartefakten: efter ett klick är en detektor blind i typiskt 10–100 ns, vilket i autokorrelation undertrycker koincidenser vid små τ och skapar en artificiell dipp mot g² ≈ 0 — en falsk kvantsignatur, riktad åt exakt det håll protokollet letar. I korskorrelation existerar problemet inte vid τ = 0, eftersom detektor A:s dödtid inte hindrar detektor B från att klicka. Dödtidens kvarvarande fotavtryck i korskorrelation är ekostrukturer kring τ ≈ ±τ_d samt en svag taktberoende baslinjeförvrängning — båda kalibrerbara och, avgörande, inte placerade ovanpå signaturen.
+
+
+Det interaktiva simuleringsverktyget (Signatur A: g²(τ) och instrumentella artefakter) demonstrerar endetektorfallet och ska i dokumentationen uttryckligen märkas som skräckexempel: termisk källa + modutspädning ~10 + dödtid producerar en kurva som okulärt är oskiljbar från en svag enfotonkälla.
+
+
+### 4.2 Kalibreringskedja
+
+
+Varje mätkampanj föregås och avslutas med karakterisering av: dödtid per detektor, afterpulsing-sannolikhet och tidskonstant, mörkerräknetakt, timing-jitter (IRF), samt korskanalig crosstalk. Tre kontrollkällor ingår obligatoriskt: koherent referens (laser, förväntat g² = 1), termisk labbkälla (förväntad bunching), samt en ljusstark stjärna som klassisk astronomisk benchmark (förväntad bunching med känd kontrast). En pipeline som inte reproducerar alla tre kontrollerna får inte användas för hypotesprövning.
+
+
+## 5. Felkällor och klassiska bedragare
+
+
+| Felkälla | Effekt på mätt g² | Riktning | Motmedel |
+|---|---|---|---|
+| Dödtid (autokorr.) | Falsk dipp vid τ≈0 | **Fejkar kvant** | Korskorrelation (bindande) |
+| Afterpulsing | Falsk topp vid små τ | Fejkar bunching | Kalibrering, nuisance-parameter |
+| Timing-jitter | Smetar ut dipp/topp | Döljer signatur | IRF-avfaltning i modellen |
+| Bakgrund/mörkerräkning | Drar g² mot 1 | Döljer signatur | Skattas, ingår i H₀ |
+| Modutspädning (spatiell, spektral, polarisation) | Krymper avvikelse med 1/M | Döljer signatur, byter aldrig tecken | Kontrastbudget, multiplexering |
+| Intensitetsdrift (flicker) | Långsam extra korrelation | Fejkar bunching/struktur | Stationaritetstest, detrending |
+
+
+Rangordning efter farlighet: dödtid i autokorrelation är den enda felkällan som fejkar signaturen åt fel håll och elimineras arkitektoniskt; övriga döljer eller fejkar åt det ofarliga hållet (bunching) och hanteras statistiskt.
+
+
+## 6. Teststatistik och beslutslogik
+
+
+### 6.1 Parametrisk modell
+
+
+Mätt korskorrelation modelleras som
+
+
+g²_AB(τ) = 1 + ε · f(τ; τ_c) ⊛ IRF(τ) + instrumenttermer,
+
+
+där f(τ; τ_c) = e^(−|τ|/τ_c) är den fysikaliskt motiverade mallformen, ⊛ betecknar faltning med instrumentets tidsrespons, och instrumenttermerna (afterpulsing-eko, baslinjedrift, bakgrund) bär nuisance-parametrar med prior från kalibreringen. Parametern ε är dippdjupet/topphöjden: ε > 0 betyder bunching (klassiskt förenligt), ε < 0 betyder antibunching (icke-klassiskt).
+
+
+### 6.2 Statistikan
+
+
+Den optimala linjära skattningen av ε är det matchade filtret
+
+
+T = Σ_k w_k · (ĝ²_AB(τ_k) − 1),  med vikter w_k ∝ f(τ_k)/σ_k²,
+
+
+summerat över ett **förregistrerat fiducialfönster** [τ_min, τ_max] där τ_min ligger utanför artefaktzonen (ekon, crosstalk) och τ_max ≈ några τ_c. Två metodval förkastas explicit: ren oviktad integration (suboptimal, felviktar brusrika bins) och extrapolering från asymptotiska svansar (informationsfattig — all information om ε ligger vid |τ| ≲ τ_c eftersom avvikelsen dör exponentiellt; svansarna vet ingenting om dippdjupet).
+
+
+Ekvivalent och för slutgiltig evidens föredragen form: profil-likelihood eller Bayesiansk modellevidens för
+
+
+H₀: ε ≥ 0 (klassisk källa + full instrumentmodell, nuisance-parametrar profilerade/marginaliserade)
+H₁: ε < 0 (icke-klassisk komponent krävs).
+
+
+### 6.3 Varför detta separerar stringent
+
+
+Modutspädning krymper |ε| men bevarar tecknet. Utspätt termiskt ljus ger ε = +1/M, aldrig negativt. En signifikant negativ ε-skattning kan därför endast härröra från (a) instrumentartefakter — eliminerade arkitektoniskt respektive modellerade i H₀ — eller (b) äkta icke-klassicitet. Tecknet på ε är diskriminatorn; dödtidsfönstret ingår aldrig i beräkningen eftersom det i korskorrelation inte finns vid τ = 0 och fiducialfönstret exkluderar ekozonerna.
+
+
+### 6.4 Klassningsregler
+
+
+**A-none:** ingen komponent i S_A avviker signifikant från klassisk null under den empiriska nollfördelningen (avsnitt 7).
+
+
+**A-suspect:** minst en komponent avviker med empiriskt p < 10⁻³ mot full instrumentnull, men reproducerbarhet saknas, eller avvikelsen överlever inte alla surrogattester.
+
+
+**A-strong:** ε < 0 med empiriskt p < 10⁻⁵ mot full instrumentnull (S4-motståndare inkluderad), reproducerad över minst två oberoende sessioner och minst två instrumentkonfigurationer, med förregistrerat fönster och trösklar, samt konsistent stöd från minst en ytterligare S_A-komponent (t.ex. Q < 0).
+
+
+Trösklarna är förslag i v0.1 och låses vid förregistrering, inte efter datainsamling.
+
+
+## 7. Nollmaskin, surrogat och analysdisciplin
+
+
+Punktvärden utan nollfördelning är otolkbara — detta är den viktigaste lärdomen från de tidiga simuleringarna, som validerade kodens lärobokvärden men saknade felstaplar. Protokollet kräver:
+
+
+**Surrogatdata S1–S4.** S1: tidsomkastade/permuterade eventtabeller (bryter kausal struktur, bevarar marginalstatistik). S2: takt-matchade Poisson-syntetiska data. S3: fasrandomiserade data (bevarar spektrum, bryter högre ordningens struktur). S4: den klassiska motståndaren — full simulering av termisk källa genom komplett instrumentmodell (dödtid, afterpulsing, jitter, bakgrund, drift) med parametrar dragna ur kalibreringens osäkerheter, aktivt trimmad för att maximera falsk signatur. En A-klassning gäller endast mot den nollfördelning S1–S4 genererar.
+
+
+**Injection tests.** Syntetiska icke-klassiska signaturer med känt ε injiceras i simulerade data; pipelinen ska återfinna dem med korrekt skattat ε och utan falsklarm på nollinjektioner. Detektionseffektivitet och falsklarmstakt rapporteras som funktion av ε — detta är pipelinens ROC-karakteristik och en obligatorisk bilaga till varje resultat.
+
+
+**Förregistrering och blindanalys.** Fiducialfönster, τ-grid, trösklar, S_A-komponenter och beslutsregler låses innan riktig data analyseras. Analysen körs blint (t.ex. med tecken-scramblad ε tills alla kvalitetssnitt frysts). Detta är den enda punkten som skiljer programmet från strukturerat självbedrägeri.
+
+
+## 8. Kontrastbudgeten — A:s verkliga begränsning
+
+
+Signal-brus-förhållandet för det matchade filtret skalar som
+
+
+SNR ≈ |ε| · R · √(τ_c · T)
+
+
+per mätkanal, där R är fotontakten och T den integrerade mättiden. Empirisk kalibrering av formeln finns i publicerad litteratur: fotonbunching i Vegas ljus har uppmätts med ett 0,5 m-teleskop, där sex nätters mätning (≈32 h) gav en buncingtopp med amplitud ≈ 9,5·10⁻³ och SNR 2,8.
+
+
+Skalning till det svåra scenariot: vid stark modutspädning med förväntat |ε| ≈ 10⁻⁵ faller SNR med faktorn ~950 relativt Bamberg-fallet; eftersom mättid går som SNR² krävs ~9·10⁵ gånger längre integration — storleksordningen tusentals år per kanal. Slutsatsen är inte att A är obrukbar, utan att A har ett **kontrastgolv** ε_min(R, τ_c, T, N) som ska beräknas och redovisas för varje instrumentkonfiguration, och att A-strong endast får hävdas ovanför golvet.
+
+
+Hävstängerna är kända och kvantifierbara. Smalare spektralfilter hjälper inte: fotonförlusten äter upp koherensvinsten exakt (R√τ_c ∝ √Δν). Det som hjälper är parallellisering: spektral multiplexering med N oberoende smala kanaler ger √N i SNR, och teleskoparrayer adderar baslinjer och samlingsyta. Med ~10⁴ kanaler krymper tusentals år till storleksordningen ett observationsprogram. Kontrastbudgeten är därför en central designparagraf för varje framtida mätkampanj, inte en fotnot.
+
+
+Fysikalisk bakgrund till utspädningen: när ljuset innehåller många moder (spatiellt, spektralt, polarisationsmässigt) medelvärdesbildas g² mot 1 — även en källa med äkta icke-klassisk komponent når oss med kontrasten nedtryckt med 1/M. Detta är A:s huvudfiende i astronomisk tillämpning; matematiken överlever den, fotonbudgeten gör det inte alltid.
+
+
+## 9. Fysikalisk räckvidd och gränser
+
+
+**Ingen genväg förbi ljusrestiden.** A ger en rikare beskrivning av det ljus som anländer nu — statistik som kodar emissions- och propagationsfysik — men kvantkorrelationer kan inte användas för superluminal signalering (no-signaling-teoremet). Detta står som bindande gränsdragning i programmet.
+
+
+**Signaturen är inte en evig etikett.** Observerad fotonstatistik beror på källfysikens tillstånd, propagation och modblandning, samt instrumentets filterbandbredd, polarisationsval, jitter och binning. A-signaturen definieras därför alltid som en normaliserad familj relativt en specificerad mätkedja, aldrig som en rå kurva.
+
+
+**Generalisering till materia.** HBT-korrelationer är inte ljusspecifika utan följer av kvantstatistik för identiska partiklar. Experimentellt etablerat med atomstrålar: bosoniska atomer bunchar, fermioniska antibunchar till följd av Pauli-principen — utan att någon "kvantljuskälla" är inblandad. Signaturtyp A är därmed en statistiksignatur för identiska partiklar, och samma protokoll (korskorrelation, matchat filter, teckendiskriminator, kontrastbudget) återanvänds för materiestrålar med detektortyp och taktparametrar utbytta. Detta är katalogens naturliga brygga från ljus till materia. Notera dock teckenlogikens spegelvändning för fermioner: där är antibunching det *förväntade* klassiskt-oförklarliga beteendet för identiska partiklar, och nollhypotesen formuleras om därefter — en punkt som utvecklas när materiespåret öppnas formellt.
+
+
+## 10. Valideringsläge mot litteraturen
+
+
+Metodkedjan är legitim och aktiv i publicerad forskning: intensitetsinterferometri mäter g² på stjärnljus vid anläggningar från 0,25 m-teleskop med SPAD-detektorer (Sirius-korrelationer med portabla system) upp till Cherenkov-arrayer (VERITAS, MAGIC, H.E.S.S.), med Asiago-observatoriets fotonräknande Vega-mätningar och Bamberg-mätningens 0,5 m-bunching som nyckelreferenser för småteleskopregimen. Det som är etablerat: bunching i stjärnljus, fotonräknande arkitektur, SNR-skalningen. Det som är spekulativt och odemonstrerat: robust icke-klassisk fotonstatistik från astronomiska källor (inklusive exoplanetljus), samt varje form av informationsöverföring bortom ljusrestid. Programmet placerar sig medvetet i gapet däremellan: etablerad metodkedja, oetablerad hypotes, strikt beslutslogik.
+
+
+## 11. Relation till övriga signaturer
+
+
+A är katalogens grindvakt: billigast, mest robust, binär i sin klassiska gräns. Beslutshierarkin är A som första test, C (CHSH) som guldstandard där mätinställningar kan kontrolleras, E och F som strukturprober ovanpå, och M (minnesspår) som nyöppnat spår med släktskap till F. E-strong kräver per definition ett oberoende A/B/C-vittne, vilket gör A:s tillförlitlighet till en förutsättning för hela katalogens övre våningar.
+
+
+**Administrativ låsning av bokstavsschemat (bindande):** A = fotonstatistik, B = polarisation–tid-korrelationer, C = Bell/CHSH, D = Stokes-invarianter/stabilitet, E = lågdimensionell struktur, F = non-Markovianitet, G = squeezing (kvadraturvarians under vakuum), M = minnesspår. Det alternativa schemat i SignA-dokumentet (B = Bell, C = squeezing, D = kumulant-topologi) utgår; dess innehåll är inarbetat här (kumulanterna ingår i S_A, squeezing blir G).
+
+
+## 12. Öppna frågor och åtgärdslista
+
+
+Kvarstående arbete i prioritetsordning: (1) implementera nollmaskinen S1–S4 med empiriska p-värden för samtliga S_A-komponenter; (2) genomföra injection tests och publicera pipelinens ROC-karakteristik internt; (3) beräkna kontrastgolvet ε_min för minst en konkret instrumentkonfiguration (litet teleskop + SPAD-par) och en multiplexerad konfiguration; (4) formulera den fermioniska varianten av beslutslogiken inför materiespåret; (5) uppdatera simuleringsverktyget med korskorrelationsläge så att skillnaden mot endetektorartefakten kan demonstreras interaktivt; (6) förregistrera v1.0-trösklar innan första riktiga datakampanj.
+
+
+Öppen forskningsfråga av principiell natur: finns astrofysikaliska processer som plausibelt producerar ε < 0 vid källan (enskilda emittrar, maser-liknande miljöer, exotiska objekt), och hur stor är deras förväntade M-utspädning? Utan minst en kandidatkälla med beräknad ε/M-kvot ovanför kontrastgolvet saknar A ett definierat mål, hur felfri protokollet än är.
+
+
+## 13. Slutsats
+
+
+Signaturtyp A är katalogens mest försvarbara komponent: dess klassiska gräns följer av en olikhet, inte en tolkning; dess artefakter är kända och den farligaste elimineras arkitektoniskt; dess teststatistik är optimal, teckenbaserad och förregistrerbar; och dess begränsning är ärligt kvantifierad som ett radiometriskt kontrastgolv snarare än en principiell omöjlighet. A i denna form är redo att agera grindvakt för resten av katalogen — och mall för hur B–G och M ska specificeras.

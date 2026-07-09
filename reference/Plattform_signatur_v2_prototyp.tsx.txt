@@ -1,0 +1,228 @@
+﻿# Plattform - signatur #
+
+
+
+
+
+
+
+
+
+
+Plattform_Signatur
+
+
+
+
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+
+
+// --- Datatyper ---
+type SourceType = 'thermal' | 'coherent' | 'singleEmitter' | 'entangled' | 'coded' | 'memory';
+type Arm = 'A' | 'B';
+type Pol = 'H' | 'V' | 'D' | 'A' | 'R' | 'L';
+
+
+interface PhotonEvent {
+  id: number;
+  t: number;        // Sann emissionstid
+  detectedT: number; // Detekterad tid (inkl jitter)
+  arm: Arm;
+  pol: Pol;
+  isBackground: boolean;
+}
+
+
+// --- Fysik- och Simuleringslogik ---
+const generateEventStream = (
+  source: SourceType,
+  rate: number,
+  duration: number,
+  lossPct: number,
+  jitterMs: number,
+  bgRate: number
+): PhotonEvent[] => {
+  let events: PhotonEvent[] = [];
+  let t = 0;
+  let idCounter = 0;
+
+
+  const survivalProb = 1 - (lossPct / 100);
+
+
+  // 1. Generera sann signal
+  if (source === 'coherent' || source === 'coded' || source === 'memory') {
+    while (t < duration) {
+      t += -Math.log(1 - Math.random()) / rate;
+      if (t < duration && Math.random() < survivalProb) {
+        events.push({
+          id: idCounter++, t, detectedT: t, arm: Math.random() > 0.5 ? 'A' : 'B',
+          pol: ['H', 'V'][Math.floor(Math.random() * 2)] as Pol, isBackground: false
+        });
+      }
+    }
+  } else if (source === 'thermal') {
+    while (t < duration) {
+      const localIntensity = rate * (-Math.log(1 - Math.random()));
+      t += -Math.log(1 - Math.random()) / (localIntensity + 0.1);
+      if (t < duration && Math.random() < survivalProb) {
+        events.push({
+          id: idCounter++, t, detectedT: t, arm: Math.random() > 0.5 ? 'A' : 'B',
+          pol: 'H', isBackground: false // Förenklad
+        });
+      }
+    }
+  } else if (source === 'singleEmitter') {
+    const deadTime = 1.0 / rate;
+    while (t < duration) {
+      let dt = -Math.log(1 - Math.random()) / rate;
+      if (dt < deadTime) dt = deadTime + (Math.random() * deadTime * 0.2);
+      t += dt;
+      if (t < duration && Math.random() < survivalProb) {
+        events.push({
+          id: idCounter++, t, detectedT: t, arm: Math.random() > 0.5 ? 'A' : 'B',
+          pol: 'V', isBackground: false
+        });
+      }
+    }
+  } else if (source === 'entangled') {
+    // Genererar par samtidigt i Arm A och Arm B med motsatt polarisation
+    while (t < duration) {
+      t += -Math.log(1 - Math.random()) / (rate / 2);
+      if (t < duration) {
+        const isH = Math.random() > 0.5;
+        if (Math.random() < survivalProb) {
+          events.push({ id: idCounter++, t, detectedT: t, arm: 'A', pol: isH ? 'H' : 'V', isBackground: false });
+        }
+        if (Math.random() < survivalProb) {
+          events.push({ id: idCounter++, t, detectedT: t, arm: 'B', pol: isH ? 'V' : 'H', isBackground: false });
+        }
+      }
+    }
+  }
+
+
+  // 2. Applicera bakgrundsbrus (Poisson)
+  let bgT = 0;
+  while (bgT < duration) {
+    bgT += -Math.log(1 - Math.random()) / bgRate;
+    if (bgT < duration) {
+      events.push({
+        id: idCounter++, t: bgT, detectedT: bgT, arm: Math.random() > 0.5 ? 'A' : 'B',
+        pol: ['H', 'V', 'D', 'R'][Math.floor(Math.random() * 4)] as Pol, isBackground: true
+      });
+    }
+  }
+
+
+  // 3. Applicera detektorjitter & sortera
+  events.forEach(e => {
+    // Förenklad Gaussisk jitter approximation
+    const u1 = Math.random(), u2 = Math.random();
+    const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+    e.detectedT = Math.max(0, e.t + z0 * (jitterMs / 1000));
+  });
+
+
+  return events.sort((a, b) => a.detectedT - b.detectedT);
+};
+
+
+// --- Komponent ---
+export default function QuantumSignaturePlatformV2() {
+  const [source, setSource] = useState<SourceType>('singleEmitter');
+  const [loss, setLoss] = useState<number>(30); // 0-99%
+  const [jitter, setJitter] = useState<number>(50); // 0-500ms
+  const [bgRate, setBgRate] = useState<number>(2); // 0-20 cps
+ 
+  const [activeSignatures, setActiveSignatures] = useState<Set<string>>(new Set(['A', 'C', 'D']));
+  const [events, setEvents] = useState<PhotonEvent[]>([]);
+ 
+  const duration = 100; // sekunder för analysfönstret
+  const signalRate = 20;
+
+
+  // Generera ny data när parametrar ändras
+  useEffect(() => {
+    setEvents(generateEventStream(source, signalRate, duration, loss, jitter, bgRate));
+  }, [source, loss, jitter, bgRate]);
+
+
+  const toggleSignature = (sig: string) => {
+    const newSigs = new Set(activeSignatures);
+    if (newSigs.has(sig)) newSigs.delete(sig);
+    else newSigs.add(sig);
+    setActiveSignatures(newSigs);
+  };
+
+
+  // Analysberäkningar baserat på degraderad data
+  const metrics = useMemo(() => {
+    if (events.length === 0) return { g2: 1, Q: 0, chsh: 0, SNR: 0, verdict: 'none' };
+   
+    const timeWindow = 1.0;
+    const numWindows = Math.ceil(duration / timeWindow);
+    const counts = new Array(numWindows).fill(0);
+    let pairsCorrelated = 0;
+    let chshViolation = 0;
+
+
+    events.forEach(e => {
+      counts[Math.floor(e.detectedT / timeWindow)]++;
+    });
+
+
+    const mean = counts.reduce((a, b) => a + b, 0) / numWindows;
+    const variance = counts.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / numWindows;
+    const Q = mean > 0 ? (variance / mean) - 1 : 0;
+
+
+    // Förenklad g2 vid tau=0 uppskattning (nära grannar)
+    let closePairs = 0;
+    for(let i=0; i<events.length-1; i++) {
+        if((events[i+1].detectedT - events[i].detectedT) < 0.1) closePairs++;
+    }
+    const expectedClosePairs = (events.length * (events.length / duration) * 0.1) / 2;
+    const g2 = expectedClosePairs > 0 ? closePairs / expectedClosePairs : 1;
+
+
+    // Förenklad CHSH uppskattning (kräver Entangled källa utan för mycket brus)
+    if (source === 'entangled') {
+        const signalRatio = signalRate * (1 - loss/100) / (signalRate * (1 - loss/100) + bgRate);
+        chshViolation = 2.82 * signalRatio * Math.exp(-jitter / 100);
+    } else {
+        chshViolation = Math.random() * 1.5; // Klassiskt brus <= 2.0
+    }
+
+
+    const signalEvents = events.filter(e => !e.isBackground).length;
+    const bgEvents = events.filter(e => e.isBackground).length;
+    const SNR = bgEvents > 0 ? signalEvents / bgEvents : 999;
+
+
+    let verdict = 'classical';
+    let flags = 0;
+    if (g2 < 0.8 || Q < -0.1) flags++;
+    if (chshViolation > 2.0) flags += 2;
+   
+    if (flags >= 2 && SNR > 1) verdict = 'strong';
+    else if (flags > 0) verdict = 'suspect';
+
+
+    return { g2, Q, chsh: chshViolation, SNR, verdict };
+  }, [events, source, loss, jitter, bgRate]);
+
+
+  return (
+    <div className="min-h-screen bg-neutral-950 text-neutral-200 p-6 font-sans">
+      <div className="max-w-6xl mx-auto space-y-6">
+       
+        {/* Header & Verdict */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-neutral-900 border border-neutral-800 p-6 rounded-xl shadow-2xl">
+          <div>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Kvantoptisk Signaturanalys</h1>
+            <p className="text-neutral-400 mt-1">Gemensam händelseström med miljödegradering (v2)</p>
+          </div>
+          <div className="mt-4 md:mt-0 flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-xs uppercase tracking-widest text-neutral-500 font-bold">Klassificering</div>

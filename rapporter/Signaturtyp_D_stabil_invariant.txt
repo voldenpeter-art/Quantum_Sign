@@ -1,0 +1,220 @@
+﻿# Signaturtyp D — Stabil invariant över observationstillfällen
+
+
+## Fullständig rapport och protokollspecifikation, version 0.1 (konsoliderad)
+
+
+*Status: utkast för intern granskning. Konsoliderar D-materialet (definitionsdokument och protokollspec v0.1 med analysmall) med teknisk granskning, inklusive den formella lösningen av variansanomalin från den tidiga simuleringen. Granskningsfynd markeras löpande. Följer samma format som rapporterna för Signaturtyp A, B och C och förutsätter deras resultat, särskilt B §12 (arvsregeln).*
+
+
+---
+
+
+## 1. Sammanfattning
+
+
+Signaturtyp D föreligger när en förregistrerad invariant-funktion av uppmätt korrelationsstruktur — invariant under passiva basbyten (SU(2)-rotationer av polarisationsbasen) och normaliserad mot intensitetsskalning — är statistiskt förenlig med en konstant över flera observationstillfällen, samtidigt som den separerar signifikant från surrogatnullen. D är därmed katalogens identitetssignatur: inte "en kod som upprepas" utan ett basoberoende fingeravtryck i invariant-rummet, natt efter natt.
+
+
+Rapporten fastslår fem saker. För det första löses variansanomalin från den tidiga simuleringen fullständigt: den korrelerade modellens tio gånger högre råvarians var förväntad skattningsstatistik (reducerat effektivt stickprov plus degenererat-spektrum-effekter), inte instabilitet, och den gamla beslutsregeln "liten rå varians" ersätts av v0.1-specens viktade χ²-test som normerar bort skattningsbruset — det korrekta objektet hela tiden. För det andra är den föreslagna invariant-vektorn internt redundant: dess fem komponenter är alla funktioner av två frihetsgrader, vilket gör kovariansmatriserna rank-deficienta och frihetsgradsräkningen felaktig; vektorn korrigeras till d = 2. För det tredje uppgraderas kontrastkravet från parentes till bindande kriterium: stabilitet hos invarianten är evidensneutral om inte de icke-invarianta råmåtten samtidigt bevisligen varierar. För det fjärde konstateras att D-pol som den står är kvantneutral — en identitetssignatur, inte ett icke-klassicitetsvittne — och ett kandidatvittne föreslås: trace-invarianten prövad mot kvant-Stokes-osäkerhetsrelationens skottbrusgräns, vilket knyter D till G (polarisationssqueezing). För det femte noteras att D-2arm-variantens singulärvärden via Horodecki-kriteriet direkt förutsäger möjligheten till Bell-brott, vilket gör D-2arm till C:s naturliga förscreening.
+
+
+## 2. Definition och scope
+
+
+### 2.1 Operational definition
+
+
+Givet S ≥ 2 sessioner byggs en förregistrerad invariant-funktion **I**(·) från B-kedjans Stokes-korrelationer C_ij(τ). D föreligger om båda villkoren uppfylls:
+
+
+**(D-sep)** — invariant-separation: **I**^(s) ligger signifikant utanför den empiriska S1–S4-nullen i varje eller typisk session (Mahalanobis-avstånd mot surrogatfördelningen, empiriskt p per session, aggregerat som median eller max).
+
+
+**(D-stab)** — multi-sessionsstabilitet: **I**^(s) är statistiskt förenlig med en konstant modell över sessionerna, med signifikans mätt mot en surrogat-driven stabilitetsnull.
+
+
+Scope v0.1 är D-pol (Stokes-baserad invarians); D-2arm (lokalt-unitära invarianter från tvåarms-korrelationstensorn) förbereds som v0.2 och behandlas i §8.
+
+
+### 2.2 De två varianterna
+
+
+**D-pol.** Ur B:s C_ij(τ) integreras en sessionskovarians Σ^(s)_ij = Σ_τ∈K w(τ)·C^(s)_ij(τ) över förregistrerat fönster K och viktning w. Under basrotation transformeras Σ ↦ RΣRᵀ, så egenvärdena λ₁ ≥ λ₂ ≥ λ₃ och huvudinvarianterna J₁ = tr Σ, J₂ = ½((tr Σ)² − tr Σ²), J₃ = det Σ är rotationsinvarianta. Normering λ̃ᵢ = λᵢ/Σλ gör måtten okänsliga för ren intensitetsskalning.
+
+
+**D-2arm.** Med två armar skattas korrelationstensorn T_ij = Tr(ρ_AB σᵢ⊗σⱼ); dess singulärvärden μ₁ ≥ μ₂ ≥ μ₃ är invarianta under lokala unitärer på vardera sidan och utgör invariant-vektorn.
+
+
+### 2.3 Kontinuitet med programmets ursprungsidé
+
+
+D är den formella operationaliseringen av frågan "är en given parameter en konstant, en driftande variabel eller en fluktuation?" som restes vid programmets start: χ²-testet mot konstant modell, under korrekt osäkerhetsmodell och med surrogat-driven referens, är exakt det verktyg som besvarar den frågan för godtyckliga parametrar — här tillämpad på invariant-vektorn.
+
+
+## 3. Variansanomalin — formell lösning
+
+
+### 3.1 Anomalin
+
+
+Den tidiga simuleringen rapporterade varians i (största normerade) Stokes-egenvärdet om 1,69·10⁻⁷ för den klassiska modellen och 1,65·10⁻⁶ för den korrelerade — en faktor ~10 högre för den modell som enligt dåvarande beslutsregel ("D-signatur = liten varians mellan sessioner") borde uppvisat lägre. Anomalin registrerades vid programmets återupptagande som katalogens mest konkreta öppna fråga.
+
+
+### 3.2 Mekanism 1: reducerat effektivt stickprov
+
+
+Skattningsvariansen för en kovariansmatris och dess egenvärden skalar som 1/N_eff, där N_eff är antalet effektivt oberoende sampel. För en tidskorrelerad process är N_eff ≈ N·Δt/(2τ_corr) — korrelationstiden förbrukar frihetsgrader. Den korrelerade modellen har därmed per konstruktion brusigare invariant-skattningar än den okorrelerade vid samma datamängd, helt oavsett hur stabil den sanna invarianten är. Hög rå skattningsvarians är inte instabilitet; det är statistik.
+
+
+### 3.3 Mekanism 2: degenererat spektrum och sorteringsbias
+
+
+Den klassiska (isotropa) modellens sanna Σ är nära proportionell mot enhetsmatrisen: egenvärdena är nära degenererade. Statistikan "största sorterade egenvärdet" plockar då i varje session ut toppen av en degenererad klunga — en ordningsstatistika med bias och icke-gaussisk fördelning — medan den korrelerade modellens separerade spektrum ger skattningar som följer distinkta sanna värden med ordinärt brus. Råvariansjämförelser mellan modeller med olika spektral degeneration är därmed inte väldefinierade som stabilitetsmått.
+
+
+### 3.4 Upplösning och bindande lärdom
+
+
+Den gamla beslutsregeln var illa ställd som fråga, inte fel besvarad av simuleringen. Det korrekta stabilitetsobjektet är det inverse-varians-viktade χ²-testet mot konstant modell (§9), där per-sessions-osäkerheterna V_s — skattade med metoder som respekterar tidskorrelationen (§9.1) — normerar bort skattningsbruset. En korrelerad källa med stabil sann invariant får lågt χ²_const trots hög råvarians. v0.1-specen implementerar detta och stänger därmed anomalin. Bindande lärdom för hela katalogen: **råvarianser jämförs aldrig mellan modeller eller källor med olika effektivt stickprov eller olika spektral struktur; stabilitet uttrycks alltid relativt korrekt skattade per-sessions-osäkerheter.**
+
+
+## 4. Matematisk form och granskningsfynd: invariant-vektorns redundans
+
+
+### 4.1 Fyndet
+
+
+v0.1 definierar **I** = [λ̃₁, λ̃₂, λ̃₃, J₂ᵗ, J₃ᵗ] med J₂ᵗ = J₂/J₁² och J₃ᵗ = J₃/J₁³. Samtliga komponenter är funktioner av det normerade spektrumet: λ̃₃ = 1 − λ̃₁ − λ̃₂ (normeringsvillkoret), J₂ᵗ = λ̃₁λ̃₂ + λ̃₁λ̃₃ + λ̃₂λ̃₃ och J₃ᵗ = λ̃₁λ̃₂λ̃₃ (elementära symmetriska funktioner). Vektorn har därmed exakt två frihetsgrader och lever på en tvådimensionell mångfald i ℝ⁵.
+
+
+### 4.2 Konsekvenser
+
+
+Kovariansmatrisen V_s är rank-deficient per konstruktion (rang ≤ 2 av 5); pseudoinversen i χ²-beräkningen räddar aritmetiken men frihetsgradsformeln "S·d − d med d = 5" överskattar dof med mer än faktor två, vilket förskjuter alla χ²-baserade trösklar. Empirisk p-sättning mot surrogat med identisk estimatorkedja mildrar felet (samma redundans i null och observation) men eliminerar det inte, eftersom rank-deficient pinv-χ² är numeriskt instabil nära mångfaldens rand.
+
+
+### 4.3 Korrigering (bindande)
+
+
+Invariant-vektorn definieras som **I** = [λ̃₁, λ̃₂] med d = 2. Full spektralinformation (λ̃₃, J-invarianter, okänsliga presentationsmått som spektral entropi) redovisas som härledda storheter men ingår inte i teststatistiken. Om trace-vittnet i §6 antas utökas vektorn med den separat normerade komponenten J₁/(2⟨S₀⟩), som inte är en funktion av det normerade spektrumet, till d = 3.
+
+
+## 5. Vad D bevisar och inte bevisar
+
+
+### 5.1 Stabilitet är evidensneutral
+
+
+En konstant, väl fungerande instrumentkedja producerar superstabila invarianter; stabilitet i sig skiljer inte källegenskap från instrumentegenskap eller från trivial frånvaro av dynamik. Notera även att D inverterar katalogens motståndarlogik: där S4 för A, B och C trimmas att maximera falsk signal, "vinner" den klassiska motståndaren i D genom att vara maximalt stabil — vilket ett bra instrument åstadkommer utan ansträngning. D:s evidensinnehåll bärs därför nästan helt av D-sep (invarianten ligger där klassiska surrogat inte når) med D-stab som konsistenskrav, inte som evidens.
+
+
+### 5.2 Kontrastkravet (uppgraderat till bindande)
+
+
+Definitionsdokumentets parentes — stabiliteten är meningsfull endast om icke-invarianta råmått samtidigt varierar — uppgraderas till kriterium. Definiera kontrastkvoten
+
+
+K_D = (normerad variation i förregistrerade icke-invarianta råmått: flux, rå g²-form, orienteringsberoende komponenter) / (normerad variation i **I**),
+
+
+båda uttryckta som χ²/dof mot konstant modell med respektive korrekta osäkerheter. D-stab räknas endast när K_D överstiger förregistrerad tröskel (förslag: K_D > 10). Tolkningen är fingeravtryckets kärna: omgivningen bevisligen rörde sig, invarianten bevisligen inte.
+
+
+### 5.3 Instrument-invariant kan inte uteslutas statistiskt
+
+
+Ingen intern statistik skiljer "källans invariant" från "instrumentets invariant" — en stabil polarisationseffekt i optiken ger stabil Σ oavsett källa. Endast kontrollbatteriet gör åtskillnaden: dark/blank-körningar (D får inte finnas där), pekvariation och fältrotation (D får inte följa känd Mueller-mixing), samt hårdvarubyten (fiber/optisk väg — fingeravtrycket får inte följa hårdvaran). Detta skrivs in som D:s epistemiska gräns, inte som fotnot.
+
+
+### 5.4 D-pol är kvantneutral
+
+
+Inget i egenvärdesstrukturen hos en klassisk Stokes-kovarians är icke-klassiskt; godtyckligt klassiska källor har väldefinierade, potentiellt stabila Σ-spektra. D-pol är därmed en identitetssignatur av samma evidensklass som B-0/B-1: vetenskapligt intressant (persistent käll- eller propagationsstruktur), kvantmässigt tyst. Kvantinnehåll kräver antingen samexistens med ett A/B-2/C-vittne på samma data (med arvsregeln B §12 beaktad) eller ett eget vittne enligt §6.
+
+
+## 6. Förslag: D-Q-vittnet — trace mot skottbrusgränsen
+
+
+Kvantmekanikens Stokes-operatorer uppfyller osäkerhetsrelationen Var(Ŝ₁) + Var(Ŝ₂) + Var(Ŝ₃) ≥ 2⟨Ŝ₀⟩, med koherenta tillstånd på gränsen; polarisationssqueezade tillstånd underskrider koherent-nivån i enskilda komponenter, vilket är klassiskt omöjligt. Detta ger D ett binärt kandidatvittne av A-klass:
+
+
+**D-Q:** den skottbrusnormerade trace-invarianten J₁/(2⟨S₀⟩), eller komponentvis min_i Var(S_i)/(referensnivå för koherent tillstånd i samma mätkedja), signifikant under 1 efter kalibrerad detektoreffektivitets- och bakgrundskorrektion.
+
+
+Vittnet kräver absolutkalibrering av skottbrusnivån (koherent referenskälla genom identisk kedja) och ärver därmed en egen artefaktlista (effektivitetsobalans, elektroniskt brus under skottbrus är omöjligt — undertryckt uppmätt varians utan kalibrerad referens är alltid misstänkt). D-Q knyter D direkt till Signatur G (squeezing): D-Q är i praktiken G:s polarisationsform, mätt genom D:s infrastruktur. Vid antagande utökas invariant-vektorn enligt §4.3.
+
+
+## 7. D-2arm och Horodecki-bryggan till C
+
+
+För tvåarms-tensorn T ger Horodecki-kriteriet den maximalt uppnåeliga CHSH-styrkan S_max = 2√(μ₁² + μ₂²), en lokalt-unitärt invariant storhet. D-2arm-invarianten förutsäger därmed direkt huruvida Bell-brott är möjligt för det uppmätta tillståndet: μ₁² + μ₂² > 1 är nödvändigt och tillräckligt (för tvåqubit-fallet) för att någon inställningskombination ska ge S > 2. D-2arm blir därmed C:s naturliga förscreening i laboratorie- och länkscenarier (C-rapporten §11, roll 1–2): stabila singulärvärden över sessioner med μ₁² + μ₂² > 1 identifierar när C-mätning är mödan värd, utan att C:s fulla settings-apparat körs. Par-golvet (C §3) gäller oförändrat för astronomisk D-2arm.
+
+
+## 8. Instrumentkrav och dataformat
+
+
+D-pol ärver B:s krav i sin helhet: time-tagging, minst tre baser (HV/DA/RL, SIM eller MOD med loggat läge), versionerad Mueller/Jones-kalibrering, samt B-rapportens detektordisciplin. Specifikt för D: basschema, bandpass, gates, τ-fönster K och viktning w(τ) måste vara identiskt förregistrerade över alla sessioner — varje mellansessionsändring i mätkedjan förstör jämförbarheten och flaggas. Dataformatet är B-eventtabellen oförändrad; sessionsbegreppet bär analysen och session_id-disciplin (en session = ett observationstillfälle med fryst konfiguration) är obligatorisk. Arvsregeln (B §12) gäller med full kraft: D delar rådata med B/E/F och räknas aldrig som oberoende bekräftelse av dessa.
+
+
+## 9. Stabilitets- och separationsstatistik
+
+
+### 9.1 Per-sessions-osäkerheter
+
+
+V_s skattas med block-bootstrap eller block-jackknife på tidsbins — aldrig på enskilda fotoner — med blocklängd ≫ korrelationstiden, så att N_eff-effekten (§3.2) fångas. Granskningsfynd: kodmallens jackknife-kovarians använder ordinär stickprovskovarians på replikaten utan jackknife-skalfaktorn (n−1)/n·Σ(·)², vilket ger V_s i fel skala; eftersom p-värdena sätts empiriskt mot surrogat med samma estimator är felet delvis självkorrigerande, men skalan ska rättas för att χ²/dof ska vara tolkbart.
+
+
+### 9.2 Konstant-modelltest
+
+
+Inverse-varians-viktat medel **Ī** och χ²_const = Σ_s (**I**^(s) − **Ī**)ᵀ V_s⁻¹ (**I**^(s) − **Ī**), med dof = (S−1)·d efter §4.3-korrigeringen (d = 2 eller 3). Stabilitets-p sätts empiriskt: samma χ²_const beräknad på S1–S4-surrogat per session ger pipeline-specifik referens, p_stab = andelen nullreplikat med lägre eller lika χ².
+
+
+### 9.3 Separationstest
+
+
+Per session Mahalanobis-avstånd M_s från **I**^(s) till surrogatfördelningens (μ_null, Σ_null), empiriskt p_sep,s, aggregerat som median (suspect-nivå) respektive max — alla sessioner måste passera (strong-nivå).
+
+
+### 9.4 Granskningsfynd: stabilitetsnullens design
+
+
+p_stab mot S1–S3-surrogat mäter "ovanligt stabil relativt strukturförstörd data" — men strukturförstörda surrogat har ofta *högre* invariant-spridning av rent statistiska skäl (degenererade spektra, §3.3), så låg p_stab kan uppstå trivialt. Stabilitetsnullens relevanta jämförelse är S4 med *stabil* instrumentkonfiguration (§5.1): om en stabil klassisk motståndare når samma (χ²_const, K_D)-kombination är D-stab inte utsagokraftig. S4 för D körs därför i två lägen — stabilitetsmaximerande (mot D-stab) och separationsmaximerande (mot D-sep) — och båda redovisas.
+
+
+## 10. Klassning (v0.1-konsoliderad)
+
+
+**D-none.** S < 2 sessioner; eller p_stab ≥ 10⁻²; eller p_sep,med ≥ 10⁻²; eller K_D under tröskel; eller röda flaggor.
+
+
+**D-suspect.** S ≥ 2; p_stab < 10⁻² mot korrekt stabilitetsnull (§9.4); p_sep,med < 10⁻²; K_D över tröskel; robusthet mot ±2× binning och variation av K; inga starka röda flaggor.
+
+
+**D-strong.** S ≥ 3 oberoende observationstillfällen; p_stab < 10⁻³; max_s p_sep,s < 10⁻³; K_D över tröskel med marginal; S4 i båda lägen (§9.4) kan inte replikera kombinationen separation + stabilitet + kontrast; fullständigt kontrollbatteri passerat (§5.3). D-strong är en stark identitetssignatur; kvantanspråk kräver därutöver D-Q-vittnet (§6) eller samexisterande oberoende A/B-2/C-vittne enligt arvsregeln.
+
+
+**Röda flaggor (automatisk nedklassning):** D föreligger i dark/blank-körningar; D följer det_id snarare än basis/pol; fingeravtrycket ändras vid trivialt byte av K (post-selection-risk); D följer pekvinkel/fältrotation konsistent med känd instrument-Mueller; mätkedjan ändrad mellan sessioner utan omkalibrering; K_D-underkänt (stabilitet utan varierande omgivning).
+
+
+## 11. Kodgranskning av analysmallen v0.1
+
+
+**Fynd 1:** samtliga surrogatgeneratorer är placeholder som returnerar kopior av indata — samma spegelproblem som i C-mallen (C §9 fynd 1), med samma konsekvens: ingen klassning över D-none kan någonsin utfärdas, och mallen är icke-funktionell som beslutsverktyg tills S1–S4 implementeras (S1–S3 porteras från B-mallen med B §8.1-rättningen; S4 nyskrivs i två lägen enligt §9.4). **Fynd 2:** invariant-vektorns redundans (§4) med rank-deficient V och fel dof. **Fynd 3:** jackknife-skalningen (§9.1). **Fynd 4:** pinv används genomgående utan villkorstalskontroll; efter §4.3-korrigeringen ersätts pinv med ordinär invers plus explicit regularitetskontroll. **Fynd 5 (positivt):** integrationen av C_ij till Σ med förregistrerad mask och symmetrisering är korrekt och återanvändbar; egenvärdesextraktion via eigvalsh är rätt verktyg.
+
+
+## 12. Öppna frågor och åtgärdslista
+
+
+I prioritetsordning: (1) korrigera invariant-vektorn till d = 2 och räkna om dof och trösklar (§4, blockerande); (2) implementera surrogaten inklusive tvåläges-S4 (§9.4, blockerande); (3) implementera kontrastkravet K_D med förregistrerade råmått (§5.2); (4) rätta jackknife-skalningen och blocklängdsvalet (§9.1); (5) specificera och prototypa D-Q-vittnet med koherent referenskälla (§6) — samordnas med G-specen; (6) skriv D-2arm som v0.2 med Horodecki-screeningen som deklarerat syfte (§7), samordnat med C-labbet (C §11 roll 1); (7) injection tests: syntetiska källor med känd, konstant invariant plus varierande nuisance ska återfinnas med korrekt K_D, och stabila instrumentartefakter ska fastna i kontrollbatteriet; (8) återkör den ursprungliga simuleringen med korrigerad statistik (χ²_const med korrekta V_s i stället för råvarianser) och dokumentera att anomalin försvinner — formell stängning av §3.
+
+
+Öppen forskningsfråga av principiell natur: vilka astrofysikaliska käll- eller propagationsmekanismer producerar en över veckor stabil, basoberoende Stokes-korrelationsinvariant som samtidigt inte reproduceras av stabil instrumentoptik? Kandidater (persistent magnetfältsgeometri, stabil spridningsmiljö) är klassiska — vilket är förenligt med D:s roll som identitetssignatur, men understryker att D aldrig ensam bär kvantanspråk.
+
+
+## 13. Slutsats
+
+
+Signaturtyp D är katalogens fingeravtryckssignatur och dess mest missförstådda ur evidenshänseende: stabilitet är generisk, och D:s utsagokraft ligger helt i treenigheten separation–stabilitet–kontrast, där kontrasten (omgivningen rörde sig, invarianten inte) är det som skiljer ett fingeravtryck från en frusen bild. Granskningen har stängt variansanomalin — den gamla beslutsregeln jämförde skattningsbrus mellan olika effektiva stickprov och var illa ställd, inte simuleringens fel — och korrigerat invariant-vektorns dolda redundans. Med D-Q-vittnet får D en väg till äkta kvantinnehåll via polarisationssqueezing, och med Horodecki-bryggan blir D-2arm C:s förscreening. D:s plats i katalogen är därmed tydlig: den bevisar inte kvant, den bevisar identitet — och identitet, stabil under allt som borde ha rubbat den, är exakt den egenskap som gör de övriga signaturernas fynd värda att följa upp natt efter natt.

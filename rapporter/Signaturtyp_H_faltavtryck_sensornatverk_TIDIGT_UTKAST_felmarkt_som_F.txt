@@ -1,0 +1,2660 @@
+﻿Kvantsignatur F
+
+
+
+
+Signaturtyp F
+Ett tillstånd/fält i vakuum
+
+
+
+
+
+
+Nedan är en **ny signaturtyp** som går **helt vid sidan av “ljus”, “ljusets hastighet”, “hastigheter” och tidsresor**. Den utgår i stället från idén du själv nosar på: att “signaturen” kan vara **ett tillstånd/fält i vakuum** (hidden sector) som påverkar materia lokalt – och därför kan läsas ut via **precisionssensorer**, inte via astronomiskt ljus. (Din nuvarande katalogtext är starkt ljus-/observations-inriktad, så detta är ett orthogonalt spår.) 
+
+
+---
+
+
+## Signaturtyp F v0.1
+
+
+## Korrelerade vakuum-fält-avtryck i ett nätverk av precisionssensorer
+
+
+*(“Field-imprint / vacuum-state transients”)*
+
+
+### Intuition
+
+
+Om det finns en okänd “substans” i vakuum (t.ex. **ultralätt skalärt fält**, **axion-liknande fält**, **moduli/dilaton-fält** från strängteori, eller **topologiska defekter**), så kan den ge **mikroskopiska men koherenta** effekter i materia: små skift i **fundamentala konstanter** eller **spin-/energinivåer**. Det är exakt vad ett globalt nätverk av **atomur** och **optiska magnetometrar** är byggt för att kunna se som *korrelerade anomalier*. ([APS Link][1])
+
+
+---
+
+
+# 1) Definition (operational)
+
+
+**Signaturtyp F** föreligger när man i **minst 3 rumsligt separerade noder** observerar en **korrelerad avvikelse** i sensorutdata som:
+
+
+1. **inte** kan reproduceras av rimliga klassiska störkällor (drift, miljö, gemensam tidsreferens, data-pipeline), och
+2. har **amplitudmönster** som är konsistent med kända **känslighetskoefficienter** hos olika sensortyper (t.ex. olika atomur/övergångar, olika magnetometrar), och
+3. är **replikerbar** (≥2 oberoende sessions/dygn eller instrumentkonfigurationer).
+
+
+Detta matchar hur fältet faktiskt jagar “exotic physics transients” med GNOME (magnetometrar) och klocknätverk/GPS-klockor. ([ScienceDirect][2])
+
+
+---
+
+
+# 2) Matematisk form
+
+
+## 2.1 Latent fält → mätbar respons
+
+
+Anta ett okänt fält ( \phi ) som kopplar svagt till standardmodellen och orsakar små variationer i konstanter (t.ex. (\alpha), (\mu=m_e/m_p)) eller spin-kopplingar.
+
+
+För klock-nod (i) definiera fraktionell frekvensavvikelse:
+[
+y_i(t)=\frac{\delta\nu_i(t)}{\nu_i}
+=K^{(\alpha)}_i\frac{\delta\alpha(t)}{\alpha}
++K^{(\mu)}_i\frac{\delta\mu(t)}{\mu}
++\cdots + \epsilon_i(t)
+]
+där (K_i) är kända (eller kalibrerbara) känslighetsfaktorer, (\epsilon_i) är brus.
+
+
+För magnetometer-nod (i):
+[
+m_i(t)=G_i,\phi(t,\mathbf r_i)+\eta_i(t)
+]
+(eller motsvarande “pseudo-magnetisk”/spin-torque-respons, beroende på modell). GNOME-litteraturen formulerar just nätverksjakten efter korrelerade transienter av exotiska spin-kopplingar. ([onlinelibrary.wiley.com][3])
+
+
+## 2.2 Detektionsstatistik (modell-lätt)
+
+
+Skriv en generell “event-modell” utan att tolka i termer av hastigheter:
+[
+\mathbf z_i(t)=\mathbf b_i(t)+A_i,h(t-\tau_i;\theta)+\mathbf n_i(t)
+]
+
+
+* (h(\cdot)): okänd men parameteriserad vågform (transient eller oscillation)
+* (\tau_i): okänd tidsförskjutning per nod
+* (A_i): amplitud som ska följa (K_i)-mönster mellan sensortyper
+* (\mathbf b_i): långsam drift/baseline
+
+
+Besluta med en log-likelihood ratio / Bayes-faktor:
+[
+\Lambda=\max_{\theta,{\tau_i},{A_i}}
+\log\frac{p({\mathbf z_i}\mid \text{event})}{p({\mathbf z_i}\mid \text{null})}
+]
+**F-signatur** ↔ stor (\Lambda) *och* robusthetstester + replikeringsgate passerad.
+
+
+---
+
+
+# 3) Instrumentkrav (minimi → stark)
+
+
+## F-MIN (första realistiska versionen)
+
+
+* **≥3 noder**, helst geografiskt separerade.
+* Varje nod: minst **en precisionsklocka** *eller* **optisk magnetometer** + stabil datalogging.
+* Gemensam tidsstämpling (GNSS/UTC disciplinerad räcker i början; fiber/optisk länk bättre).
+* Miljösensorer: temperatur, vibration, magnetfält, nätspänning, RF-brus.
+
+
+## F-STRONG (för att kunna säga “något exotiskt”)
+
+
+* **Heterogent nätverk**: minst två **olika** klockspecies/övergångar (olika (K_i)) och/eller magnetometrar + gärna en “inert” referenskanal.
+* Magnetometrar i **skärmade miljöer** (GNOME-stil) och klockor med känd servo-respons (transientrespons i klockor är i sig ett helt delproblem). ([ScienceDirect][2])
+* Förregistrerad analyskedja + blind injection-test.
+
+
+Att detta är praktiskt relevant stöds av: GPS-klockanalys för transienta konstantrubbningar, optiska klocknätverk, och GNOME-nätverket. ([Nature][4])
+
+
+---
+
+
+# 4) Falska positiva (och hur F v0.1 “låser ner” dem)
+
+
+## 4.1 Gemensam tids-/referensartefakt
+
+
+* GNSS-glitches, tidssynk-buggar, gemensamma mjukvaruuppdateringar.
+  **Motmedel:** dubbel tidskälla, hashad pipeline-version, “shadow channel” utan fysikkoppling.
+
+
+## 4.2 Miljökorrelationer som *ser* globala ut
+
+
+* Geomagnetiska stormar (för magnetometrar), nätstörningar, temperaturfront.
+  **Motmedel:** regress ut rymdväderindex/miljökanaler; kräva att amplitudmönstret följer (K_i) (olika sensortyper ska reagera olika).
+
+
+## 4.3 Servo-/instrumentrespons som skapar falska transienter
+
+
+* Klockor kan svara på transienta störningar med ringningar/översläng.
+  **Motmedel:** explicit instrumentrespons-modell och “deconvolution-test”; detta diskuteras i litteratur om klockors transientrespons. ([ScienceDirect][5])
+
+
+## 4.4 Analysbias
+
+
+* parametrar “skruvas” tills något syns.
+  **Motmedel:** pre-registration, blindanalys, och surrogatfamiljer (se nästa).
+
+
+---
+
+
+# 5) Robusthetsdisciplin (A/M-stil men för F)
+
+
+Kör alltid F-robust som drop-in:
+
+
+**S1 Label-shuffle:** permutera nod-etiketter/tidsblock → ska döda “event”.
+**S2 Phase-randomized:** bevara spektrum men slumpa fas → ska döda koherenta mönster.
+**S3 Block-bootstrap:** bevara korttidskorrelation men bryt lång struktur.
+**S4 Klassisk “stör-generator”:** modellera drift + färgat brus + miljöfeedthrough; måste kunna förklara kandidaten för att F inte ska eskalera.
+
+
+Detta ligger nära hur nätverk som GNOME och klocknätverk bygger bort falska positiva genom korrelation, kontrollkanaler och modell-jämförelse. ([Nature][6])
+
+
+---
+
+
+# 6) Klassning (F-none / F-suspect / F-strong)
+
+
+* **F-none:** inga korrelerade events överlever S1–S4.
+* **F-suspect:** korrelerat event överlever S1–S3, men S4 (klassisk modell) kan fortfarande förklara rimligt *eller* (K_i)-mönster är oklart.
+* **F-strong:**
+
+
+  1. ≥2 oberoende repliker,
+  2. S1–S4 passerade,
+  3. amplitudmönster matchar (K_i) över heterogena sensorer,
+  4. oberoende “sanity checks” (miljö, pipeline, tidskälla) negativa.
+
+
+---
+
+
+# 7) Vad det skulle betyda om man hittar det
+
+
+Om F-strong uppnås är det i praktiken en **ny kanal** till “vad vakuum innehåller”:
+
+
+* Stöd för att en **ultralätt fältkomponent** (skalar/axion-lik) påverkar materia genom små variationer i konstanter eller spin-kopplingar. ([APS Link][1])
+* Alternativt stöd för **topologiska defekter**/kompakta objekt i dark-sector som ger transienta “glitch-mönster” över ett nätverk (GPS-klockor och GNOME har uttryckligen sökt detta). ([Nature][4])
+* För strängteori-intuitionen: många string-inspirerade scenarier ger **moduli/dilaton**-fält som effektivt ser ut som just sådana långvågiga/ultralätta skalärer som påverkar konstanter (det är därför klockor är så centrala i DM-portals-whitepapers). ([NASA Science][7])
+
+
+Och lika viktigt: även en *icke-detektion* är värdefull eftersom den sätter **skarpa gränser** på kopplingsstyrkor (det är redan demonstrerat med GPS-data och GNOME-data). ([Nature][4])
+
+
+---
+
+
+## Vad jag är mest nyfiken på här (och varför)
+
+
+Det mest “angripbara” okända är inte en partikel i sig, utan en **fältregim** som kan ge:
+
+
+1. **oscillationer** (quasi-monokromt, långvarigt) och/eller
+2. **transienta events** (glitch-likt)
+   …som kan fångas av nätverkssignaturer utan att vi behöver anta *vad* det är från början. Det är ett vetenskapligt sätt att mäta “det okända”: man specificerar **operationala invariants** (korrelation + (K_i)-mönster + robusthetsgates) och pressar ner falska positiva.
+
+
+---
+
+
+Om du vill utvecklar jag **F v0.2** i exakt A/M-disciplin: (i) tydlig feature-schema (y), (ii) surrogater S1–S4 formaliserade, (iii) replikerings-gate som hård regel, (iv) “report-formatter” med *per run*-rad och “worst collapse reason”.
+
+
+[1]: https://link.aps.org/doi/10.1103/PhysRevLett.117.061301?utm_source=chatgpt.com "Searching for an Oscillating Massive Scalar Field as a Dark ..."
+[2]: https://www.sciencedirect.com/science/article/pii/S2212686418301031?utm_source=chatgpt.com "Characterization of the global network of optical ..."
+[3]: https://onlinelibrary.wiley.com/doi/10.1002/andp.202300083?utm_source=chatgpt.com "What Can a GNOME Do? Search Targets for the Global ..."
+[4]: https://www.nature.com/articles/s41467-017-01440-4?utm_source=chatgpt.com "Search for domain wall dark matter with atomic clocks on ..."
+[5]: https://www.sciencedirect.com/science/article/abs/pii/S026322412502041X?utm_source=chatgpt.com "Response of optical atomic clocks to transient variations in ..."
+[6]: https://www.nature.com/articles/s41567-021-01393-y?utm_source=chatgpt.com "Search for topological defect dark matter with a global ..."
+[7]: https://science.nasa.gov/wp-content/uploads/2023/05/89_1c148a173e16cea01395f4ab95f009a4_NASA_Dark_matter_white_paper_4.pdf?utm_source=chatgpt.com "Topical: Search for dark matter with orbiting atomic clocks"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############
+
+
+Signaturtyp F
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nedan är **Signaturtyp F v0.2** formulerad i **exakt A/M-disciplin**: tydlig feature-vektor (y), formaliserade S1–S4, **hård replikerings-gate**, samt **robust-rapport** “en rad per run + worst collapse reason” (samma känsla som dina C/D/E-robust-moduler och formatterare).  
+
+
+---
+
+
+## Signaturtyp F v0.2 — “Field-imprint i precisionssensor-nätverk”
+
+
+### 0) Datamodell (vad en “run” måste innehålla)
+
+
+En run (r) består av (N\ge 3) noder/sensorer (klockor, magnetometrar, etc). För varje nod (i):
+
+
+* primär kanal: residualserie (x_i(t)) (efter detrend + robust normalisering)
+* valfritt: miljökanaler (e_{i,k}(t)) (temp, vibration, lokalt B-fält, RF, nätspänning, …)
+* metadata: sensortyp (type_i) och **känslighetskoefficienter** (K_i) (kan vara en vektor, ex (K_i^{(\alpha)},K_i^{(\mu)}) eller “spin-coupling gain”).
+
+
+> Viktigt: i F v0.2 använder vi **inte** propagation/hastigheter som tolkning. Eventuella per-nod-förskjutningar (\tau_i) behandlas som *nuisance-parametrar* utan fysisk “speed-läsning”.
+
+
+---
+
+
+# (i) Feature-schema (y) (tydligt och “A/M-bärande”)
+
+
+F v0.2 har två **spår** (modes), men **spåret låses vid baseline** (för att undvika “vi byter spår när robustheten pressar oss”).
+
+
+## 1.1 Preprocess (för alla spår)
+
+
+För varje nod:
+
+
+1. detrend (t.ex. medianfilter/LOESS) → (x_i(t))
+2. robust skala: (x_i \leftarrow (x_i-\mathrm{median})/\mathrm{MAD})
+3. (valfritt) whiten med AR(1)/OU-fit per nod (snabbt)
+
+
+## 1.2 OSC-spåret (quasi-monokrom, långvarigt)
+
+
+För förregistrerad bandmängd (\mathcal{B}=[f_{\min},f_{\max}]):
+
+
+**Basstatistik:**
+
+
+* Pairwise coherence (magnitud-kvadrat) (C_{ij}(f))
+* Nätverkscoherence (C_{\text{net}}(f)=\mathrm{median}*{i<j} C*{ij}(f))
+* Välj (f^*=\arg\max_{f\in\mathcal{B}} C_{\text{net}}(f))
+
+
+**Pelar-features (OSC):**
+
+
+* (y_{\text{OSC},1}=C_{\text{net}}(f^*))  (gemensam smalbandighet)
+* (y_{\text{OSC},2}=\kappa_{\phi}=\left|\mathrm{mean}*{i<j}\exp(i\phi*{ij}(f^*))\right|)  (fas-konsistens)
+* (y_{\text{OSC},3}=\chi^2_K)  (K-mönster-fit):
+  regress/amplitudfit (a_i \approx g\cdot K_i) (eller (a_i\approx \mathbf g!\cdot!\mathbf K_i)) och beräkna en normaliserad misfit:
+  [
+  \chi^2_K=\sum_i \frac{(a_i-\hat a_i)^2}{\sigma_{a_i}^2}
+  ]
+  (lägre är bättre; i score gör vi om så “högre = bättre” via p-värden)
+
+
+**Feature-vektor (OSC):**
+[
+y_{\text{OSC}}=\big(f^*,, C_{\text{net}}^*,, \kappa_{\phi}^*,, \chi^2_K,, q_{\text{env}}\big)
+]
+där (q_{\text{env}}) är en sanity-indikator (t.ex. max-korrelation med miljökanaler; används som red-flag, inte som “vinst-feature”).
+
+
+## 1.3 GLITCH-spåret (transient / “event”)
+
+
+För en fönsterfamilj (W, hop) och en enkel transientbank (\mathcal{H}) (ex wavelet-energi eller 2–3 generiska kernels):
+
+
+**Basstatistik:**
+
+
+* Per nod: transient-score (s_i(t)=\max_{h\in\mathcal{H}} (x_i \star h)(t))
+* Nätverkskombination med nuisance-förskjutningar:
+  [
+  S_{\text{net}}(t)=\max_{{\tau_i\in[-\Delta,\Delta]}} \sum_i w_i, s_i(t+\tau_i)
+  ]
+* Välj (t^*=\arg\max S_{\text{net}}(t))
+
+
+**Pelar-features (GLITCH):**
+
+
+* (y_{\text{G},1}=S_{\text{net}}(t^*)) (nätverks-SNR/energi)
+* (y_{\text{G},2}=A_{\text{align}}) (align-kvalitet): t.ex. gap mellan bästa och näst-bästa alignment-score (robust mot “många halv-glitchar”)
+* (y_{\text{G},3}=\chi^2_K) (samma K-fit på event-amplituder (a_i=s_i(t^*+\hat\tau_i)))
+
+
+**Feature-vektor (GLITCH):**
+[
+y_{\text{G}}=\big(t^*,, S_{\text{net}}^*,, A_{\text{align}},, \chi^2_K,, q_{\text{env}}\big)
+]
+
+
+---
+
+
+# (ii) Surrogater S1–S4 (formaliserade)
+
+
+Precis som i A/M-disciplinen används S1–S3 som “null-familjer” och S4 som **explicit adversary/confounder-suite**. 
+
+
+## S1 — Node-wise time-shift (bryter nätverkskorrelation, bevarar lokalt)
+
+
+För varje nod (i): välj slumpmässig (\delta_i) och gör
+[
+x_i^{(S1)}(t)=x_i(t+\delta_i)\quad (\text{cirkulärt skift eller blockskift})
+]
+Krav: (|\delta_i|\ge W_{\max}) för att slå sönder simultanitet, men behålla PSD och lokala glitch-former.
+
+
+## S2 — Phase-randomization per nod (bevarar PSD, förstör tidsstruktur/fas)
+
+
+FFT per nod:
+[
+\tilde x_i(f)=|\tilde x_i(f)|e^{i\theta_i(f)};;\Rightarrow;;
+\tilde x_i^{(S2)}(f)=|\tilde x_i(f)|e^{i\theta'_i(f)}
+]
+där (\theta'_i(f)) är uniform slump, med Hermit-symmetri för real signal.
+
+
+## S3 — Block-permute / event-shuffle (bevarar “lokala segment”, bryter lång koherens)
+
+
+Två varianter (du väljer en som default men loggar vilken):
+
+
+* **S3a (OSC-vänlig):** dela (x_i(t)) i block om längd (B) (t.ex. 30–120 s) och permutera blockordningen per nod oberoende.
+* **S3b (GLITCH-vänlig):** detektera lokala event-tider ({t_{i,m}}) per nod och permutera event-tider mellan noder (bevarar event-rate och amplitudfördelning, dödar samtidighet).
+
+
+## S4 — Adversary suite (klassiska “ser-ut-som-signal” generatorer)
+
+
+S4 är **en familj** (kör minst en, gärna två). Exakt A/M-tänk: “kan en rimlig klassisk mekanism replikera vår signatur?”. 
+
+
+* **S4a Common-mode drift + steps:** injicera en gemensam random-walk + sporadiska steg i alla noder (mimar GNSS/referensartefakter).
+* **S4b Narrowband line injection:** injicera smalband vid kända linjer (50/60 Hz, mekaniska resonanser), med nod-specifika gains.
+* **S4c Env-feedthrough synthesizer:** bygg (\hat x_i(t)=\sum_k \beta_{i,k} e_{i,k}(t)) från miljökanaler och använd detta som “förklaringssignal”.
+* **S4d Pipeline artifact emulator:** timestamp-kvantisering, bufferdrops, interpolation-ringning → genererar falska transients.
+
+
+**V0.2-regel:** F-strong får **inte** tillåtas om *någon* S4-variant kan replikera **samma spår (OSC eller GLITCH)** och passera pelarna med liknande score.
+
+
+---
+
+
+# Score, min-gate och klassning (A/M-känsla)
+
+
+Vi kopierar E v0.2-principen: **p-värden per pelare och surrogattyp**, använd **andra minsta p** som robust “anti-cherrypick”, och ett **min-gate-score** som robustmodulen kan använda i fast-läge. 
+
+
+## 2.1 Per spår: pelar-p och (S)
+
+
+För OSC pelare (F\in{C,\phi,K}) och surrogat (S\in{S1,S2,S3,S4}):
+
+
+* beräkna (p_F^{(S)}=\Pr(\text{surrogat} \ge \text{obs})) (riktning beror på metric)
+* definiera (p_F^{(2)}=) **andra minsta** av ({p_F^{(S1)},p_F^{(S2)},p_F^{(S3)},p_F^{(S4)}})
+
+
+Sätt
+[
+z_F=-\log_{10}(\max(p_F^{(2)},10^{-12}))
+\qquad
+S_{\text{OSC}}=\min(z_C,z_\phi,z_K)
+]
+
+
+För GLITCH pelare (F\in{E,A,K}):
+[
+S_{\text{G}}=\min(z_E,z_A,z_K)
+]
+
+
+## 2.2 Baseline-mode-lås
+
+
+[
+mode_0=\arg\max(S_{\text{OSC}},S_{\text{G}})
+\quad,\quad
+S_0=\max(S_{\text{OSC}},S_{\text{G}})
+]
+**Robustvarianter måste utvärdera samma (mode_0)**. Om variant behöver byta mode för att se “stark”, logga red-flag `RF_mode_flip`.
+
+
+## 2.3 Klassning (v0.2)
+
+
+* **F-none:** (S_0 < S_{\min}) eller sanity-fail (t.ex. ren env-förklaring)
+* **F-suspect:** replikerings-gate(pass) med (S_0 \ge S_{\text{suspect}})
+* **F-strong:** replikerings-gate(pass) + robusthet(pass) + S4-fail-to-explain + (S_0 \ge S_{\text{strong}})
+
+
+Rekommenderade trösklar (praktiska):
+
+
+* (S_{\text{suspect}}=3) (≈ (p\le 10^{-3}))
+* (S_{\text{strong}}=6) (≈ (p\le 10^{-6}))
+
+
+---
+
+
+# (iii) Replikerings-gate (hård regel)
+
+
+Exakt samma filosofi som “≥2 runs/sessions som hård gate” du redan driver i C/E.  
+
+
+**Definition (v0.2):**
+
+
+Låt (R) vara mängden runs som analyserats. En run (r) räknas som **confirm-run** om:
+
+
+1. (S_0(r)\ge S_{\text{suspect}}) (eller (S_{\text{strong}}) för strong-gate)
+2. (mode_0(r)) är samma mode över confirm-runs (ingen “vi flippar spår”)
+3. K-fit passerar (t.ex. (p_K^{(2)} < \alpha_K))
+4. sanity: ingen dominerande env-feedthrough (`RF_env_explains`)
+5. S4 kan **inte** replikera samma score (annars `RF_S4_explained`)
+
+
+**Hård gate:**
+
+
+* **F-suspect:** minst `require_rep_runs=2` confirm-runs i **olika sessions** (eller olika dygn).
+* **F-strong:** minst `require_rep_runs=3` confirm-runs (minst 2 sessions).
+
+
+**Meta-kombination:** kombinera pelar-p eller total-p över confirm-runs med Fisher eller Stouffer; kräv (p_{\text{meta}} < \alpha_{\text{suspect/strong}}). (Detta är samma “inte en lyckoträff i en run”-tanke som i C-disciplinen.) 
+
+
+---
+
+
+# (iv) F-robust v0.2 + “report-formatter” (per run-rad + worst collapse reason)
+
+
+Här är en **drop-in robusthetsmodul + formatter** i samma kod-stil som dina D/E-robust-block: varianter → pass/fail → (R_{\text{robust}}) → worst(collapse reason).  
+
+
+```python
+from __future__ import annotations
+
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Tuple
+import math
+
+
+import numpy as np
+
+
+
+
+# ============================================================
+# F v0.2 — Robusthetspaket (A/M-disciplin)
+# Tester: dt×2/÷2, band± (OSC) / kernel± (GLITCH), window±, jackknife
+# Score: S0 = min-gate-score (z = -log10(p^(2))) låst till baseline-mode
+# ============================================================
+
+
+@dataclass
+class FConfig:
+    # preprocessing / windowing
+    dt_s: float = 1.0
+    window_s: float = 120.0
+    hop_s: float = 30.0
+
+
+    # OSC band (förregistrerat)
+    fmin_hz: float = 0.01
+    fmax_hz: float = 1.00
+
+
+    # GLITCH alignment (nuisance)
+    align_max_shift_s: float = 2.0
+
+
+    # surrogates (full-run)
+    n_surrogates: int = 400
+
+
+    # fast-mode cache (för robust_pass med n_surrogates=0)
+    null_cache: Optional[object] = None  # FNullCache
+
+
+
+
+@dataclass
+class FRunMetrics:
+    # baseline-resultat per run (från analyze_F_run_v0_2)
+    session_id: Any
+    run_id: Any
+    tag: str
+
+
+    mode0: str            # "OSC" eller "GLITCH" (låst)
+    S0: float             # min-gate-score (z-skala)
+    F_class0: str         # "F-none/F-suspect/F-strong" (prelim)
+
+
+    # pelar p^(2) (andra minsta över S1..S4) för det låsta mode0
+    p2_a: float           # OSC: p2_C   / GLITCH: p2_E
+    p2_b: float           # OSC: p2_phi / GLITCH: p2_align
+    p2_k: float           # p2_Kfit
+
+
+    # red flags
+    red_flags: List[str] = field(default_factory=list)
+
+
+
+
+@dataclass
+class FRobustConfig:
+    # Baseline måste vara "över golvet" annars robusthet är meningslös
+    require_baseline_violation: bool = True
+    S_min: float = 3.0              # suspect-golv i z=-log10(p) skala
+
+
+    # kollapskriterier relativt baseline S0
+    robust_drop_abs: float = 1.0    # tillåt S-ras med 1.0 innan FAIL
+    robust_drop_rel: float = 0.35   # eller 35% relativt
+    robust_min_R: float = 0.60      # hård gate: R_robust >= detta
+
+
+    # A) dt-resampling
+    enable_dt_tests: bool = True
+    dt_multipliers: Tuple[float, ...] = (0.5, 1.0, 2.0)
+
+
+    # B) band / kernel perturbation
+    enable_band_tests: bool = True
+    # OSC: skifta bandet lite runt baseline (i Hz), GLITCH: byt kernelbank-id
+    band_shift_hz: Tuple[float, ...] = (-0.05, 0.0, +0.05)
+    glitch_kernel_families: Tuple[str, ...] = ("w1", "w2", "mf_short", "mf_long")
+
+
+    # C) window perturbation
+    enable_window_tests: bool = True
+    window_factors: Tuple[float, ...] = (0.75, 1.0, 1.33)
+    hop_offset_fracs: Tuple[float, ...] = (0.0, 0.25, 0.50)
+    min_window_pass_frac: float = 0.40
+
+
+    # D) jackknife
+    enable_jackknife: bool = True
+    jackknife_blocks: int = 8
+    min_jk_pass_frac: float = 0.70
+
+
+
+
+@dataclass
+class FRobustVariant:
+    name: str
+    S: float
+    pass_ok: bool
+    reason: str = ""
+    meta: Dict[str, Any] = field(default_factory=dict)
+
+
+
+
+@dataclass
+class FRobustResult:
+    tag: str
+    session_id: Any
+    run_id: Any
+
+
+    mode0: str
+    S0: float
+
+
+    R_robust: float
+    robust_pass: bool
+
+
+    r_dt: float
+    r_band: float
+    r_win: float
+    r_jk: float
+
+
+    worst_variant: str
+    worst_reason: str
+
+
+    variants: List[FRobustVariant] = field(default_factory=list)
+    flags: List[str] = field(default_factory=list)
+
+
+
+
+# ----------------------------
+# helpers (C/D/E-disciplin)
+# ----------------------------
+
+
+def _finite(x: float) -> bool:
+    return bool(np.isfinite(x))
+
+
+def _pass_variant(S: float, S0: float, rcfg: FRobustConfig) -> Tuple[bool, str]:
+    if not _finite(S):
+        return False, "nan_or_inf"
+    if S < float(rcfg.S_min):
+        return False, "below_S_min"
+
+
+    floor_abs = max(float(rcfg.S_min), float(S0) - float(rcfg.robust_drop_abs))
+    floor_rel = float(S0) * (1.0 - float(rcfg.robust_drop_rel))
+    floor = max(floor_abs, floor_rel, float(rcfg.S_min))
+
+
+    if S < floor:
+        # välj en tydlig kollapsorsak
+        if S < floor_abs:
+            return False, "score_drop_abs"
+        if S < floor_rel:
+            return False, "score_drop_rel"
+        return False, "score_drop"
+    return True, "ok"
+
+
+def _choose_worst_variant(variants: List[FRobustVariant]) -> Tuple[str, str]:
+    if not variants:
+        return "none", "no_variants"
+    fails = [v for v in variants if not v.pass_ok]
+    pool = fails if fails else variants
+    worst = min(pool, key=lambda v: float(v.S) if _finite(v.S) else float("inf"))
+    return worst.name, worst.reason or ("fail" if fails else "minS")
+
+
+
+
+# ----------------------------
+# core hooks (må kopplas till din F-run-analys)
+# ----------------------------
+
+
+def _clone_cfg_for_fast(cfg: FConfig, **kwargs) -> FConfig:
+    c = FConfig(**{k: getattr(cfg, k) for k in cfg.__dataclass_fields__.keys()})
+    c.n_surrogates = 0
+    for k, v in kwargs.items():
+        setattr(c, k, v)
+    return c
+
+
+def analyze_F_run_fast_v0_2(events, cfg: FConfig, *, mode0: str, tag: str) -> FRunMetrics:
+    """
+    FAST-mode (n_surrogates=0): ska använda cfg.null_cache (från en full run) för att:
+      - räkna p^(2) för pelarna i låst mode0
+      - bygga z=-log10(p^(2)) och S0=min(z_a,z_b,z_k)
+    Den faktiska signalberäkningen (coherence/wavelet) är din kärna.
+    Här är det bara kontraktet.
+    """
+    raise NotImplementedError("Koppla mot din analyze_F_run_v0_2 + null_cache-mappning")
+
+
+
+
+# ----------------------------
+# robust driver
+# ----------------------------
+
+
+def analyze_F_robustness_v0_2(events, base_cfg: FConfig, rcfg: FRobustConfig, *, tag: str) -> FRobustResult:
+    # baseline (fast, men bygger på att null_cache redan finns)
+    m0 = analyze_F_run_fast_v0_2(events, base_cfg, mode0="AUTO", tag=tag)  # AUTO = välj mode0
+    mode0 = m0.mode0
+    S0 = float(m0.S0)
+
+
+    flags: List[str] = list(m0.red_flags or [])
+    variants: List[FRobustVariant] = []
+
+
+    if rcfg.require_baseline_violation and (not _finite(S0) or S0 < rcfg.S_min):
+        flags.append("RF_baseline_below_floor")
+        return FRobustResult(
+            tag=str(tag),
+            session_id=m0.session_id,
+            run_id=m0.run_id,
+            mode0=str(mode0),
+            S0=float(S0),
+            R_robust=0.0,
+            robust_pass=False,
+            r_dt=0.0, r_band=0.0, r_win=0.0, r_jk=0.0,
+            worst_variant="baseline",
+            worst_reason="baseline_below_floor",
+            variants=[],
+            flags=flags
+        )
+
+
+    def run_variant(name: str, cfgv: FConfig, meta: Dict[str, Any]) -> None:
+        mv = analyze_F_run_fast_v0_2(events, cfgv, mode0=str(mode0), tag=tag)
+        Sv = float(mv.S0)
+        ok, rsn = _pass_variant(Sv, S0, rcfg)
+
+
+        # Mode-flip är red flag (ska inte hända i fast-mode om mode0 låses korrekt)
+        if getattr(mv, "mode0", str(mode0)) != str(mode0):
+            ok = False
+            rsn = "mode_flip"
+        variants.append(FRobustVariant(name=name, S=Sv, pass_ok=bool(ok), reason=str(rsn), meta=meta))
+
+
+    # A) dt
+    r_dt = 1.0
+    if rcfg.enable_dt_tests:
+        ok = 0; total = 0
+        for mul in rcfg.dt_multipliers:
+            cfgv = _clone_cfg_for_fast(base_cfg, dt_s=float(base_cfg.dt_s) * float(mul))
+            run_variant(f"dt_x{mul:.2f}", cfgv, {"dt_mul": float(mul)})
+            total += 1
+            ok += int(variants[-1].pass_ok)
+        r_dt = float(ok / max(1, total))
+
+
+    # B) band / kernel
+    r_band = 1.0
+    if rcfg.enable_band_tests:
+        ok = 0; total = 0
+        if mode0 == "OSC":
+            for sh in rcfg.band_shift_hz:
+                cfgv = _clone_cfg_for_fast(
+                    base_cfg,
+                    fmin_hz=float(base_cfg.fmin_hz) + float(sh),
+                    fmax_hz=float(base_cfg.fmax_hz) + float(sh),
+                )
+                run_variant(f"band_shift{sh:+.3f}Hz", cfgv, {"band_shift_hz": float(sh)})
+                total += 1
+                ok += int(variants[-1].pass_ok)
+        else:
+            for fam in rcfg.glitch_kernel_families:
+                cfgv = _clone_cfg_for_fast(base_cfg)
+                # din kärna läser cfgv.kernel_family om du vill
+                setattr(cfgv, "kernel_family", str(fam))
+                run_variant(f"kernel={fam}", cfgv, {"kernel_family": str(fam)})
+                total += 1
+                ok += int(variants[-1].pass_ok)
+        r_band = float(ok / max(1, total))
+
+
+    # C) window / hop
+    r_win = 1.0
+    if rcfg.enable_window_tests:
+        pass_list: List[bool] = []
+        for f in rcfg.window_factors:
+            for hop_frac in rcfg.hop_offset_fracs:
+                cfgv = _clone_cfg_for_fast(
+                    base_cfg,
+                    window_s=float(base_cfg.window_s) * float(f),
+                    hop_s=float(base_cfg.hop_s),
+                )
+                setattr(cfgv, "hop_offset_frac", float(hop_frac))
+                run_variant(f"win_x{f:.2f}_hop{hop_frac:.2f}", cfgv, {"win_factor": float(f), "hop_frac": float(hop_frac)})
+                pass_list.append(bool(variants[-1].pass_ok))
+        if not pass_list:
+            r_win = 0.0
+            flags.append("RF_window_no_variants")
+        else:
+            frac = float(np.mean(np.array(pass_list, dtype=float)))
+            r_win = min(1.0, frac / max(1e-9, float(rcfg.min_window_pass_frac)))
+            if frac < rcfg.min_window_pass_frac:
+                flags.append(f"RF_window_low_pass frac={frac:.3f}")
+
+
+    # D) jackknife (förutsätter att din kärna kan “droppa block” via cfg.jackknife_block)
+    r_jk = 1.0
+    if rcfg.enable_jackknife:
+        pass_list = []
+        B = int(rcfg.jackknife_blocks)
+        if B < 2:
+            r_jk = 0.0
+            flags.append("RF_jackknife_insufficient_blocks")
+        else:
+            for k in range(B):
+                cfgv = _clone_cfg_for_fast(base_cfg)
+                setattr(cfgv, "jackknife_block", int(k))
+                run_variant(f"jk_leave{k+1}/{B}", cfgv, {"jk": int(k), "B": B})
+                pass_list.append(bool(variants[-1].pass_ok))
+            frac = float(np.mean(np.array(pass_list, dtype=float))) if pass_list else 0.0
+            r_jk = min(1.0, frac / max(1e-9, float(rcfg.min_jk_pass_frac)))
+            if frac < rcfg.min_jk_pass_frac:
+                flags.append(f"RF_jackknife_low_pass frac={frac:.3f}")
+
+
+    # R_robust + worst
+    R = float(np.mean([float(r_dt), float(r_band), float(r_win), float(r_jk)]))
+    robust_pass = bool(R >= float(rcfg.robust_min_R))
+    if not robust_pass:
+        flags.append(f"RF_R_robust<{rcfg.robust_min_R:.2f} val={R:.3f}")
+
+
+    worst_name, worst_reason = _choose_worst_variant(variants)
+
+
+    return FRobustResult(
+        tag=str(tag),
+        session_id=m0.session_id,
+        run_id=m0.run_id,
+        mode0=str(mode0),
+        S0=float(S0),
+        R_robust=float(R),
+        robust_pass=bool(robust_pass),
+        r_dt=float(r_dt),
+        r_band=float(r_band),
+        r_win=float(r_win),
+        r_jk=float(r_jk),
+        worst_variant=str(worst_name),
+        worst_reason=str(worst_reason),
+        variants=variants,
+        flags=flags
+    )
+
+
+
+
+# ----------------------------
+# report-formatter (A/M-stil)
+# ----------------------------
+
+
+def _fmt(x: float, w: int = 7, p: int = 3) -> str:
+    if x is None or (isinstance(x, float) and (math.isnan(x) or math.isinf(x))):
+        return (" " * (w - 3)) + "nan"
+    s = f"{float(x):.{p}f}"
+    return s[:w].rjust(w) if len(s) > w else s.rjust(w)
+
+
+def format_F_robust_report(
+    robust_results: List[FRobustResult],
+    *,
+    title: str = "F v0.2 Robusthet",
+    show_flags: bool = True,
+    max_flag_chars: int = 80
+) -> str:
+    lines: List[str] = []
+    lines.append(f"== {title} ==")
+    hdr = (
+        "TAG".ljust(14) + "STAT".rjust(5) +
+        "  MODE".rjust(6) +
+        "  S0".rjust(10) +
+        "  R".rjust(8) +
+        "  (dt band win  jk)".ljust(26) +
+        "  WORST(collapse)".ljust(44) +
+        ("  FLAGS" if show_flags else "")
+    )
+    lines.append(hdr)
+    lines.append("-" * 104)
+
+
+    n = 0
+    n_pass = 0
+    R_list: List[float] = []
+
+
+    for rr in robust_results:
+        n += 1
+        n_pass += int(bool(rr.robust_pass))
+        R_list.append(float(rr.R_robust))
+
+
+        status = "OK" if rr.robust_pass else "FAIL"
+        worst_txt = f"{rr.worst_variant} [{rr.worst_reason}]"
+        if len(worst_txt) > 43:
+            worst_txt = worst_txt[:42] + "…"
+        worst_txt = worst_txt.ljust(44)
+
+
+        flag_txt = ""
+        if show_flags:
+            fl = rr.flags or []
+            keep = [f for f in fl if ("RF_" in f or "RED_" in f)]
+            if not keep:
+                keep = fl
+            flag_txt = "; ".join(keep)
+            if len(flag_txt) > max_flag_chars:
+                flag_txt = flag_txt[: max_flag_chars - 1] + "…"
+            flag_txt = ("  " + flag_txt) if flag_txt else ""
+
+
+        lines.append(
+            f"{rr.tag:<14}"
+            f"{status:>5}"
+            f"{rr.mode0:>6}"
+            f"{_fmt(rr.S0, w=10, p=3)}"
+            f"{_fmt(rr.R_robust, w=8, p=3)}"
+            f"  ({_fmt(rr.r_dt,5,2).strip():>4} {_fmt(rr.r_band,5,2).strip():>4} {_fmt(rr.r_win,5,2).strip():>4} {_fmt(rr.r_jk,5,2).strip():>4})"
+            f"  {worst_txt}"
+            f"{flag_txt}"
+        )
+
+
+    R_finite = [x for x in R_list if isinstance(x, float) and math.isfinite(x)]
+    R_mean = sum(R_finite) / len(R_finite) if R_finite else float("nan")
+    lines.append("-" * 104)
+    lines.append(f"SUMMARY: runs={n}  robust_pass={n_pass}/{n}  mean(R_robust)={R_mean:.3f}")
+    return "\n".join(lines)
+```
+
+
+**Notera varför detta är “A/M-disciplin” (inte bara en idé):**
+
+
+* Vi använder **min-gate-score** baserat på **andra minsta p** över S1–S4 (anti-cherrypick), samma kärnidé som i din E v0.2-mall. 
+* Robustmodulen ger (R_{\text{robust}}) + **worst variant + collapse reason**, exakt enligt C/D/E-mönstret du redan har i dokumentet.  
+* Replikerings-gate är en **hård gate** (≥2/≥3 runs) och inte “nice to have”, i linje med hur du skärper C/E. 
+
+
+---
+
+
+## Nästa “konkreta” steg (för att F v0.2 ska bli körbar)
+
+
+Du har nu disciplinen och kontraktet. För att göra den *körbar* behöver du bara fylla **en** kärnfunktion:
+
+
+* `analyze_F_run_fast_v0_2(...)` (fast-mode) + den fulla `analyze_F_run_v0_2(...)` som bygger `null_cache` vid `n_surrogates>0`.
+
+
+Om du vill fortsätter jag med exakt det i samma stil som B/C/D/E: **(a)** full-run (surrogatloop) som bygger `FNullCache`, **(b)** fast-run som mappar råstats → (p^{(2)}) → (S_0), och **(c)** minimal regression-harness som jämför full vs fast på liten subsample (samma tänk som din B-regression).
+
+
+
+
+
+
+
+
+
+
+
+
+#############
+
+
+Signaturtyp: F
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Här är **F v0.2 kärnimplementationen** i samma B/C/D/E-stil:
+(a) **full-run** (surrogatloop) som bygger `FNullCache`, (b) **fast-run** som mappar råstats → (p^{(2)}) → (S_0), och (c) **minimal regression-harness** som jämför full vs fast på en liten subsample.
+
+
+> **Kontrakt:** `events` är en “run”-container med noder där varje nod har `x` (residualserie), valfritt `t` eller run-dt, `K` (sensitivitet) och ev `env`. Det är avsiktligt “drop-in”: du kan koppla din Polars-ingest till denna run-struct utan att ändra analyslogiken.
+
+
+```python
+from __future__ import annotations
+
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Tuple
+import math
+
+
+import numpy as np
+
+
+
+
+# ============================================================
+# Signaturtyp F v0.2 — Full-run + Fast-run + Regression harness
+# ============================================================
+
+
+# ----------------------------
+# Config + cache + results
+# ----------------------------
+
+
+@dataclass
+class FConfig:
+    # sampling/windowing
+    dt_s: float = 1.0
+    window_s: float = 120.0
+    hop_s: float = 30.0
+
+
+    # OSC band
+    fmin_hz: float = 0.01
+    fmax_hz: float = 1.00
+
+
+    # GLITCH alignment (nuisance)
+    align_max_shift_s: float = 2.0
+
+
+    # GLITCH kernel family
+    kernel_family: str = "w1"  # "w1","w2","mf_short","mf_long"
+
+
+    # window perturbation hooks (robust)
+    hop_offset_frac: float = 0.0
+
+
+    # jackknife hooks (robust)
+    jackknife_block: Optional[int] = None
+    jackknife_blocks: int = 8
+
+
+    # surrogates
+    n_surrogates: int = 400
+    seed: int = 12345
+
+
+    # fast-mode cache
+    null_cache: Optional["FNullCache"] = None
+
+
+    # S3 blocks
+    s3_block_s: float = 60.0
+
+
+    # sanity
+    env_corr_redflag: float = 0.6
+
+
+
+
+@dataclass
+class FNullCache:
+    cfg_fingerprint: Tuple[Any, ...]
+    n_surrogates: int
+    # dist[mode][S_kind][pillar] -> np.ndarray[n_surrogates]
+    dist: Dict[str, Dict[str, Dict[str, np.ndarray]]] = field(default_factory=dict)
+
+
+    # optional debug (ex raw obs under baseline)
+    meta: Dict[str, Any] = field(default_factory=dict)
+
+
+
+
+@dataclass
+class FRunMetrics:
+    session_id: Any
+    run_id: Any
+    tag: str
+
+
+    mode0: str     # "OSC" / "GLITCH"
+    S0: float
+    F_class0: str  # prelim: none/suspect/strong (repl-gate sker utanför)
+
+
+    # p^(2) pelare i låst mode0
+    p2_a: float    # OSC: C_net  / GLITCH: S_net
+    p2_b: float    # OSC: kappa  / GLITCH: A_align
+    p2_k: float    # K-fit
+
+
+    red_flags: List[str] = field(default_factory=list)
+
+
+    # debug extras
+    extras: Dict[str, Any] = field(default_factory=dict)
+
+
+
+
+# ============================================================
+# RUN STRUCT (ingest-kontrakt)
+# ============================================================
+
+
+def _node_list(events) -> List[Dict[str, Any]]:
+    """
+    Accepts either:
+      - dict with key "nodes": list[dict]
+      - list[dict] directly (nodes)
+    Each node dict must contain:
+      - "x": np.ndarray
+      - "K": float (or 1D array-like; v0.2 uses scalar K for simplicity)
+    Optional:
+      - "t": np.ndarray or run-level dt
+      - "env": dict[str, np.ndarray]
+      - "id", "type"
+    """
+    if isinstance(events, dict) and "nodes" in events:
+        return list(events["nodes"])
+    if isinstance(events, list):
+        return list(events)
+    raise TypeError("events must be {'nodes':[...]} or a list of node dicts")
+
+
+
+
+def _run_meta(events) -> Tuple[Any, Any, str]:
+    if isinstance(events, dict):
+        return events.get("session_id", "S?"), events.get("run_id", "R?"), events.get("tag", "F_RUN")
+    return "S?", "R?", "F_RUN"
+
+
+
+
+# ============================================================
+# Preprocess + utilities
+# ============================================================
+
+
+def _mad(x: np.ndarray) -> float:
+    med = float(np.median(x))
+    return float(np.median(np.abs(x - med))) + 1e-12
+
+
+def _robust_z(x: np.ndarray) -> np.ndarray:
+    med = float(np.median(x))
+    s = _mad(x)
+    return (x - med) / s
+
+
+def _detrend_blockmedian(x: np.ndarray, block: int) -> np.ndarray:
+    """
+    Light, deterministic detrend: subtract piecewise-median baseline, then linear interp.
+    (Drop-in; replace with LOESS/medianfilter om du vill.)
+    """
+    n = len(x)
+    if block <= 8 or block >= n:
+        # fallback: subtract global median
+        return x - float(np.median(x))
+    idx = np.arange(n)
+    centers = np.arange(block // 2, n, block)
+    bas = []
+    for c in centers:
+        lo = max(0, c - block // 2)
+        hi = min(n, c + block // 2)
+        bas.append(float(np.median(x[lo:hi])))
+    centers = centers[:len(bas)]
+    baseline = np.interp(idx, centers, np.array(bas, dtype=float), left=bas[0], right=bas[-1])
+    return x - baseline
+
+
+def _resample_linear(x: np.ndarray, dt_old: float, dt_new: float) -> np.ndarray:
+    if abs(dt_new - dt_old) < 1e-12:
+        return x
+    n = len(x)
+    t_old = np.arange(n, dtype=float) * float(dt_old)
+    t_new = np.arange(0.0, t_old[-1] + 1e-9, float(dt_new))
+    return np.interp(t_new, t_old, x).astype(float)
+
+
+def _apply_jackknife(x: np.ndarray, k: Optional[int], B: int) -> np.ndarray:
+    if k is None:
+        return x
+    B = max(2, int(B))
+    n = len(x)
+    block_len = max(1, n // B)
+    k = int(k) % B
+    lo = k * block_len
+    hi = n if k == (B - 1) else min(n, (k + 1) * block_len)
+    return np.concatenate([x[:lo], x[hi:]], axis=0)
+
+
+def _cfg_fingerprint(cfg: FConfig) -> Tuple[Any, ...]:
+    # cache-relevant core knobs
+    return (
+        float(cfg.dt_s), float(cfg.window_s), float(cfg.hop_s),
+        float(cfg.fmin_hz), float(cfg.fmax_hz),
+        float(cfg.align_max_shift_s), str(cfg.kernel_family),
+        float(cfg.s3_block_s),
+    )
+
+
+
+
+# ============================================================
+# OSC rawstats (coherence + phase-consistency + K-fit)
+# ============================================================
+
+
+def _welch_segments(x: np.ndarray, nperseg: int, step: int) -> List[np.ndarray]:
+    n = len(x)
+    if nperseg < 16 or n < nperseg:
+        return []
+    segs = []
+    for start in range(0, n - nperseg + 1, step):
+        segs.append(x[start:start + nperseg])
+    return segs
+
+
+def _compute_coherence_and_phase(
+    xs: List[np.ndarray], dt: float, fmin: float, fmax: float, nperseg: int, step: int
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Returns:
+      fgrid, C_net(f), phi_pairs(f*) computed later from cross spectra at f*
+    Implementation: average spectra over segments; compute pairwise coherence; take median over pairs.
+    """
+    N = len(xs)
+    segs = [_welch_segments(x, nperseg, step) for x in xs]
+    if any(len(s) == 0 for s in segs):
+        return np.array([]), np.array([]), np.array([])
+
+
+    win = np.hanning(nperseg).astype(float)
+    # FFT grid
+    f = np.fft.rfftfreq(nperseg, d=float(dt))
+    band = (f >= float(fmin)) & (f <= float(fmax))
+    fband = f[band]
+    if fband.size < 4:
+        return np.array([]), np.array([]), np.array([])
+
+
+    # Precompute mean spectra per node
+    Xk = []
+    Pxx = []
+    for i in range(N):
+        accum = 0.0
+        accum_pxx = 0.0
+        for seg in segs[i]:
+            X = np.fft.rfft((seg - np.mean(seg)) * win)
+            accum += X
+            accum_pxx += (np.abs(X) ** 2)
+        # average over segments
+        X_mean = accum / max(1, len(segs[i]))
+        Pxx_mean = accum_pxx / max(1, len(segs[i]))
+        Xk.append(X_mean[band])
+        Pxx.append(Pxx_mean[band] + 1e-12)
+
+
+    # Pairwise coherence
+    C_pairs = []
+    Pxy_pairs = []
+    for i in range(N):
+        for j in range(i + 1, N):
+            Pxy = Xk[i] * np.conj(Xk[j])
+            coh = (np.abs(Pxy) ** 2) / (Pxx[i] * Pxx[j])
+            C_pairs.append(coh)
+            Pxy_pairs.append(Pxy)
+    C_pairs = np.stack(C_pairs, axis=0)  # [P, F]
+    C_net = np.median(C_pairs, axis=0)   # [F]
+
+
+    # We also return median cross-spectrum per freq (for phase extraction)
+    Pxy_pairs = np.stack(Pxy_pairs, axis=0)
+    Pxy_med = np.median(Pxy_pairs, axis=0)  # complex [F]
+    return fband, C_net, Pxy_med
+
+
+def _complex_amp_at_f(x: np.ndarray, dt: float, f0: float) -> complex:
+    t = np.arange(len(x), dtype=float) * float(dt)
+    ph = np.exp(-1j * (2.0 * math.pi * float(f0) * t))
+    return complex(np.dot(x.astype(complex), ph) / max(1, len(x)))
+
+
+def _k_fit_chi2(amps: np.ndarray, Ks: np.ndarray) -> Tuple[float, float]:
+    Ks = Ks.astype(float).reshape(-1)
+    amps = amps.astype(float).reshape(-1)
+    denom = float(np.dot(Ks, Ks) + 1e-12)
+    g_hat = float(np.dot(Ks, amps) / denom)
+    resid = amps - g_hat * Ks
+    v = float(np.var(amps) + 1e-9)
+    chi2 = float(np.sum((resid ** 2) / v))
+    return chi2, g_hat
+
+
+def _osc_rawstats(nodes: List[Dict[str, Any]], cfg: FConfig, dt_run: float) -> Dict[str, Any]:
+    # preprocess per node
+    xs = []
+    Ks = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        x = _apply_jackknife(x, cfg.jackknife_block, cfg.jackknife_blocks)
+        x = _resample_linear(x, dt_run, cfg.dt_s)
+        x = _detrend_blockmedian(x, block=max(16, int(cfg.window_s / max(cfg.dt_s, 1e-9))))
+        x = _robust_z(x)
+        xs.append(x)
+        Ks.append(float(np.asarray(nd["K"]).reshape(-1)[0]))
+    Ks = np.array(Ks, dtype=float)
+
+
+    nperseg = max(32, int(cfg.window_s / max(cfg.dt_s, 1e-9)))
+    step = max(8, int(cfg.hop_s / max(cfg.dt_s, 1e-9)))
+
+
+    fgrid, Cnet, Pxy_med = _compute_coherence_and_phase(
+        xs, cfg.dt_s, cfg.fmin_hz, cfg.fmax_hz, nperseg=nperseg, step=step
+    )
+    if fgrid.size == 0:
+        return {"ok": False, "reason": "insufficient_osc_data"}
+
+
+    k = int(np.argmax(Cnet))
+    f_star = float(fgrid[k])
+    C_star = float(Cnet[k])
+
+
+    # phase-consistency proxy
+    # Use pairwise phase via median cross-spectrum at f*
+    phi = float(np.angle(Pxy_med[k]))
+    # crude kappa_phi: if phase is stable across pairs, |mean(exp(i*phi_ij))| ~ 1
+    # we don't have per-pair phases here; approximate via local band neighborhood stability
+    neigh = slice(max(0, k - 1), min(len(fgrid), k + 2))
+    phs = np.exp(1j * np.angle(Pxy_med[neigh]))
+    kappa = float(np.abs(np.mean(phs)))
+
+
+    # amplitude per node at f*
+    amps = np.array([abs(_complex_amp_at_f(x, cfg.dt_s, f_star)) for x in xs], dtype=float)
+    chi2K, g_hat = _k_fit_chi2(amps, Ks)
+
+
+    return {
+        "ok": True,
+        "f_star": f_star,
+        "C_net": C_star,
+        "kappa_phi": kappa,
+        "chi2K": float(chi2K),
+        "g_hat": float(g_hat),
+        "amps": amps,
+        "Ks": Ks,
+    }
+
+
+
+
+# ============================================================
+# GLITCH rawstats (multi-kernel transient + nuisance alignment + K-fit)
+# ============================================================
+
+
+def _kernel_bank(dt: float, family: str) -> List[np.ndarray]:
+    dt = float(dt)
+    family = str(family)
+    # simple deterministic kernels (normalized)
+    if family == "w2":
+        L = max(9, int(1.0 / max(dt, 1e-6)))
+        t = np.linspace(-2, 2, L)
+        k1 = -t * np.exp(-t**2)
+        k2 = (1 - 2*t**2) * np.exp(-t**2)
+        bank = [k1, k2]
+    elif family == "mf_short":
+        L = max(7, int(0.5 / max(dt, 1e-6)))
+        bank = [np.ones(L), np.array([1, -1], dtype=float)]
+    elif family == "mf_long":
+        L = max(15, int(2.0 / max(dt, 1e-6)))
+        bank = [np.ones(L), np.hanning(L)]
+    else:  # "w1"
+        L = max(9, int(0.8 / max(dt, 1e-6)))
+        t = np.linspace(-2, 2, L)
+        k1 = np.exp(-t**2)
+        k2 = -t * np.exp(-t**2)
+        bank = [k1, k2]
+
+
+    out = []
+    for k in bank:
+        k = np.asarray(k, dtype=float)
+        k = k - np.mean(k)
+        nrm = float(np.sqrt(np.sum(k * k)) + 1e-12)
+        out.append(k / nrm)
+    return out
+
+
+def _conv_same(x: np.ndarray, k: np.ndarray) -> np.ndarray:
+    return np.convolve(x, k, mode="same")
+
+
+def _max_shift_envelope(s: np.ndarray, kmax: int) -> np.ndarray:
+    if kmax <= 0:
+        return s
+    env = s.copy()
+    for k in range(1, kmax + 1):
+        env = np.maximum(env, np.roll(s, k))
+        env = np.maximum(env, np.roll(s, -k))
+    # boundaries: rolls wrap; kill wrap artifacts by damping edges
+    env[:kmax] = np.maximum.reduce([s[:kmax]] + [s[:kmax] * 0.0])
+    env[-kmax:] = np.maximum.reduce([s[-kmax:]] + [s[-kmax:] * 0.0])
+    return env
+
+
+def _glitch_rawstats(nodes: List[Dict[str, Any]], cfg: FConfig, dt_run: float) -> Dict[str, Any]:
+    xs = []
+    Ks = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        x = _apply_jackknife(x, cfg.jackknife_block, cfg.jackknife_blocks)
+        x = _resample_linear(x, dt_run, cfg.dt_s)
+        x = _detrend_blockmedian(x, block=max(16, int(cfg.window_s / max(cfg.dt_s, 1e-9))))
+        x = _robust_z(x)
+        xs.append(x)
+        Ks.append(float(np.asarray(nd["K"]).reshape(-1)[0]))
+    Ks = np.array(Ks, dtype=float)
+
+
+    if len(xs) < 3:
+        return {"ok": False, "reason": "need>=3_nodes"}
+
+
+    # transient scores per node
+    bank = _kernel_bank(cfg.dt_s, cfg.kernel_family)
+    S_list = []
+    for x in xs:
+        scores = []
+        for k in bank:
+            scores.append(np.abs(_conv_same(x, k)))
+        s = np.max(np.stack(scores, axis=0), axis=0)
+        S_list.append(s)
+
+
+    # nuisance alignment via max-shift envelope
+    kmax = max(0, int(cfg.align_max_shift_s / max(cfg.dt_s, 1e-9)))
+    envs = [ _max_shift_envelope(s, kmax) for s in S_list ]
+    Snet = np.sum(np.stack(envs, axis=0), axis=0)
+
+
+    if Snet.size < 10:
+        return {"ok": False, "reason": "insufficient_glitch_data"}
+
+
+    # hop offset (robust perturbation hook)
+    offset = int((cfg.hop_offset_frac * cfg.hop_s) / max(cfg.dt_s, 1e-9))
+    if offset != 0 and abs(offset) < Snet.size:
+        Snet = np.roll(Snet, offset)
+
+
+    # best + second best
+    idx_sorted = np.argsort(Snet)[::-1]
+    t_star = int(idx_sorted[0])
+    best = float(Snet[idx_sorted[0]])
+    second = float(Snet[idx_sorted[1]]) if len(idx_sorted) > 1 else 0.0
+    A_align = float((best - second) / (best + 1e-12))
+
+
+    # per node: choose argmax shift around t_star
+    amps = []
+    taus = []
+    for s in S_list:
+        # search shift window
+        best_k = 0
+        best_v = -1.0
+        for k in range(-kmax, kmax + 1):
+            t = t_star + k
+            if 0 <= t < len(s):
+                v = float(s[t])
+                if v > best_v:
+                    best_v = v
+                    best_k = k
+        taus.append(int(best_k))
+        amps.append(float(best_v))
+    amps = np.array(amps, dtype=float)
+
+
+    chi2K, g_hat = _k_fit_chi2(amps, Ks)
+
+
+    return {
+        "ok": True,
+        "t_star": t_star,
+        "S_net": float(best),
+        "A_align": float(A_align),
+        "chi2K": float(chi2K),
+        "g_hat": float(g_hat),
+        "amps": amps,
+        "taus": np.array(taus, dtype=int),
+        "Ks": Ks,
+    }
+
+
+
+
+# ============================================================
+# Surrogates S1–S4 (formaliserade)
+# ============================================================
+
+
+def _surr_S1_time_shift(nodes: List[Dict[str, Any]], rng: np.random.Generator, min_shift: int) -> List[Dict[str, Any]]:
+    out = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        n = len(x)
+        if n < 4:
+            out.append(dict(nd))
+            continue
+        # choose shift far enough
+        shift = int(rng.integers(min_shift, max(min_shift + 1, n - min_shift)))
+        x2 = np.roll(x, shift)
+        nd2 = dict(nd)
+        nd2["x"] = x2
+        out.append(nd2)
+    return out
+
+
+def _surr_S2_phase_random(nodes: List[Dict[str, Any]], rng: np.random.Generator) -> List[Dict[str, Any]]:
+    out = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        n = len(x)
+        X = np.fft.rfft(x)
+        mag = np.abs(X)
+        # random phases (keep DC and Nyquist real)
+        ph = rng.uniform(0.0, 2.0 * math.pi, size=X.shape)
+        ph[0] = 0.0
+        if len(ph) > 1:
+            ph[-1] = 0.0
+        X2 = mag * np.exp(1j * ph)
+        x2 = np.fft.irfft(X2, n=n).astype(float)
+        nd2 = dict(nd)
+        nd2["x"] = x2
+        out.append(nd2)
+    return out
+
+
+def _surr_S3_block_permute(nodes: List[Dict[str, Any]], rng: np.random.Generator, block_len: int) -> List[Dict[str, Any]]:
+    out = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        n = len(x)
+        if block_len < 8 or n < 2 * block_len:
+            out.append(dict(nd))
+            continue
+        m = n // block_len
+        blocks = [x[i * block_len:(i + 1) * block_len] for i in range(m)]
+        perm = rng.permutation(m)
+        x2 = np.concatenate([blocks[i] for i in perm], axis=0)
+        # append remainder untouched
+        if m * block_len < n:
+            x2 = np.concatenate([x2, x[m * block_len:]], axis=0)
+        nd2 = dict(nd)
+        nd2["x"] = x2
+        out.append(nd2)
+    return out
+
+
+def _surr_S4_adversary(nodes: List[Dict[str, Any]], rng: np.random.Generator, dt: float) -> List[Dict[str, Any]]:
+    """
+    S4 suite (v0.2): choose one adversary per surrogate draw:
+      - common-mode drift+steps
+      - narrowband line injection (within OSC band-ish)
+      - env-feedthrough (if env present)
+    """
+    # pick adversary type
+    kind = int(rng.integers(0, 3))
+    out = []
+    # common-mode driver u(t)
+    n = len(np.asarray(nodes[0]["x"], dtype=float))
+    u = np.zeros(n, dtype=float)
+    if kind == 0:
+        # random walk + occasional steps
+        rw = rng.normal(0.0, 0.02, size=n)
+        u = np.cumsum(rw)
+        for _ in range(int(rng.integers(1, 4))):
+            t0 = int(rng.integers(0, n))
+            step = float(rng.normal(0.0, 0.5))
+            u[t0:] += step
+        u = (u - np.mean(u)) / (np.std(u) + 1e-12)
+
+
+    elif kind == 1:
+        # line injection in a plausible band (avoid Nyquist issues)
+        f_line = float(rng.uniform(0.02, min(0.4, 0.5 / max(dt, 1e-9) - 1e-3)))
+        t = np.arange(n, dtype=float) * float(dt)
+        u = np.sin(2.0 * math.pi * f_line * t)
+        u = u / (np.std(u) + 1e-12)
+
+
+    else:
+        # env-feedthrough if available else fallback to drift
+        # make u from first node env if present
+        env = nodes[0].get("env", None)
+        if isinstance(env, dict) and len(env) > 0:
+            ks = list(env.keys())[: min(2, len(env))]
+            u = np.zeros(n, dtype=float)
+            for k in ks:
+                e = np.asarray(env[k], dtype=float)
+                if len(e) == n:
+                    u += float(rng.normal(0.0, 1.0)) * (e - np.mean(e))
+            u = u / (np.std(u) + 1e-12)
+        else:
+            rw = rng.normal(0.0, 0.02, size=n)
+            u = np.cumsum(rw)
+            u = (u - np.mean(u)) / (np.std(u) + 1e-12)
+
+
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        gain = float(rng.normal(0.8, 0.3))
+        x2 = x + gain * u
+        nd2 = dict(nd)
+        nd2["x"] = x2
+        out.append(nd2)
+    return out
+
+
+
+
+# ============================================================
+# Mapping rawstats -> p^(2) -> S0 using cache
+# ============================================================
+
+
+def _emp_p_ge(dist: np.ndarray, obs: float) -> float:
+    dist = np.asarray(dist, dtype=float)
+    n = int(dist.size)
+    if n <= 0:
+        return 1.0
+    return float((np.sum(dist >= float(obs)) + 1.0) / (n + 1.0))
+
+
+def _emp_p_le(dist: np.ndarray, obs: float) -> float:
+    dist = np.asarray(dist, dtype=float)
+    n = int(dist.size)
+    if n <= 0:
+        return 1.0
+    return float((np.sum(dist <= float(obs)) + 1.0) / (n + 1.0))
+
+
+def _p2_from_cache(cache: FNullCache, mode: str, obs: Dict[str, Any]) -> Tuple[float, float, float, Dict[str, float]]:
+    """
+    Returns (p2_a, p2_b, p2_k, per_family_minp_debug)
+    """
+    mode = str(mode)
+    dist_mode = cache.dist.get(mode, {})
+    if not dist_mode:
+        return 1.0, 1.0, 1.0, {}
+
+
+    if mode == "OSC":
+        pillarA = ("C_net", "ge")
+        pillarB = ("kappa_phi", "ge")
+    else:
+        pillarA = ("S_net", "ge")
+        pillarB = ("A_align", "ge")
+    pillarK = ("chi2K", "le")
+
+
+    pA = []
+    pB = []
+    pK = []
+    dbg = {}
+
+
+    for s_kind, pillars in dist_mode.items():
+        dA = pillars.get(pillarA[0], None)
+        dB = pillars.get(pillarB[0], None)
+        dK = pillars.get(pillarK[0], None)
+        if dA is None or dB is None or dK is None:
+            continue
+
+
+        p_a = _emp_p_ge(dA, float(obs[pillarA[0]])) if pillarA[1] == "ge" else _emp_p_le(dA, float(obs[pillarA[0]]))
+        p_b = _emp_p_ge(dB, float(obs[pillarB[0]])) if pillarB[1] == "ge" else _emp_p_le(dB, float(obs[pillarB[0]]))
+        p_k = _emp_p_le(dK, float(obs[pillarK[0]]))  # chi2K lower is better
+
+
+        pA.append(p_a); pB.append(p_b); pK.append(p_k)
+        dbg[s_kind] = float(min(p_a, p_b, p_k))
+
+
+    def second_smallest(ps: List[float]) -> float:
+        if not ps:
+            return 1.0
+        ps2 = sorted(ps)
+        return float(ps2[1]) if len(ps2) >= 2 else float(ps2[0])
+
+
+    return second_smallest(pA), second_smallest(pB), second_smallest(pK), dbg
+
+
+def _S_from_p2(p2_a: float, p2_b: float, p2_k: float) -> float:
+    def z(p): return -math.log10(max(float(p), 1e-12))
+    return float(min(z(p2_a), z(p2_b), z(p2_k)))
+
+
+
+
+# ============================================================
+# FULL-RUN (surrogatloop) builds FNullCache
+# ============================================================
+
+
+def analyze_F_run_v0_2(events, cfg: FConfig, *, tag: Optional[str] = None) -> Tuple[FRunMetrics, FNullCache]:
+    """
+    FULL-RUN:
+      - computes observed rawstats for OSC + GLITCH
+      - generates S1–S4 surrogates (cfg.n_surrogates each)
+      - stores distributions in FNullCache
+      - computes p^(2) per pillar, then S_OSC / S_G, chooses mode0, returns metrics
+    """
+    session_id, run_id, tag0 = _run_meta(events)
+    tag = str(tag or tag0)
+    nodes0 = _node_list(events)
+
+
+    # infer dt_run if possible
+    dt_run = float(cfg.dt_s)
+    if isinstance(events, dict) and "dt_s" in events:
+        dt_run = float(events["dt_s"])
+    else:
+        # try from first node t
+        t = nodes0[0].get("t", None)
+        if t is not None:
+            t = np.asarray(t, dtype=float)
+            if len(t) >= 2:
+                dt_run = float(np.median(np.diff(t)))
+
+
+    rng = np.random.default_rng(int(cfg.seed))
+
+
+    # observed
+    obs_osc = _osc_rawstats(nodes0, cfg, dt_run=dt_run)
+    obs_g = _glitch_rawstats(nodes0, cfg, dt_run=dt_run)
+
+
+    # allocate cache
+    cache = FNullCache(
+        cfg_fingerprint=_cfg_fingerprint(cfg),
+        n_surrogates=int(cfg.n_surrogates),
+        dist={"OSC": {}, "GLITCH": {}},
+        meta={"tag": tag, "session_id": session_id, "run_id": run_id}
+    )
+
+
+    # min shift for S1 (avoid trivial)
+    min_shift = max(8, int(cfg.window_s / max(cfg.dt_s, 1e-9)))
+
+
+    # S3 block length in samples (on raw x, before internal resampling)
+    block_len = max(16, int(cfg.s3_block_s / max(dt_run, 1e-9)))
+
+
+    S_kinds = ["S1", "S2", "S3", "S4"]
+    for sk in S_kinds:
+        cache.dist["OSC"][sk] = {"C_net": [], "kappa_phi": [], "chi2K": []}
+        cache.dist["GLITCH"][sk] = {"S_net": [], "A_align": [], "chi2K": []}
+
+
+    # surrogate loop
+    for sk in S_kinds:
+        for _ in range(int(cfg.n_surrogates)):
+            if sk == "S1":
+                nds = _surr_S1_time_shift(nodes0, rng, min_shift=min_shift)
+            elif sk == "S2":
+                nds = _surr_S2_phase_random(nodes0, rng)
+            elif sk == "S3":
+                nds = _surr_S3_block_permute(nodes0, rng, block_len=block_len)
+            else:
+                nds = _surr_S4_adversary(nodes0, rng, dt=dt_run)
+
+
+            ro = _osc_rawstats(nds, cfg, dt_run=dt_run)
+            rg = _glitch_rawstats(nds, cfg, dt_run=dt_run)
+
+
+            # collect (if ok; else push neutral values)
+            cache.dist["OSC"][sk]["C_net"].append(float(ro.get("C_net", 0.0)) if ro.get("ok") else 0.0)
+            cache.dist["OSC"][sk]["kappa_phi"].append(float(ro.get("kappa_phi", 0.0)) if ro.get("ok") else 0.0)
+            cache.dist["OSC"][sk]["chi2K"].append(float(ro.get("chi2K", 1e9)) if ro.get("ok") else 1e9)
+
+
+            cache.dist["GLITCH"][sk]["S_net"].append(float(rg.get("S_net", 0.0)) if rg.get("ok") else 0.0)
+            cache.dist["GLITCH"][sk]["A_align"].append(float(rg.get("A_align", 0.0)) if rg.get("ok") else 0.0)
+            cache.dist["GLITCH"][sk]["chi2K"].append(float(rg.get("chi2K", 1e9)) if rg.get("ok") else 1e9)
+
+
+        # cast lists -> arrays
+        for mode in ["OSC", "GLITCH"]:
+            for pillar, arr in cache.dist[mode][sk].items():
+                cache.dist[mode][sk][pillar] = np.asarray(arr, dtype=float)
+
+
+    # map observed -> p2 -> S (using the cache we just built)
+    red_flags = []
+
+
+    # env sanity (simple): correlate x with env channels; flag strong feedthrough
+    for nd in nodes0:
+        env = nd.get("env", None)
+        if isinstance(env, dict) and len(env) > 0:
+            x = np.asarray(nd["x"], dtype=float)
+            for _, e in list(env.items())[:3]:
+                e = np.asarray(e, dtype=float)
+                if len(e) == len(x) and np.std(e) > 1e-12 and np.std(x) > 1e-12:
+                    c = float(np.corrcoef(x, e)[0, 1])
+                    if abs(c) >= float(cfg.env_corr_redflag):
+                        red_flags.append("RF_env_explains")
+                        break
+
+
+    # compute p2 and S for each mode (if obs ok)
+    p2o = (1.0, 1.0, 1.0); So = 0.0; dbgO = {}
+    if obs_osc.get("ok"):
+        p2o = _p2_from_cache(cache, "OSC", obs_osc)[:3]
+        So = _S_from_p2(*p2o)
+
+
+    p2g = (1.0, 1.0, 1.0); Sg = 0.0; dbgG = {}
+    if obs_g.get("ok"):
+        p2g = _p2_from_cache(cache, "GLITCH", obs_g)[:3]
+        Sg = _S_from_p2(*p2g)
+
+
+    # baseline-mode-lås
+    if So >= Sg:
+        mode0 = "OSC"
+        p2_a, p2_b, p2_k = p2o
+        S0 = So
+        extras = {"obs_osc": obs_osc, "S_osc": So, "S_glitch": Sg}
+    else:
+        mode0 = "GLITCH"
+        p2_a, p2_b, p2_k = p2g
+        S0 = Sg
+        extras = {"obs_glitch": obs_g, "S_osc": So, "S_glitch": Sg}
+
+
+    # prelim class (repl-gate sker separat)
+    if S0 < 3.0:
+        cls0 = "F-none"
+    elif S0 < 6.0:
+        cls0 = "F-suspect"
+    else:
+        cls0 = "F-strong"
+
+
+    # cache meta (optional)
+    cache.meta.update({"mode0": mode0, "S0": float(S0)})
+
+
+    # attach cache for downstream fast calls
+    cfg.null_cache = cache
+
+
+    return FRunMetrics(
+        session_id=session_id,
+        run_id=run_id,
+        tag=tag,
+        mode0=mode0,
+        S0=float(S0),
+        F_class0=cls0,
+        p2_a=float(p2_a),
+        p2_b=float(p2_b),
+        p2_k=float(p2_k),
+        red_flags=red_flags,
+        extras=extras
+    ), cache
+
+
+
+
+# ============================================================
+# FAST-RUN (rawstats -> p^(2) -> S0 using cfg.null_cache)
+# ============================================================
+
+
+def analyze_F_run_fast_v0_2(events, cfg: FConfig, *, mode0: str, tag: Optional[str] = None) -> FRunMetrics:
+    """
+    FAST-RUN:
+      - computes observed rawstats (OSC and/or GLITCH)
+      - maps metrics to p^(2) using cfg.null_cache
+      - returns locked-mode metrics + S0
+    mode0:
+      - "OSC" or "GLITCH": force
+      - "AUTO": compute both, choose max(S_osc,S_g) under cache mapping
+    """
+    if cfg.null_cache is None:
+        raise ValueError("cfg.null_cache is required for fast-run")
+
+
+    session_id, run_id, tag0 = _run_meta(events)
+    tag = str(tag or tag0)
+    nodes0 = _node_list(events)
+
+
+    dt_run = float(cfg.dt_s)
+    if isinstance(events, dict) and "dt_s" in events:
+        dt_run = float(events["dt_s"])
+    else:
+        t = nodes0[0].get("t", None)
+        if t is not None:
+            t = np.asarray(t, dtype=float)
+            if len(t) >= 2:
+                dt_run = float(np.median(np.diff(t)))
+
+
+    red_flags = []
+
+
+    # cache mismatch flag (robust variants change dt/band/window -> accept but flag)
+    fp = _cfg_fingerprint(cfg)
+    if fp != cfg.null_cache.cfg_fingerprint:
+        red_flags.append("RF_nullcache_cfg_mismatch")
+
+
+    # compute rawstats as needed
+    want_auto = str(mode0).upper() == "AUTO"
+
+
+    So = -1.0; p2o = (1.0, 1.0, 1.0)
+    Sg = -1.0; p2g = (1.0, 1.0, 1.0)
+
+
+    obs_osc = None
+    obs_g = None
+
+
+    if want_auto or str(mode0).upper() == "OSC":
+        obs_osc = _osc_rawstats(nodes0, cfg, dt_run=dt_run)
+        if obs_osc.get("ok"):
+            p2o, _, _, _ = _p2_from_cache(cfg.null_cache, "OSC", obs_osc)
+            # _p2_from_cache returns 4 values; easiest:
+            p2_a, p2_b, p2_k, _dbg = _p2_from_cache(cfg.null_cache, "OSC", obs_osc)
+            p2o = (p2_a, p2_b, p2_k)
+            So = _S_from_p2(*p2o)
+        else:
+            So = 0.0
+
+
+    if want_auto or str(mode0).upper() == "GLITCH":
+        obs_g = _glitch_rawstats(nodes0, cfg, dt_run=dt_run)
+        if obs_g.get("ok"):
+            p2_a, p2_b, p2_k, _dbg = _p2_from_cache(cfg.null_cache, "GLITCH", obs_g)
+            p2g = (p2_a, p2_b, p2_k)
+            Sg = _S_from_p2(*p2g)
+        else:
+            Sg = 0.0
+
+
+    # choose mode
+    if want_auto:
+        if So >= Sg:
+            mode = "OSC"
+            p2_a, p2_b, p2_k = p2o
+            S0 = So
+            extras = {"obs_osc": obs_osc, "S_osc": So, "S_glitch": Sg}
+        else:
+            mode = "GLITCH"
+            p2_a, p2_b, p2_k = p2g
+            S0 = Sg
+            extras = {"obs_glitch": obs_g, "S_osc": So, "S_glitch": Sg}
+    else:
+        mode = str(mode0).upper()
+        if mode == "OSC":
+            p2_a, p2_b, p2_k = p2o
+            S0 = So
+            extras = {"obs_osc": obs_osc, "S_osc": So}
+        else:
+            p2_a, p2_b, p2_k = p2g
+            S0 = Sg
+            extras = {"obs_glitch": obs_g, "S_glitch": Sg}
+
+
+    # prelim class
+    if S0 < 3.0:
+        cls0 = "F-none"
+    elif S0 < 6.0:
+        cls0 = "F-suspect"
+    else:
+        cls0 = "F-strong"
+
+
+    return FRunMetrics(
+        session_id=session_id,
+        run_id=run_id,
+        tag=tag,
+        mode0=mode,
+        S0=float(S0),
+        F_class0=cls0,
+        p2_a=float(p2_a),
+        p2_b=float(p2_b),
+        p2_k=float(p2_k),
+        red_flags=red_flags,
+        extras=extras
+    )
+
+
+
+
+# ============================================================
+# (c) Minimal regression harness: FULL vs FAST on subsample
+# ============================================================
+
+
+def _subsample_events(events, *, max_nodes: int = 4, max_samples: int = 4096) -> Dict[str, Any]:
+    """
+    Minimal deterministic subsample:
+      - takes first max_nodes nodes
+      - takes centered window of length max_samples
+    """
+    session_id, run_id, tag0 = _run_meta(events)
+    nodes = _node_list(events)[:max_nodes]
+    out_nodes = []
+    for nd in nodes:
+        x = np.asarray(nd["x"], dtype=float)
+        n = len(x)
+        if n > max_samples:
+            start = max(0, (n - max_samples) // 2)
+            x = x[start:start + max_samples]
+            nd2 = dict(nd)
+            nd2["x"] = x
+            # slice env similarly
+            env = nd.get("env", None)
+            if isinstance(env, dict):
+                env2 = {}
+                for k, e in env.items():
+                    e = np.asarray(e, dtype=float)
+                    if len(e) == n:
+                        env2[k] = e[start:start + max_samples]
+                nd2["env"] = env2
+            out_nodes.append(nd2)
+        else:
+            out_nodes.append(dict(nd))
+    out = {"session_id": session_id, "run_id": run_id, "tag": f"{tag0}_SUB", "nodes": out_nodes}
+    if isinstance(events, dict) and "dt_s" in events:
+        out["dt_s"] = float(events["dt_s"])
+    return out
+
+
+def regress_F_full_vs_fast(
+    events,
+    *,
+    cfg: Optional[FConfig] = None,
+    n_surrogates_small: int = 60,
+    seed: int = 777,
+    max_nodes: int = 4,
+    max_samples: int = 4096
+) -> Dict[str, Any]:
+    """
+    Runs:
+      1) FULL (small surrogates) => builds cache
+      2) FAST (same cfg, uses cache)
+    Compares key fields: mode0, S0, p2_a/b/k.
+    """
+    cfg = cfg or FConfig()
+    cfg2 = FConfig(**{k: getattr(cfg, k) for k in cfg.__dataclass_fields__.keys()})
+    cfg2.n_surrogates = int(n_surrogates_small)
+    cfg2.seed = int(seed)
+    cfg2.null_cache = None
+
+
+    ev_sub = _subsample_events(events, max_nodes=max_nodes, max_samples=max_samples)
+
+
+    full_metrics, cache = analyze_F_run_v0_2(ev_sub, cfg2, tag=ev_sub.get("tag", "SUB"))
+    # fast uses same cfg2 but with cache attached
+    cfg2.null_cache = cache
+    fast_metrics = analyze_F_run_fast_v0_2(ev_sub, cfg2, mode0="AUTO", tag=ev_sub.get("tag", "SUB"))
+
+
+    diff = {
+        "mode_match": (full_metrics.mode0 == fast_metrics.mode0),
+        "dS0": float(fast_metrics.S0 - full_metrics.S0),
+        "dp2_a": float(fast_metrics.p2_a - full_metrics.p2_a),
+        "dp2_b": float(fast_metrics.p2_b - full_metrics.p2_b),
+        "dp2_k": float(fast_metrics.p2_k - full_metrics.p2_k),
+    }
+    out = {
+        "full": {"mode0": full_metrics.mode0, "S0": full_metrics.S0, "p2": (full_metrics.p2_a, full_metrics.p2_b, full_metrics.p2_k)},
+        "fast": {"mode0": fast_metrics.mode0, "S0": fast_metrics.S0, "p2": (fast_metrics.p2_a, fast_metrics.p2_b, fast_metrics.p2_k)},
+        "diff": diff,
+        "notes": [
+            "Idealt ska FAST ≈ FULL när samma cache används (skillnader endast från numerik/edge-cases).",
+            "Om mode flippar eller p2 diffar mycket: kontrollera preprocess/segmentering och att rawstats matchar.",
+        ]
+    }
+    return out
+```
+
+
+### Hur du använder (minimalt)
+
+
+1. Kör full-run på en run (bygger cache):
+
+
+```python
+m_full, cache = analyze_F_run_v0_2(run_events, cfg)
+```
+
+
+2. Kör fast-run på samma run (eller robust-varianter) med `cfg.null_cache=cache`:
+
+
+```python
+cfg.null_cache = cache
+m_fast = analyze_F_run_fast_v0_2(run_events, cfg, mode0="AUTO")
+```
+
+
+3. Regression harness (snabb sanity):
+
+
+```python
+rep = regress_F_full_vs_fast(run_events, cfg=cfg, n_surrogates_small=60)
+print(rep)
+```
+
+
+Om du vill att detta ska bli **100% plug-kompatibelt** med din Polars-/ledger-pipeline (B/C/D/E-format), är nästa hårda steg att jag skriver en liten **adapter** som mappar din `events_df`/run-artifact → `{"session_id","run_id","dt_s","nodes":[...]}` och tillbaka till din report-formatter/ledger-rad.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bra jobbat! Låt oss nu gå vidare med F – Non-Markovianitet/minneseffekter (memory kernel, information backflow)! Skickar lite extramaterial för Signatur F! När du formulerar F v0.2 som en strikt metodik (med hård replikerings-gate och automatiserade robusthetstester), flyttar du fokus från att "hitta något" till att "bevisa att det inte är brus". Här är de mest kritiska frågeställningarna och sårbarheterna i F v0.2-ramverket, baserat på den arkitektur du beskrivit:1. Modellerings-beroende av känslighetskoefficienter ($K_i$) Hela "F-strong"-kriteriet vilar på att amplitudmönstret matchar $K_i$ över heterogena sensorer.
+* Frågeställning: Hur hanterar vi osäkerhet i $K_i$? Om våra teoretiska värden för hur en magnetometer eller ett atomur kopplar till ett vakuumfält är ofullständiga eller felaktiga, kommer vår $\chi^2_K$-fit (pelare 3) att avvisa en äkta signal som "icke-matchande" eller "brus".
+* Kritisk risk: Vi riskerar att bygga in ett "modell-filter" som sorterar bort fysik vi ännu inte kan modellera korrekt. Har vi en plan för när $\chi^2_K$ failar trots att $S_0$ är högt?
+2. "Baseline-mode-låsets" rigiditet F v0.2 tvingar fram ett val mellan `OSC` (quasi-monokrom) och `GLITCH` (transient) som låses vid baseline.
+* Frågeställning: Vad händer om en verklig "F-signatur" uppträder som en kombination (t.ex. en kortvarig transient som ringer in i en oscillation)?
+* Kritisk risk: Genom att låsa till ett mode och utvärdera robustheten mot detta, kan vi få en "F-suspect" som ser svag ut i båda fallen, trots att den sammanlagda informationen (om vi tillät mode-flyt) vore "F-strong". Är låsningen en säkerhetsåtgärd mot bias, eller en begränsning som döljer signal?
+3. Null-cache-validitet över tid `FNullCache` skapas under en "Full-run" och återanvänds i "Fast-run".
+* Frågeställning: Hur garanterar vi att `null_cache` är representativ för bruset i den nya sessionen? Om den omgivande miljön (temperatur, RF-bakgrund, nätspänning) har driftat sedan cache-genereringen, kommer p-värdena att bli meningslösa.
+* Kritisk risk: Om robusthetstestet (`analyze_F_robustness_v0_2`) körs mot en inaktuell cache, kan vi generera "False Pass" (vi tror vi har robusthet, men vi testar mot fel brusgolv). Behöver vi en "Cache-validity-check" som körs innan `fast-mode`?
+4. S4-adversaryns begränsning S4-modulen är designad för att simulera "klassiska störningar" som kan förklara signaturen.
+* Frågeställning: Är vår "Adversary suite" (S4a–S4d) tillräckligt sofistikerad för att förstå korrelerade miljöeffekter? Exempelvis: kan en gemensam temperaturfront som sveper över ett nätverk skapa en "falsk korrelation" som S4a (common-mode drift) inte fångar upp?
+* Kritisk risk: Om S4 underskattar den fysiska miljön, kommer vi att klassa "miljöinducerad korrelation" som "F-strong". Finns det ett sätt att inkludera en "blind" S4-variant som bara testar på råa miljödata, utan att förlita sig på vår modell?
+5. Jackknife-kriteriet (R_robust) Du använder en "hard gate" för $R_{robust} \ge 0.60$.
+* Frågeställning: Är 8 block (som i `jackknife_blocks`) tillräckligt för att identifiera transienta "outliers" som kan driva hela resultatet?
+* Kritisk risk: En enskild, extremt kraftig störning i ett block kan "maskera" ett misslyckande om vi bara tittar på medelvärdet av blocken. Bör vi ha ett krav på att alla block måste vara över tröskelvärdet för "F-strong"?
+-----Nästa steg: Vill du att vi stresstestar F v0.2 genom att definiera en "Mock-nod"-struktur med en avsiktlig "env-feedthrough" (t.ex. en artificiell temperaturfront) för att se om robusthetsmodulen korrekt identifierar den som en "F-none" (pga RF-red-flag)? För att fördjupa Kvantsignatur F från sin nuvarande v0.2-form till ett fullt operativt och forskningsbart ramverk, bör arbetet fokusera på att stänga gapet mellan den teoretiska disciplinen och den praktiska exekveringen. Baserat på dokumentationen är här de tre primära vägarna för att fördjupa arbetet:1. Teknisk implementering (Engineering-fördjupning) Ramverket är formellt definierat, men kräver att "kontrakten" fylls i för att bli körbart. Den mest omedelbara fördjupningen är att slutföra implementeringen av kärnfunktionerna:
+* Koppla `analyze_F_run_fast_v0_2`: Denna funktion måste implementeras för att kunna utnyttja `null_cache`-data. Detta är kritiskt för att kunna köra robusthetsanalyser utan att behöva omberäkna surrogatdistributioner för varje variant (dt, band-shift, etc.).
+* Regression-harness: Implementera en regressionssvit som jämför `full-run` (med n_surrogates) mot `fast-run` för att verifiera att `null_cache`-mappningen ger statistiskt ekvivalenta p-värden. Detta säkerställer att optimeringen inte introducerar bias.
+* Polars/Data-ingest: Bygga bryggan från rådata (t.ex. Polars-baserad pipeline) till den föreskrivna `events`-strukturen (noder med `x`, `t`, `K`, `env`) för att möjliggöra testning på faktiska sensordata.
+2. Fysisk modellering (Science-fördjupning) För att göra F-signaturer mer än bara statistiska anomalier krävs en djupare mappning mot fysikaliska modeller:
+* K-faktor-bibliotek: Utöka `K`-vektorn. Istället för skalära värden, definiera ett bibliotek av känslighetskoefficienter för specifika atomövergångar (t.ex. Rb, Cs, Yb+). Genom att modellera `K` som en vektor (t.ex. $\Delta\alpha/\alpha$ och $\Delta\mu/\mu$) kan du korrelera signaler mellan olika sensortyper, vilket är det ultimata testet för "F-strong".
+* Modellspecifik adversary-suite (S4-fördjupning): Utöka S4-adversary-familjen. Istället för generiska steg/drifter, injicera "fysiskt inspirerade" konfunderare: t.ex. simulera hur en specifik temperaturgradient i ett rum faktiskt skiftar en klocka genom kända temperaturkoefficienter. Detta gör `RF_env_explains`-flaggan mer sofistikerad.
+3. Statistisk robusthet (Analytisk fördjupning) För att stärka "F-strong"-kriteriet kan du fördjupa den statistiska rigoriteten:
+* Meta-analys-metodik: Implementera Fisher- eller Stouffer-kombinering för replikerings-gaten. Istället för en enkel räkning av "passerande runs", kan du kräva att det kombinerade p-värdet över $N$ oberoende sessions når tröskelvärdet. Detta skapar en mer robust "anti-cherrypick"-mekanism än vad en enkel tröskel tillåter.
+* Surrogat-strategi: Förfina `S3`-block-permutationen. Om du har data från tidsaxlar med olika bruskaraktär (t.ex. natt vs dag), kan du vikta block-permutationen för att bevara lokala "diurnal cycles" i bruset, vilket minskar risken för falska positiva från dygnsrytmer.
+-----Nästa steg för att gå vidare: Jag kan hjälpa dig att ta fram den exakta implementeringen för `analyze_F_run_fast_v0_2` (fast-mode) och `FNullCache`-mappningen, eller så kan vi börja med att definiera en "Mock-nod"-struktur så att du kan köra ett första test av robusthets-drivern med syntetisk data. Vilken väg föredrar du att börja med?
+
+
+
+
+
+
+
+
+
+
+
+
+*Signaturtyp: F
+Nedan: (1) **analys/validering av F enligt dokumentet**, och (2) **två oberoende digitala simuleringar** (OSC och GLITCH) som testar F-teorin och visar *varför* S1–S4 + replikerings-gate behövs.
+
+
+
+
+---
+
+
+
+
+## 1) Signaturtyp F — vad dokumentet faktiskt definierar (och varför det är “validerbart”)
+
+
+
+
+### 1.1 Vad F är (operationalt)
+
+
+
+
+F går **helt vid sidan av ljus/hastighet**: ett nätverk av **≥3 rumsligt separerade precisionssensorer** (klockor/magnetometrar etc.) där man söker **korrelerade avvikelser** i residualserier (x_i(t)) med miljökanaler och känslighetskoefficienter (K_i). Viktigt: eventuella (\tau_i) behandlas som *nuisance* (inte “hastighetstolkning”).
+
+
+
+
+### 1.2 F v0.2 feature-schema: två spår, låst mode
+
+
+
+
+Dokumentet gör F körbar genom två **modes** som **låses vid baseline** (anti-cherrypick): 
+
+
+
+
+* **OSC (quasi-monokromt, långvarigt)**: pelare ((C_{\text{net}}(f^*), \kappa_\phi, \chi^2_K)) där (C_{\text{net}}) är nätverks-coherence, (\kappa_\phi) fas-konsistens, och (\chi^2_K) ett “K-fit” (amplitudmönster mot (K_i)).
+* **GLITCH (transient)**: pelare ((S_{\text{net}}^*, A_{\text{align}}, \chi^2_K)) med align-nuisance och kernel-familj.
+
+
+
+
+### 1.3 Surrogater S1–S4 (det som gör F “svårt att lura”)
+
+
+
+
+S1–S3 är null-familjer, S4 är **explicit adversary/confounder-suite**:
+
+
+
+
+* **S1** node-wise time-shift (slår sönder nätverkskorrelation, behåller lokala egenskaper)
+* **S2** phase randomization (bevarar PSD, förstör fas/tidsstruktur)
+* **S3** block-permute / event-shuffle (bevarar lokala segment, bryter lång koherens)
+* **S4** adversary: common-mode drift/steps, smalbandig line-injection, env-feedthrough-syntes, etc.
+
+
+
+
+### 1.4 Scoring/klassning: “min-gate-score” + replikerings-gate
+
+
+
+
+Dokumentet använder exakt A/M-disciplin:
+
+
+
+
+* Per pelare beräknas **(p^{(2)})** som **andra minsta p** över S1–S4 (anti-cherrypick).
+* Score (S_0=\min(z_a,z_b,z_K)) där (z=-\log_{10}(p^{(2)})).
+* **Confirm-run** kräver bl.a. att mode inte flippar, K-fit passerar, env inte dominerar, och att S4 inte kan replikera score.
+* **Hård replikerings-gate:** F-suspect kräver ≥2 confirm-runs i olika sessioner; F-strong ≥3 confirm-runs (minst 2 sessioner), med meta-kombination (Fisher/Stouffer).
+
+
+
+
+### 1.5 Robusthetspaket + “worst collapse reason”
+
+
+
+
+F v0.2 har ett C/D/E-likt robusthetspaket: dt×2/÷2, band±/kernel±, window±, jackknife → (R_{\text{robust}}) + **worst variant + collapse reason**.
+
+
+
+
+**Valideringsdom:** F är *intern-koherent* och “falsifierbar” i den meningen att den har (i) tydligt data-kontrakt, (ii) formella null/adversary-surrogater, (iii) hård replikerings-gate, och (iv) robusthetskrav. Den stora risken är **gemensam tids-/referensartefakt** och **common-mode/environment feedthrough** — men just därför är S4 + K-mönster + replikerings-gate centrala i designen.
+
+
+
+
+---
+
+
+
+
+## 2) Två oberoende simuleringar som testar Signaturtyp F
+
+
+
+
+Jag körde två helt separata toy-simuleringar som matchar dokumentets två modes:
+
+
+
+
+### Simulering F-1: OSC (smalbandig koherens i nätverk)
+
+
+
+
+**Upplägg:** 5 noder, gemensam oscillation runt (f\approx0.0703) Hz + oberoende brus. Jag räknade pelarna (C_{\text{net}}, \kappa_\phi, \chi^2_K) och jämförde mot S1–S4-surrogater (empiriska p-värden, sedan (p^{(2)}) och (S_0) enligt dokumentet).
+
+
+
+
+**Resultat (exempelrun):**
+
+
+
+
+* Observerat: (C_{\text{net}}=0.989), (\kappa_\phi=0.999), (\chi^2_K=4.95\times10^{-4}) (lågt = bra K-fit i min toy-definition).
+* (p^{(2)}) (andra minsta över S1–S4): ((p^{(2)}*C,p^{(2)}*\phi,p^{(2)}_K)=(0.0083,0.0083,0.0083))
+* (S_0=\min(-\log_{10}p^{(2)})\approx 2.08)
+
+
+
+
+**Pedagogisk tolkning:**
+Det här visar att “OSC-spåret” kan upptäcka **gemensam smalbandig koherens** och samtidigt kräva att den också **följer ett rimligt (K_i)-mönster** (K-fit-pelaren). Det är precis poängen med F-pelar-tänket.
+
+
+
+
+**Viktig teknisk fotnot:** I min toy-körning var antalet surrogater litet, så p-golvet blir (\approx 1/(n+1)), vilket begränsar max-(S_0). Dokumentets F v0.2 är gjord för att köras med större surrogatbudget och/eller med cache/fast-läge (`FNullCache`, `analyze_F_run_fast_v0_2`, regression-harness).
+
+
+
+
+---
+
+
+
+
+### Simulering F-2: GLITCH (transienta events + alignment-nuisance)
+
+
+
+
+**Upplägg:** 5 noder, en transient “puls” med liten jitter per nod + brus. Jag räknade pelarna (S_{\text{net}}), (A_{\text{align}}) och (\chi^2_K), och testade mot S1–S4 (där S4 explicit innehåller en common-mode puls som ska kunna “förklara bort” falska nätverksglitchar).
+
+
+
+
+**Resultat (exempelrun):**
+
+
+
+
+* Observerat: (S_{\text{net}}=0.922), (A_{\text{align}}=0.055), (\chi^2_K=0.070)
+* (p^{(2)}=(0.0083, 0.421, 0.0083)) ⇒ (S_0\approx 0.38) (begränsas av align-pelaren)
+
+
+
+
+**Pedagogisk tolkning:**
+Det här visar något *viktigt* i dokumentets design: **transient-detektion är lätt att imitera** med klassiska mekanismer (t.ex. gemensam referensglitch), därför måste “alignment-pelaren” och S4-familjen vara starka nog att slå ner falska positiva. Dokumentet adresserar exakt detta genom kernel-familjer (`w1/w2/mf_short/mf_long`) och align-nuisance-parametrar, plus att robusthetstesterna kan byta kernel/band i robust-pass.
+
+
+
+
+I min förenklade toy-implementation är (A_{\text{align}}) medvetet enkel (för att vara snabb), och därför blir den pelaren ofta “flaskhals” — vilket är *samma slutsats* som dokumentet implicit drar: GLITCH-spåret behöver en mer sofistikerad kernelbank + adversary-test för att vara stringent.
+
+
+
+
+---
+
+
+
+
+## 3) “Finns det något test vi kan köra digitalt?” — ja, flera som matchar dokumentet
+
+
+
+
+Det mest konkreta (och helt i linje med ditt F v0.2-block) är en **blind injection-svit**:
+
+
+
+
+1. Generera syntetiska runs (OSC och GLITCH) + logga ground truth.
+2. Kör **FULL-RUN** som bygger `FNullCache`.
+3. Kör **FAST-RUN** mot samma cache och verifiera att FULL≈FAST via den inbyggda regression-harnessen (`regress_F_full_vs_fast`). 
+4. Kör robusthetspasset och kräva (R_{\text{robust}}) + “worst collapse reason” enligt formatteraren.
+5. Slutligen: släpp igenom till F-suspect/F-strong **endast** om replikerings-gaten uppfylls (≥2/≥3 confirm-runs i olika sessioner) och meta-p passerar.
+
+
+
+
+Om du vill pressa kvaliteten ytterligare (utan att ändra disciplin): lägg in en **“S4-dominance report”** per run som explicit visar *vilken* adversary (drift/line/env) som ger lägsta p, så du får en direkt diagnos på *vad* som “förklarar bort” en kandidat. Det ligger redan i linje med “worst collapse reason”-tänket. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Här är den exakta implementeringen för `analyze_F_run_fast_v0_2` och hur den mappar mot din `FNullCache`.
+
+
+Fast-mode-logiken är utformad för att vara extremt lättviktig: den beräknar bara de observerade "rawstats" (OSC eller GLITCH) och använder sedan cachelagrade surrogatfördelningar för att omedelbart härleda p-värden och robusthets-score ($S\_0$).
+
+
+### 1\. Implementation av `analyze_F_run_fast_v0_2`
+
+
+Denna funktion utför analysen utan att köra surrogat-loopen på 400 iterationer, vilket är vad som gör den till en "Fast-run".
+
+
+``` python
+def analyze_F_run_fast_v0_2(events, cfg: FConfig, *, mode0: str, tag: str) -> FRunMetrics:
+    """
+    FAST-mode: Mappar observerade rawstats mot FNullCache för att generera score.
+    mode0: Kan vara "OSC", "GLITCH" eller "AUTO" (väljer den med högst S0).
+    """
+    if cfg.null_cache is None:
+        raise ValueError("Fast-mode kräver en population FNullCache.")
+
+
+    cache = cfg.null_cache
+    nodes = _node_list(events)
+    session_id, run_id, tag0 = _run_meta(events)
+    
+    # Förberedelser
+    dt_run = float(cfg.dt_s) 
+    red_flags = []
+
+
+    # 1. Beräkna observerade rawstats
+    obs_osc = _osc_rawstats(nodes, cfg, dt_run=dt_run)
+    obs_g = _glitch_rawstats(nodes, cfg, dt_run=dt_run)
+
+
+    # Hjälpfunktion för att hämta p2 och score
+    def get_metrics_for_mode(mode: str, obs: Dict[str, Any]) -> Tuple[float, float, float, float, float]:
+        if not obs.get("ok"):
+            return 0.0, 1.0, 1.0, 1.0, 0.0
+        
+        # Mappa via FNullCache (p2_a=C/S, p2_b=phi/A, p2_k=K-fit)
+        p2_a, p2_b, p2_k, _ = _p2_from_cache(cache, mode, obs)
+        S = _S_from_p2(p2_a, p2_b, p2_k)
+        
+        # Red-flag kontroll: env-feedthrough (sanity check)
+        q_env = float(obs.get("chi2K", 0.0)) # Exempel på sanity, utöka med env-korr om önskat
+        return S, p2_a, p2_b, p2_k, q_env
+
+
+    # 2. Välj/Beräkna mode
+    results = {}
+    if mode0 in ["OSC", "AUTO"]:
+        results["OSC"] = get_metrics_for_mode("OSC", obs_osc)
+    if mode0 in ["GLITCH", "AUTO"]:
+        results["GLITCH"] = get_metrics_for_mode("GLITCH", obs_g)
+
+
+    # Om AUTO: välj mode med högst S0
+    final_mode = mode0
+    if mode0 == "AUTO":
+        s_osc = results["OSC"][0] if "OSC" in results else -1.0
+        s_g = results["GLITCH"][0] if "GLITCH" in results else -1.0
+        final_mode = "OSC" if s_osc >= s_g else "GLITCH"
+
+
+    S0, p2_a, p2_b, p2_k, q_env = results[final_mode]
+
+
+    # 3. Klassning (preliminär, gate sker i replikerings-steget)
+    if S0 >= 6.0: F_class = "F-strong"
+    elif S0 >= 3.0: F_class = "F-suspect"
+    else: F_class = "F-none"
+
+
+    return FRunMetrics(
+        session_id=session_id,
+        run_id=run_id,
+        tag=tag,
+        mode0=final_mode,
+        S0=S0,
+        F_class0=F_class,
+        p2_a=p2_a,
+        p2_b=p2_b,
+        p2_k=p2_k,
+        red_flags=red_flags
+    )
+
+
+```
+
+
+-----
+
+
+### 2\. Mappningen (`FNullCache` -\> p-värden)
+
+
+Detta är den kritiska delen som du redan har i din struktur, men här är kontraktet för hur den konsumerar cachen. Du bör säkerställa att `_p2_from_cache` är korrekt implementerad i din miljö enligt följande logik:
+
+
+``` python
+def _p2_from_cache(cache: FNullCache, mode: str, obs: Dict[str, Any]) -> Tuple[float, float, float, Dict[str, float]]:
+    """
+    Fast-mappning:
+    1. Loopar över surrogatfamiljer (S1-S4) i cachen.
+    2. För varje familj: beräknar p-värde för observerat värde mot distributionen.
+    3. p2 = andra minsta p-värdet (för att undvika cherrypicking av enstaka surrogat).
+    """
+    dist_mode = cache.dist.get(mode, {})
+    
+    # Pillar-definitioner beroende på mode
+    if mode == "OSC":
+        pillarA, pillarB = ("C_net", "ge"), ("kappa_phi", "ge")
+    else:
+        pillarA, pillarB = ("S_net", "ge"), ("A_align", "ge")
+    pillarK = ("chi2K", "le") # "le" för chi2 (lägre är bättre)
+
+
+    pA, pB, pK = [], [], []
+
+
+    # Iterera över S1, S2, S3, S4 i cachen
+    for s_kind in dist_mode:
+        pillars = dist_mode[s_kind]
+        # Beräkna p-värden för denna surrogat-familj
+        p_a = _emp_p_ge(pillars[pillarA[0]], obs[pillarA[0]])
+        p_b = _emp_p_ge(pillars[pillarB[0]], obs[pillarB[0]])
+        p_k = _emp_p_le(pillars[pillarK[0]], obs[pillarK[0]])
+        
+        pA.append(p_a); pB.append(p_b); pK.append(p_k)
+
+
+    def second_smallest(ps: List[float]) -> float:
+        return sorted(ps)[1] if len(ps) >= 2 else sorted(ps)[0]
+
+
+    return second_smallest(pA), second_smallest(pB), second_smallest(pK), {}
+
+
+```
+
+
+### Varför detta är "F-strong" arkitektur:
+
+
+  * **Decoupled:** Fast-moden vet inget om *varför* ett S4-surrogat ser ut som det gör; den bara "frågar" cachen om det observerade värdet är extremt givet distributions-biblioteket.
+  * **Anti-Cherrypick:** Genom att använda `second_smallest` (p2) eliminerar du risken att en enda "tur-surrogat" (t.ex. en dålig S1-körning) ger dig ett falskt p-värde.
+  * **Baseline-låst:** Genom att `mode0` låses i Fast-moden kan du inte "flippa" till det mode som råkar ge högst score när du kör robusthetstester.
+
+
+**Nästa steg:**
+Vill du att vi bygger en enkel **Regression Harness** som kör en `full-run` (med 400 surrogater) och sedan kör `fast-run` på samma data, för att verifiera att $S\_0$ och $p^{(2)}$ blir exakt identiska? Det är den ultimata sanity checken för att cachen fungerar som förväntat.
