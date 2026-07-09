@@ -11,9 +11,12 @@ import { SignatureDashboard } from './ui/SignatureDashboard';
 import { NullDistributionPanel } from './ui/NullDistributionPanel';
 import { InjectionStudyPanel } from './ui/InjectionStudyPanel';
 import { ExportPanel } from './ui/ExportPanel';
+import { SessionBar } from './ui/SessionBar';
+import { CombineSignaturesPanel } from './ui/CombineSignaturesPanel';
 import type { ExportBundle } from './export';
+import type { SavedSession } from './types/session';
 
-type Tab = 'run' | 'nulls' | 'injection';
+type Tab = 'run' | 'nulls' | 'injection' | 'combine';
 
 export default function App() {
   const [config, setConfig] = useState(DEFAULT_CONFIG);
@@ -22,6 +25,7 @@ export default function App() {
   const [selectedSignature, setSelectedSignature] = useState<SignatureId>('A');
   const [results, setResults] = useState<Partial<Record<SignatureId, SignatureResult>>>({});
   const [loading, setLoading] = useState(false);
+  const [sessions, setSessions] = useState<SavedSession[]>([]);
 
   const stream = useMemo(() => generateEventStream(config), [config]);
 
@@ -68,6 +72,7 @@ export default function App() {
               ['run', 'Körning'],
               ['nulls', 'Nollfördelningar'],
               ['injection', 'Blind injection'],
+              ['combine', 'Kombinera signaturer'],
             ] as [Tab, string][]
           ).map(([id, label]) => (
             <button
@@ -94,6 +99,7 @@ export default function App() {
             />
             <div className="space-y-4">
               <EventStreamView stream={stream} />
+              <SessionBar config={config} results={results} loading={loading} sessions={sessions} setSessions={setSessions} />
               <SignatureDashboard results={results} loading={loading} />
             </div>
           </div>
@@ -121,6 +127,8 @@ export default function App() {
         )}
 
         {tab === 'injection' && <InjectionStudyPanel config={config} nullReplicates={nullReplicates} />}
+
+        {tab === 'combine' && <CombineSignaturesPanel sessions={sessions} />}
 
         <footer className="pb-6 text-center text-xs text-neutral-600">
           Pedagogisk Monte Carlo-prototyp och pipeline-validerare — inte ett färdigt vetenskapligt instrument.

@@ -8,6 +8,18 @@ export function mean(xs: number[]): number {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0;
 }
 
+/** Ensidig normal-överlevnadsfunktion P(Z > z), Abramowitz–Stegun 7.1.26-approximation av erf. */
+export function normalSurvival(z: number): number {
+  if (!Number.isFinite(z)) return z > 0 ? 0 : 1;
+  const sign = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const erf = 1 - poly * Math.exp(-x * x);
+  const erfSigned = sign * erf;
+  return 0.5 * (1 - erfSigned);
+}
+
 export function variance(xs: number[]): number {
   if (xs.length < 2) return 0;
   const m = mean(xs);

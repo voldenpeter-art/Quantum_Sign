@@ -8,7 +8,7 @@ import type { AnalysisContext, SignatureResult } from './types';
 import type { NullId } from '../types/signatures';
 import type { PhotonEvent } from '../types/events';
 import type { RunConfig } from '../types/config';
-import { std } from './stats';
+import { std, normalSurvival } from './stats';
 import { generateNull } from '../nulls';
 import type { Rng } from '../sim/rng';
 
@@ -110,6 +110,10 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
   const S = computeS(pairs);
   const sigmaS = bootstrapSigmaS(pairs, rng.fork(), 300);
   const k = Number.isFinite(sigmaS) && sigmaS > 0 ? (S - 2) / sigmaS : 0;
+  // p härledd ur primärtestet (S − 2 > k·σ_S), INTE ur surrogat-p mot en
+  // nollkorrelerad null (C-rapporten §4.3 varnar uttryckligen för det senare).
+  // Används som huvudstatistika för kombinerad evidens (analysis/combine.ts).
+  const pFromK = normalSurvival(k);
 
   // Grov synlighetsskattning under antagande om optimala CHSH-vinklar (S = 2√2·V).
   const visibilityHat = S / (2 * Math.SQRT2);
@@ -142,7 +146,7 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 's_global', labelSv: 'S (CHSH)', value: S, classicalReference: 2 },
+      { key: 's_global', labelSv: 'S (CHSH)', value: S, pValue: pFromK, classicalReference: 2 },
       { key: 'k_sigma', labelSv: '(S − 2) / σ_S', value: k },
       { key: 'visibility', labelSv: 'Synlighet V (skattad)', value: visibilityHat, classicalReference: 1 / Math.SQRT2 },
       { key: 'coincidences', labelSv: 'Antal A/B-koincidenser', value: pairs.length },

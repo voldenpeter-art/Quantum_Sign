@@ -69,8 +69,7 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, classicalReference: 6 },
-      { key: 'p_value', labelSv: 'p mot drift-/permutationsnull', value: pValue },
+      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, pValue, classicalReference: 6 },
     ],
     redFlags: [
       {

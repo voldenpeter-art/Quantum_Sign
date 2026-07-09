@@ -6,13 +6,41 @@
 // kräver högre ordningens klickstatistik, utanför v1-scope.
 
 import type { AnalysisContext, SignatureResult } from './types';
+import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
+import type { Rng } from '../sim/rng';
 import { computeG2Curve } from './coincidence';
 import { mean, variance, binCounts, rangeSymmetric, empiricalPValue } from './stats';
 import { generateNull } from '../nulls';
 
 function channelTimestamps(events: { channel: string; detectedT: number }[], ch: 'D1' | 'D2') {
   return events.filter((e) => e.channel === ch).map((e) => e.detectedT).sort((a, b) => a - b);
+}
+
+/**
+ * A kräver två fysiskt/statistiskt separata kanaler (§4.1). HBT-källor har
+ * redan D1/D2 (sim/detector/channels.ts). Parkällor (entangled) har ingen
+ * sådan uppdelning eftersom `arm` styr kanalen — där härleds istället en
+ * virtuell 50/50-delning av EN arms (A) tidsstämplar, med samma rng-disciplin
+ * som den riktiga HBT-stråldelaren. Detta gör A körbar SIMULTANT med B–F på
+ * samma entanglade ström (heraldad enfotonstatistik på arm A), vilket är en
+ * standardteknik i riktiga SPDC-experiment. v1-förenkling: ingen äkta
+ * heraldning (koincidenskrav mot arm B), bara en antibunching-proxy.
+ */
+function deriveChannelPair(events: PhotonEvent[], rng: Rng): [number[], number[]] {
+  const hasHbtChannels = events.some((e) => e.channel === 'D1') && events.some((e) => e.channel === 'D2');
+  if (hasHbtChannels) {
+    return [channelTimestamps(events, 'D1'), channelTimestamps(events, 'D2')];
+  }
+  const armAEvents = events.filter((e) => e.arm === 'A');
+  const d1: number[] = [];
+  const d2: number[] = [];
+  for (const e of armAEvents) {
+    (rng.bool(0.5) ? d1 : d2).push(e.detectedT);
+  }
+  d1.sort((a, b) => a - b);
+  d2.sort((a, b) => a - b);
+  return [d1, d2];
 }
 
 function matchedFilterEpsilon(
@@ -33,8 +61,8 @@ const A_NULLS: NullId[] = ['S1', 'S2', 'S3', 'S4'];
 
 export function analyzeA(ctx: AnalysisContext): SignatureResult {
   const { stream, config, rng, nullReplicates } = ctx;
-  const d1 = channelTimestamps(stream.events, 'D1');
-  const d2 = channelTimestamps(stream.events, 'D2');
+  const channelRng = rng.fork();
+  const [d1, d2] = deriveChannelPair(stream.events, channelRng.fork());
 
   const tauChar = 1 / Math.max(config.sourceRateHz, 1);
   const binWidth = tauChar / 2;
@@ -63,8 +91,7 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
   for (const nullId of A_NULLS) {
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
-      const sd1 = channelTimestamps(surrogate.events, 'D1');
-      const sd2 = channelTimestamps(surrogate.events, 'D2');
+      const [sd1, sd2] = deriveChannelPair(surrogate.events, channelRng.fork());
       nullEpsilons.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
     }
   }
@@ -83,6 +110,7 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
   }
 
   const lowCounts = d1.length < 20 || d2.length < 20;
+  const virtualSplit = !(stream.events.some((e) => e.channel === 'D1') && stream.events.some((e) => e.channel === 'D2'));
 
   return {
     id: 'A',
@@ -101,6 +129,15 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
         labelSv: 'Låg räknestatistik',
         triggered: lowCounts,
         detailSv: 'D1/D2 < 20 händelser — g²-skattningen är opålitlig vid denna körningslängd/förlust.',
+      },
+      {
+        code: 'A-RF-VIRTUALSPLIT',
+        labelSv: 'Virtuell kanaldelning (ingen fysisk stråldelare)',
+        triggered: virtualSplit,
+        detailSv:
+          'Källan har ingen egen HBT-uppdelning (entangled) — D1/D2 härleds här genom att slumpa arm A:s ' +
+          'händelser 50/50. Gör A körbar tillsammans med B–F på samma ström, men delar då rådata med dem ' +
+          '(räknas INTE som en oberoende session vid kombinerad evidens, se "Kombinera signaturer").',
       },
     ],
     nullsUsed: A_NULLS,
