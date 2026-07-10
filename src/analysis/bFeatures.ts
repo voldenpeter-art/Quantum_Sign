@@ -23,6 +23,8 @@ export interface BasisWitness {
   g2AutoNeg0: number;
   rCS: number[];
   rCSMax: number;
+  /** För få händelser i denna bas för att R_CS-nämnaren ska vara meningsfull. */
+  lowCount: boolean;
 }
 
 export interface StokesSeries {
@@ -89,15 +91,32 @@ export function computeBFeatures(stream: EventStream): BFeatures {
   const binWidth = tauChar / 4;
   const tauGrid = rangeSymmetric(-tauChar, tauChar, binWidth);
 
+  // R_CS är statistiskt meningslös vid låg räknestatistik: nämnaren (auto-g²
+  // vid τ=0) blir lätt nära noll av ren utspädning, inte fysik, vilket blåser
+  // upp kvoten mot orimliga värden (upptäckt via 1500-körningssvepet,
+  // scripts/sweep.ts: medelvärdet av R_CS var i storleksordningen 10⁹ pga
+  // enstaka lågräknade körningar). Kräv ett minsta antal händelser per utfall
+  // innan R_CS räknas som meningsfull för en given bas.
+  const MIN_COUNT_FOR_RCS = 5;
+
   const basisWitness: BasisWitness[] = BASES.map((basis) => {
     const pos = tsFor(tomographyEvents, basis, '+');
     const neg = tsFor(tomographyEvents, basis, '-');
     const g2CrossCurve = computeG2Curve(pos, neg, stream.duration, tauGrid, binWidth, false);
     const g2AutoPos0 = computeG2Curve(pos, pos, stream.duration, [0], binWidth, true)[0]?.g2 ?? 1;
     const g2AutoNeg0 = computeG2Curve(neg, neg, stream.duration, [0], binWidth, true)[0]?.g2 ?? 1;
-    const denom = Math.max(g2AutoPos0 * g2AutoNeg0, 1e-9);
-    const rCS = g2CrossCurve.map((p) => (p.g2 * p.g2) / denom);
-    return { basis, g2CrossCurve, g2AutoPos0, g2AutoNeg0, rCS, rCSMax: Math.max(...rCS, 0) };
+    const lowCount = pos.length < MIN_COUNT_FOR_RCS || neg.length < MIN_COUNT_FOR_RCS;
+    const denom = Math.max(g2AutoPos0 * g2AutoNeg0, 1e-3);
+    const rCS = lowCount ? [] : g2CrossCurve.map((p) => (p.g2 * p.g2) / denom);
+    return {
+      basis,
+      g2CrossCurve,
+      g2AutoPos0,
+      g2AutoNeg0,
+      rCS,
+      rCSMax: rCS.length ? Math.max(...rCS, 0) : 0,
+      lowCount,
+    };
   });
 
   const stokes = stokesSeries(tomographyEvents, stream.duration);

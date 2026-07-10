@@ -72,6 +72,14 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
           'v1-förenkling: nämnartermerna g²₁₁(0)/g²₂₂(0) skattas direkt, inte via detektorsplitting eller ' +
           'modellextraktion (B-rapporten §4.2). R_CS-siffran är pedagogisk, inte ett skarpt B-2-vittne.',
       },
+      {
+        code: 'B-RF-LOWCOUNTS',
+        labelSv: 'Låg räknestatistik i minst en bas',
+        triggered: features.basisWitness.some((b) => b.lowCount),
+        detailSv:
+          'Färre än 5 händelser i +/− för en bas — R_CS uteslöts för den basen (satt till 0) istället för att ' +
+          'riskera en division nära noll i nämnaren, som annars kan blåsa upp kvoten mot orimliga värden.',
+      },
     ],
     nullsUsed: B_NULLS,
     primaryNull: { labelSv: 'R_CS (max över baser) mot S4', observed: rCSMax, nullValues: rCSNulls },
