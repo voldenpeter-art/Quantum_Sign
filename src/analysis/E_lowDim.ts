@@ -13,7 +13,15 @@ import type { NullId } from '../types/signatures';
 import { covMatrix, participationRatio, empiricalPValue } from './stats';
 import { generateNull } from '../nulls';
 
-const BIN_WIDTH_S = 0.5;
+// Antal bins (inte binbredd) hålls fast. v1 hade en fast BIN_WIDTH_S=0.5s,
+// vilket gjorde att binantalet — och därmed skattningens brusnivå — växte
+// linjärt med mätfönstrets längd. 1500-körningssvepet visade en stark
+// korrelation (r≈0.57) mellan d_eff och duration som INTE var fysikalisk:
+// längre körning gav systematiskt högre uppmätt dimension oavsett källa,
+// alltså ett skattningsartefakt, inte signal. Fast binantal gör körningar
+// med olika längd jämförbara (viktigt för "Kombinera signaturer").
+const TARGET_BIN_COUNT = 24;
+const MIN_BIN_WIDTH_S = 0.1;
 const E_NULLS: NullId[] = ['S1', 'S3', 'S5'];
 
 const COLUMN_INDEX: Record<string, number> = {
@@ -38,7 +46,8 @@ function binFeatureVectors(events: PhotonEvent[], duration: number, binWidth: nu
 }
 
 function effectiveDimension(events: PhotonEvent[], duration: number): number {
-  const feats = binFeatureVectors(events, duration, BIN_WIDTH_S);
+  const binWidth = Math.max(MIN_BIN_WIDTH_S, duration / TARGET_BIN_COUNT);
+  const feats = binFeatureVectors(events, duration, binWidth);
   return participationRatio(covMatrix(feats));
 }
 

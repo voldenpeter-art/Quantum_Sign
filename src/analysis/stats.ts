@@ -8,6 +8,13 @@ export function mean(xs: number[]): number {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0;
 }
 
+export function median(xs: number[]): number {
+  if (xs.length === 0) return NaN;
+  const s = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+
 /** Ensidig normal-överlevnadsfunktion P(Z > z), Abramowitz–Stegun 7.1.26-approximation av erf. */
 export function normalSurvival(z: number): number {
   if (!Number.isFinite(z)) return z > 0 ? 0 : 1;

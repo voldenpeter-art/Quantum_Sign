@@ -87,7 +87,17 @@ export function sigmaFromStokes(stokes: StokesSeries): number[][] {
 
 export function computeBFeatures(stream: EventStream): BFeatures {
   const tomographyEvents = stream.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
-  const tauChar = 0.2; // grov skala för entangled-parens ankomsttakt (par delar detectedT ≈ 0)
+
+  // τ-fönstret måste skalas mot den FAKTISKA (realiserade) händelsetakten i en
+  // enskild (bas, utfall)-delström, inte en hårdkodad konstant. v1 hade
+  // tauChar=0.2s fast oavsett källtakt — vid höga takter (400 Hz) blev
+  // fönstret ~40× för brett relativt medelavståndet mellan händelser (utspätt
+  // g²-facit); vid låga takter kunde det tvärtom vara för smalt. Följer samma
+  // princip som A_g2.ts (tauChar = 1/takt), men skattad empiriskt ur strömmen
+  // eftersom denna funktion inte har tillgång till RunConfig — se
+  // 1500-körningssvepet (scripts/sweep.ts) för fyndet som motiverade fixen.
+  const basisSubstreamRate = Math.max(tomographyEvents.length / 6 / stream.duration, 0.5);
+  const tauChar = Math.min(0.5, Math.max(0.02, 5 / basisSubstreamRate));
   const binWidth = tauChar / 4;
   const tauGrid = rangeSymmetric(-tauChar, tauChar, binWidth);
 

@@ -43,6 +43,22 @@ function deriveChannelPair(events: PhotonEvent[], rng: Rng): [number[], number[]
   return [d1, d2];
 }
 
+/**
+ * A-rapporten §6.2: w_k ∝ f(τ_k)/σ_k². GRANSKNINGSFYND: detta ser ut som att
+ * sakna invers-variansviktning (bara mallformen f(τ) används), men det är
+ * INTE en lucka — det ÄR den korrekta viktningen här. σ_k² under H0 skattas
+ * av den FÖRVÄNTADE (ackcidentella) räkningen rateA·rateB·T·Δτ, som är
+ * τ-oberoende för konstant takt — invers variansviktning reducerar därmed
+ * till en konstant faktor som inte påverkar det viktade medelvärdet.
+ *
+ * Ett granskningsförsök att vikta med det OBSERVERADE antalet n_k istället
+ * (en rimlig men fel tolkning av "1/σ_k²") visade sig vara självrefererande:
+ * n_k är just den storhet SIGNALEN trycker ner nära τ=0, så att vikta med n_k
+ * straffar exakt de bins som bär antibunchingen — verifierat genom att det
+ * fick regressionstestet (singleEmitter → ε<0) att slå om till ε>0. Se
+ * commit-historiken och sim/sources/singleEmitter.ts för den relaterade,
+ * verkliga bugg detta grävande avslöjade (källans artificiella periodicitet).
+ */
 function matchedFilterEpsilon(
   d1: number[],
   d2: number[],

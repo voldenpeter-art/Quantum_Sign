@@ -114,6 +114,24 @@ estimator) → se rapport.
   `loss → jitter → deadTime → afterpulsing → darkCounts → crosstalk`
   `TODO(spec): bekräfta kanonisk ordning och per-detektor-parametrar.`
 
+### 6.1 Arkitektonisk gräns: statistik-nivå, inte tillstånds-nivå (bindande)
+
+Simuleringslagret evolverar ALDRIG ett kvanttillstånd (ingen täthetsmatris,
+ingen Hamiltonian, inga Krausoperatorer). Källor som `entangled.ts` samplar
+händelser DIREKT ur den sannolikhetsfördelning kvantmekaniken förutsäger för
+en given mätning (t.ex. E(a,b) = −V·(â·b̂) i Blochvektor-modellen), inte genom
+att evolvera ett tillstånd och simulera en mätning på det. Detta är legitim,
+standardpraxis för att generera testdata till en analyspipeline — men sätter
+en hård gräns: plattformen kan aldrig svara på frågor om tillståndsdynamik
+(Rabi-oscillationer, kontinuerlig dekoherens som process, blandade tillstånd
+bortom en skalär "visibility", kontinuerliga variabler). **Detta är den
+sannolika förklaringen till varför G (squeezing) korrekt lämnats som stubbe**
+— kvadratursqueezing är en kontinuerlig-variabel-egenskap (fältkvadraturer,
+homodyndetektion) som inte kan genereras med samma "sampla ur facit"-teknik
+som de diskreta klick-baserade källorna använder. G kräver en annan
+simuleringsmotor, inte bara en till källfil. Väg detta noga innan G/H/M
+implementeras — fråga först vilken simuleringsklass signaturen tillhör.
+
 ---
 
 ## 7. Nolldistributioner (`nulls/`)
