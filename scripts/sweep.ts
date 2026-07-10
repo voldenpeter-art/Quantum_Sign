@@ -2,8 +2,8 @@
 // av förhållanden/detektorparametrar, analyserar alla tillämpliga signaturer
 // per körning, och skriver rådata till CSV + en sammanfattning till JSON.
 //
-// Körs med: npx tsx scripts/sweep.ts [runsPerSource] [outDir]
-// Deterministisk: styrs helt av META_SEED nedan (samma svep varje körning).
+// Körs med: npx tsx scripts/sweep.ts [runsPerSource] [outDir] [metaSeed]
+// Deterministisk: styrs helt av metaSeed (samma svep vid samma seed).
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,7 +14,7 @@ import type { AnalysisContext, SignatureResult } from '../src/analysis/types';
 import { SIGNATURE_CATALOG, IMPLEMENTED_SIGNATURES, type SignatureId } from '../src/types/signatures';
 import type { RunConfig, SourceType } from '../src/types/config';
 
-const META_SEED = 20260710;
+const META_SEED = Number(process.argv[4] ?? 20260710);
 const RUNS_PER_SOURCE = Number(process.argv[2] ?? 300);
 const OUT_DIR = process.argv[3] ?? join(process.cwd(), 'scratchpad-sweep');
 const NULL_REPLICATES = 6; // reducerad för svepets skala; UI:t använder högre värden interaktivt
@@ -157,5 +157,5 @@ writeFileSync(join(OUT_DIR, 'sweep_results.csv'), csvLines.join('\n'));
 writeFileSync(join(OUT_DIR, 'sweep_results.json'), JSON.stringify(rows));
 
 const totalTime = ((Date.now() - t0) / 1000).toFixed(1);
-console.log(`Done: ${runCounter} runs, ${rows.length} signature rows, ${totalTime}s total.`);
+console.log(`Done: ${runCounter} runs (META_SEED=${META_SEED}), ${rows.length} signature rows, ${totalTime}s total.`);
 console.log(`Wrote ${join(OUT_DIR, 'sweep_results.csv')}`);
