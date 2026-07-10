@@ -38,11 +38,12 @@ export const SIGNATURE_CATALOG: SignatureMeta[] = [
     evidenceClass: 'I',
     reportStatus: 'klar',
     implemented: true,
-    requiredSources: ['singleEmitter', 'coherent', 'thermal'],
+    requiredSources: ['singleEmitter', 'coherent', 'thermal', 'entangled', 'memoryEcho'],
     validNulls: ['S1', 'S2', 'S3', 'S4'],
     floorNote: 'Kontrastgolv (modutspädning, ε ~ 1/M)',
     summarySv:
-      'g²(0) < 1 via korskorrelation mellan två HBT-kanaler. Matchat filter, teckendiskriminator ε.',
+      'g²(0) < 1 via korskorrelation mellan två HBT-kanaler (virtuell 50/50-delning på icke-HBT-källor, se A_g2.ts). ' +
+      'Matchat filter, teckendiskriminator ε.',
   },
   {
     id: 'B',
