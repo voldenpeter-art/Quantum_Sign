@@ -12,6 +12,14 @@ export interface SignatureComponent {
   /** Klassiskt/golv-relaterat referensvärde för visuell jämförelse i UI. */
   classicalReference?: number;
   unit?: string;
+  /**
+   * Markerar VILKEN komponent som är signaturens huvudvittne när flera
+   * komponenter bär ett pValue (t.ex. B har både dg_cross och r_cs_max; D har
+   * både chi2_const och separation). Utan denna flagga är "första komponenten
+   * med ett pValue" odefinierat vilken som väljs — se analysis/combine.ts och
+   * scripts/sweep.ts, som båda letar efter primary===true först.
+   */
+  primary?: boolean;
 }
 
 export type Verdict = 'none' | 'classical' | 'suspect' | 'strong';

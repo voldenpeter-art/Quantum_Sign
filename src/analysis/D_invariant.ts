@@ -112,7 +112,10 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
       { key: 'lambda1', labelSv: 'λ̃₁', value: Ibar[0] },
       { key: 'lambda2', labelSv: 'λ̃₂', value: Ibar[1] },
       { key: 'chi2_const', labelSv: 'χ²_const (stabilitet)', value: chi2Const, pValue: pStab },
-      { key: 'separation', labelSv: 'Separation mot null', value: observedDist, pValue: pSep },
+      // D-rapporten §5.1: D:s evidensinnehåll bärs nästan helt av D-sep (separation);
+      // D-stab (chi2_const) är ett konsistenskrav, inte evidens i sig — separation
+      // markeras därför primary för kombinerad evidens (analysis/combine.ts).
+      { key: 'separation', labelSv: 'Separation mot null', value: observedDist, pValue: pSep, primary: true },
       { key: 'k_d', labelSv: 'K_D (kontrastkvot)', value: kD, classicalReference: K_D_THRESHOLD },
     ],
     redFlags: [

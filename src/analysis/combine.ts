@@ -17,6 +17,11 @@ import type { SignatureId } from '../types/signatures';
 import type { SignatureResult, Verdict } from './types';
 
 export function getHeadlinePValue(result: SignatureResult): number | undefined {
+  // Vissa signaturer (B: dg_cross+r_cs_max; D: chi2_const+separation) har FLERA
+  // komponenter med pValue. "Första med pValue" är odefinierat vilken som är
+  // det egentliga vittnet — kräv den uttryckligt märkta primary-komponenten.
+  const primary = result.components.find((c) => c.primary && c.pValue !== undefined);
+  if (primary) return primary.pValue;
   return result.components.find((c) => c.pValue !== undefined)?.pValue;
 }
 

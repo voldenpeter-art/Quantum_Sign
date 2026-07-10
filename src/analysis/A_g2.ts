@@ -118,7 +118,7 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
     verdictLabelSv,
     components: [
       { key: 'g2_0', labelSv: 'g²(0), korskorrelation', value: g2Zero, classicalReference: 1 },
-      { key: 'epsilon', labelSv: 'ε (matchat filter, teckendiskriminator)', value: epsilonHat, pValue: pEpsilon, classicalReference: 0 },
+      { key: 'epsilon', labelSv: 'ε (matchat filter, teckendiskriminator)', value: epsilonHat, pValue: pEpsilon, classicalReference: 0, primary: true },
       { key: 'delta_anti', labelSv: 'Δ_anti (formvittne)', value: deltaAnti },
       { key: 'mandel_q', labelSv: 'Mandel Q', value: mandelQ, classicalReference: 0 },
       { key: 'fano', labelSv: 'Fano-faktor F', value: fano, classicalReference: 1 },

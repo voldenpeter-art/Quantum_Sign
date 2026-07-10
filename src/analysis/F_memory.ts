@@ -79,7 +79,7 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 'revival_score', labelSv: 'Revival-poäng (max avvikelse från Markov-baslinje)', value: score, pValue },
+      { key: 'revival_score', labelSv: 'Revival-poäng (max avvikelse från Markov-baslinje)', value: score, pValue, primary: true },
       { key: 'tau_at', labelSv: 'τ vid maximal avvikelse (s)', value: tauAt, unit: 's' },
     ],
     redFlags: [

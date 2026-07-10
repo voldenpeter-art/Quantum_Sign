@@ -146,7 +146,7 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 's_global', labelSv: 'S (CHSH)', value: S, pValue: pFromK, classicalReference: 2 },
+      { key: 's_global', labelSv: 'S (CHSH)', value: S, pValue: pFromK, classicalReference: 2, primary: true },
       { key: 'k_sigma', labelSv: '(S − 2) / σ_S', value: k },
       { key: 'visibility', labelSv: 'Synlighet V (skattad)', value: visibilityHat, classicalReference: 1 / Math.SQRT2 },
       { key: 'coincidences', labelSv: 'Antal A/B-koincidenser', value: pairs.length },

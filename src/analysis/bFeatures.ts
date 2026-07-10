@@ -103,8 +103,19 @@ export function computeBFeatures(stream: EventStream): BFeatures {
   const stokes = stokesSeries(tomographyEvents, stream.duration);
   const sigma = sigmaFromStokes(stokes);
 
+  // OBS (fixad bugg): tauGrid byggs via flyttalsackumulering (rangeSymmetric),
+  // så "tau === 0" träffar nästan aldrig exakt (t.ex. -1.39e-17 ≠ 0). Måste
+  // hitta punkten NÄRMAST noll, annars faller dgCross alltid tillbaka på
+  // (1 ?? 1) - 1 = 0 oavsett verklig data — upptäckt via 1500-körningssvepet
+  // (scripts/sweep.ts): entangled/B fastnade på "none" i 100 % av 300 körningar.
   const dgCross = mean(
-    basisWitness.map((b) => Math.abs((b.g2CrossCurve.find((p) => p.tau === 0)?.g2 ?? 1) - 1)),
+    basisWitness.map((b) => {
+      const zeroPoint = b.g2CrossCurve.reduce(
+        (best, p) => (Math.abs(p.tau) < Math.abs(best.tau) ? p : best),
+        b.g2CrossCurve[0],
+      );
+      return Math.abs((zeroPoint?.g2 ?? 1) - 1);
+    }),
   );
   const dgAuto = mean(
     basisWitness.flatMap((b) => [Math.abs(b.g2AutoPos0 - 1), Math.abs(b.g2AutoNeg0 - 1)]),

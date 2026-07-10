@@ -84,7 +84,10 @@ function applicableSignatures(source: SourceType): SignatureId[] {
 }
 
 function headline(result: SignatureResult): { key: string; value: number; pValue: number | '' } {
-  const withP = result.components.find((c) => c.pValue !== undefined);
+  // Se analysis/combine.ts getHeadlinePValue för samma disciplin: föredra den
+  // uttryckligt markerade primary-komponenten framför "första med pValue".
+  const primaryMarked = result.components.find((c) => c.primary && c.pValue !== undefined);
+  const withP = primaryMarked ?? result.components.find((c) => c.pValue !== undefined);
   const primary = withP ?? result.components[0];
   return { key: primary?.key ?? '', value: primary?.value ?? NaN, pValue: withP?.pValue ?? '' };
 }

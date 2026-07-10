@@ -69,7 +69,7 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, pValue, classicalReference: 6 },
+      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, pValue, classicalReference: 6, primary: true },
     ],
     redFlags: [
       {

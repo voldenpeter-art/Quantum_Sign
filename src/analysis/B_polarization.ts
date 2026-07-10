@@ -55,7 +55,7 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
     components: [
       { key: 'dg_cross', labelSv: 'D_g^cross (korsdel)', value: features.dgCross, pValue: pDgCross },
       { key: 'dg_auto', labelSv: 'D_g^auto (autodel, diagnostik)', value: features.dgAuto },
-      { key: 'r_cs_max', labelSv: 'R_CS (max över baser)', value: rCSMax, pValue: pRCS, classicalReference: 1 },
+      { key: 'r_cs_max', labelSv: 'R_CS (max över baser)', value: rCSMax, pValue: pRCS, classicalReference: 1, primary: true },
       ...features.basisWitness.map((b) => ({
         key: `rcs_${b.basis}`,
         labelSv: `R_CS, bas ${b.basis}`,
