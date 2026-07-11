@@ -143,7 +143,16 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
   let burstStart = 0;
   for (let i = 1; i < windowSyncTick.length; i++) {
     const gapS = (windowSyncTick[i] - windowSyncTick[i - 1]) * TICK_S;
-    if (gapS > BURST_GAP_THRESHOLD_S) {
+    // GRANSKNINGSFYND (bindande, bevarat som varning): en tidigare version
+    // splittade bara på FRAMÅT-hopp (gapS > tröskel). Verifierat empiriskt mot
+    // den riktiga "afterfixingModeLocking"-filen: exakt 5 framåthopp OCH 5
+    // BAKÅThopp av EXAKT samma magnitud (112987.214 s) förekommer, tydligt
+    // alternerande mellan två tick-"epoker" (~0.77e15 respektive ~2.2e15).
+    // Att bara fånga framåthoppen delade filen i 6 "bursts" där flera av dem
+    // i praktiken innehöll ett dolt bakåthopp mitt inuti — vilket bryter
+    // antagandet om sorterad ordning som binärsökningen i pairTrials() vilar
+    // på. Fixad genom att splitta på |gapS| > tröskel (båda riktningarna).
+    if (Math.abs(gapS) > BURST_GAP_THRESHOLD_S) {
       bursts.push(makeBurst(windowSyncTick, burstStart, i - 1));
       burstStart = i;
     }
