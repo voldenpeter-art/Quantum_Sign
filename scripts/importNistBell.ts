@@ -39,17 +39,31 @@ for (const b of bobParsed.bursts) {
   console.log(`  [${b.startWindowIdx}-${b.endWindowIdx}] syncCount=${b.syncCount} duration=${((b.endTick-b.startTick)*TICK_S).toFixed(2)}s`);
 }
 
-const aliceBurst = selectGpsBracketedBurst(aliceParsed);
+// Bob väljs via GPS-bracketed burst (pålitlig, sammanhängande täckning).
+// Alice PAR-AS MOT HELA HENNES FIL, inte bara hennes egen GPS-bracketed
+// burst: hennes GPS-kanal visade sig ha egna, oberoende glapp (985 pulser
+// utspridda över 6 bursts, där bara EN — den sista, 52.7 s — råkade
+// GPS-täckas) som INTE nödvändigtvis speglar glapp i själva sync-/
+// detektorströmmen. Klockoffseten är redan validerad (matchade GPS-pulser
+// nedan) och driftar inte (samma delade 10 MHz-referens) — att bara pröva
+// mot bobs betrodda fönster och låta toleransen naturligt förkasta det som
+// inte överlappar är säkrare än att i förväg utesluta alices andra,
+// GPS-lösa men annars giltiga bursts.
 const bobBurst = selectGpsBracketedBurst(bobParsed);
-console.log(`\nVald burst (alice): syncCount=${aliceBurst.syncCount}, duration=${((aliceBurst.endTick-aliceBurst.startTick)*TICK_S).toFixed(2)}s`);
-console.log(`Vald burst (bob):   syncCount=${bobBurst.syncCount}, duration=${((bobBurst.endTick-bobBurst.startTick)*TICK_S).toFixed(2)}s`);
+console.log(`\nVald burst (bob): syncCount=${bobBurst.syncCount}, duration=${((bobBurst.endTick-bobBurst.startTick)*TICK_S).toFixed(2)}s`);
 
 console.log('\nBeräknar GPS-baserad klockoffset...');
 const { offsetTicks, matchedPulses } = computeGpsOffsetTicks(aliceParsed.gpsTicks, bobParsed.gpsTicks);
 console.log(`  offset=${offsetTicks.toFixed(1)} tick (${(offsetTicks*TICK_S*1e9).toFixed(2)} ns), matchade GPS-pulser=${matchedPulses}/${aliceParsed.gpsTicks.length}`);
 
-console.log('\nParar trials...');
-const aliceSlice = sliceBurst(aliceParsed, aliceBurst);
+console.log('\nParar trials (alice: hela filen, bob: vald burst)...');
+const aliceSlice = {
+  syncTick: aliceParsed.windowSyncTick,
+  setting: aliceParsed.windowSetting,
+  clicked: aliceParsed.windowClicked,
+  startIdx: 0,
+  endIdx: aliceParsed.windowSyncTick.length - 1,
+};
 const bobSlice = sliceBurst(bobParsed, bobBurst);
 const paired = pairTrials(aliceSlice, bobSlice, offsetTicks);
 console.log(`  matchedTrials=${paired.matchedTrials}, unmatchedAliceWindows=${paired.unmatchedAliceWindows}`);
