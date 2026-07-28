@@ -29,6 +29,9 @@
 //        med exakt 1 per post och sammanfaller ungefär var 200 000:e post.
 //        Försumbar andel av strömmen (~0.0005 %). Behandlas som brus/heartbeat
 //        och kasseras — INTE del av den dokumenterade fysiken.
+//        BEKRÄFTAT av K. Shalm (e-postkorrespondens, juli 2026): en tillagd
+//        "heartbeat" (dator- eller GPS-klocka, han mindes inte vilken), ingick
+//        inte i NIST:s egen analys — säkert att kassera.
 
 import { open } from 'node:fs/promises';
 
@@ -152,6 +155,14 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
     // i praktiken innehöll ett dolt bakåthopp mitt inuti — vilket bryter
     // antagandet om sorterad ordning som binärsökningen i pairTrials() vilar
     // på. Fixad genom att splitta på |gapS| > tröskel (båda riktningarna).
+    // BEKRÄFTAT av K. Shalm (e-postkorrespondens, juli 2026): hoppen är en
+    // känd firmware-bugg i timetaggarna. NIST:s egen analys förlitade sig
+    // inte på absoluta timetags utan på sync-pulsernas positioner RELATIVT
+    // varandra ("we find and align the sync pulses, then define trial
+    // windows relative to the syncs") — vilket är exakt den egenskap som
+    // gör per-burst-hanteringen här giltig: inom en burst är den relativa
+    // ordningen intakt, och absoluta tick används bara för burst-avgränsning
+    // och GPS-förankring, aldrig som fysikaliskt mätvärde.
     if (Math.abs(gapS) > BURST_GAP_THRESHOLD_S) {
       bursts.push(makeBurst(windowSyncTick, burstStart, i - 1));
       burstStart = i;

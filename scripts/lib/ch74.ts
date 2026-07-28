@@ -18,6 +18,22 @@
 // reproduktion av det ursprungliga NIST-resultatet. Alla råa räknetal
 // rapporteras separat så att den som vill använda en annan konvention kan
 // räkna om direkt ur dem.
+//
+// KONTEXT från K. Shalm (e-postkorrespondens, juli 2026), som förklarar
+// varför denna naiva form inte kränkte på 2015-datan (J ≈ −0.031):
+// (1) "One has to be careful to use the correct form which depends on both
+//     the measurement settings and prepared state" — vår symmetriska
+//     läroboksform är inte anpassad till det asymmetriska Eberhard-tillstånd
+//     och de optimerade vinklar NIST faktiskt använde. Han bedömde det som
+//     möjligt att en KORREKT anpassad CH74 kan kränka på denna data.
+// (2) Deras publicerade analys använde en "coin-flipping variant" av CH74,
+//     och deras bästa resultat kommer från en "test factor"-metod som hittar
+//     det optimala vittnet ur träningsdata innan det testas mot skarp data.
+// Slutsatsen från vår ROC-studie står sig alltså även här, bekräftad av
+// försöket självt: valet/kalibreringen av vittnesFORMEN — inte bara datan —
+// avgör känsligheten. TODO: härled/implementera Eberhard-formen med
+// tillståndets asymmetri (r-parametern) och NIST:s faktiska vinklar om en
+// kränkning ska eftersökas på allvar i denna data.
 
 import type { PairedTrialCounts } from './nistBellRaw';
 
