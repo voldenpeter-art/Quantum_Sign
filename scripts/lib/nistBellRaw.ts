@@ -65,6 +65,17 @@ export interface ParsedFile {
   windowSyncTick: Float64Array; // tick för varje trial-fönsters STARTsync
   windowSetting: Int8Array; // 0 | 1 | -1 (ingen/båda RNG-kanalerna sågs i fönstret)
   windowClicked: Uint8Array; // 0 | 1
+  /**
+   * FÖRSTA klickets fördröjning efter fönstrets sync, i tick; -1 om inget
+   * klick. Float32 räcker: max-fördröjningen (~129 k tick) ligger långt under
+   * float32:s exakta heltalsgräns (2^24). Behövs för fördröjningsgrindning:
+   * Pockelscell-fönstret är bara ~16 laser-cykler (~200 ns) av sync-periodens
+   * ~10.09 µs — klick utanför den smala fördröjningstoppen är bakgrund/mörker
+   * och bär ingen inställningsberoende fysik (jfr NIST:s "cw45"-metadata:
+   * "the relative delay from the sync used to define a click ... and its
+   * radius").
+   */
+  windowClickDelayTicks: Float32Array;
 }
 
 /**
@@ -83,10 +94,12 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
   const syncTicks: number[] = [];
   const settings: number[] = [];
   const clickedFlags: number[] = [];
+  const clickDelays: number[] = [];
 
   let position = 0;
   let curSyncTick: number | null = null;
   let curClicked = 0;
+  let curClickDelay = -1;
   let sawRng0 = false;
   let sawRng1 = false;
 
@@ -95,6 +108,7 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
     syncTicks.push(curSyncTick);
     settings.push(sawRng0 && !sawRng1 ? 0 : sawRng1 && !sawRng0 ? 1 : -1);
     clickedFlags.push(curClicked);
+    clickDelays.push(curClickDelay);
   }
 
   while (position < stat.size) {
@@ -114,6 +128,7 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
           closeWindow();
           curSyncTick = tick;
           curClicked = 0;
+          curClickDelay = -1;
           sawRng0 = false;
           sawRng1 = false;
           break;
@@ -124,6 +139,9 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
           sawRng1 = true;
           break;
         case CH_DETECTOR:
+          if (curClicked === 0 && curSyncTick !== null) {
+            curClickDelay = tick - curSyncTick;
+          }
           curClicked = 1;
           break;
         case CH_GPS_PPS:
@@ -141,6 +159,7 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
   const windowSyncTick = Float64Array.from(syncTicks);
   const windowSetting = Int8Array.from(settings);
   const windowClicked = Uint8Array.from(clickedFlags);
+  const windowClickDelayTicks = Float32Array.from(clickDelays);
 
   const bursts: Burst[] = [];
   let burstStart = 0;
@@ -174,7 +193,7 @@ export async function parseRawFile(path: string): Promise<ParsedFile> {
 
   gpsTicks.sort((a, b) => a - b);
 
-  return { bursts, gpsTicks, windowSyncTick, windowSetting, windowClicked };
+  return { bursts, gpsTicks, windowSyncTick, windowSetting, windowClicked, windowClickDelayTicks };
 }
 
 function makeBurst(syncTick: Float64Array, startIdx: number, endIdx: number): Burst {
@@ -274,8 +293,22 @@ export interface WindowSlice {
   syncTick: Float64Array;
   setting: Int8Array;
   clicked: Uint8Array;
+  clickDelayTicks: Float32Array;
   startIdx: number;
   endIdx: number; // inklusive
+}
+
+/**
+ * Fördröjningsgrind i tick relativt fönstrets sync. Ett fönster räknas som
+ * "klick" endast om första klicket föll inom [loTicks, hiTicks]. Utan grind
+ * räknas varje klick var som helst i hela sync-perioden (~10.09 µs) — vilket
+ * dränker den inställningsberoende fysiken (Pockels-fönstret ~200 ns) i
+ * inställningsOberoende bakgrund. Verifierat empiriskt: ogrindat är
+ * koincidenserna nära identiska över alla fyra inställningspar.
+ */
+export interface DelayGate {
+  loTicks: number;
+  hiTicks: number;
 }
 
 export function sliceBurst(parsed: ParsedFile, burst: Burst): WindowSlice {
@@ -283,6 +316,7 @@ export function sliceBurst(parsed: ParsedFile, burst: Burst): WindowSlice {
     syncTick: parsed.windowSyncTick,
     setting: parsed.windowSetting,
     clicked: parsed.windowClicked,
+    clickDelayTicks: parsed.windowClickDelayTicks,
     startIdx: burst.startWindowIdx,
     endIdx: burst.endWindowIdx,
   };
@@ -310,7 +344,15 @@ export function pairTrials(
   bob: WindowSlice,
   offsetTicks: number,
   toleranceTicks = 5000,
+  gateA?: DelayGate,
+  gateB?: DelayGate,
 ): PairedTrialCounts {
+  const inGate = (slice: WindowSlice, idx: number, gate?: DelayGate): boolean => {
+    if (slice.clicked[idx] !== 1) return false;
+    if (!gate) return true;
+    const d = slice.clickDelayTicks[idx];
+    return d >= gate.loTicks && d <= gate.hiTicks;
+  };
   const joint: Record<string, number> = { '0,0': 0, '0,1': 0, '1,0': 0, '1,1': 0 };
   const aliceOnly: Record<string, number> = { '0,0': 0, '0,1': 0, '1,0': 0, '1,1': 0 };
   const bobOnly: Record<string, number> = { '0,0': 0, '0,1': 0, '1,0': 0, '1,1': 0 };
@@ -334,8 +376,8 @@ export function pairTrials(
 
     matchedTrials++;
     const key = `${settingA},${settingB}`;
-    const clickedA = alice.clicked[i] === 1;
-    const clickedB = bob.clicked[j] === 1;
+    const clickedA = inGate(alice, i, gateA);
+    const clickedB = inGate(bob, j, gateB);
     if (clickedA && clickedB) joint[key]++;
     else if (clickedA) aliceOnly[key]++;
     else if (clickedB) bobOnly[key]++;
@@ -343,6 +385,140 @@ export function pairTrials(
   }
 
   return { matchedTrials, unmatchedAliceWindows, joint, aliceOnly, bobOnly, neither };
+}
+
+/**
+ * Fördröjningshistogram över klickade fönster i en slice, plus automatiskt
+ * grindval: hitta toppbinen och expandera åt båda håll så länge bininnehållet
+ * ligger över `floorFraction` av toppen (sammanhängande). Ger den smala
+ * Pockels-fönster-toppen utan att handväja gränser. Binbredd 128 tick = 10 ns.
+ */
+/**
+ * Fördröjningshistogram uppdelat på EGEN inställning, okonditionerat på
+ * motparten. GRANSKNINGSFYND (bindande): används för att skilja äkta
+ * tvåfoton-koincidensstruktur från elektroniska artefakter i en enskild
+ * parts detektorkedja. Verifierat mot "afterfixingModeLocking"-filen: en
+ * ~44-61 % modulation i alices klick vid 300-600 ns EFTER sync kvarstår
+ * HELT okonditionerat på om bob klickade (setting1 nästan dubblerar
+ * alices klickfrekvens där) — detta kan alltså INTE vara en parkorrelation
+ * (den skulle kräva att bob också klickade), utan är sannolikt elektrisk
+ * inkoppling från Pockelscellens drivspänning in i tidmätningselektroniken,
+ * exakt i det dokumenterade Pockels-på-fönstret. Motsvarar RF_pump_leak i
+ * plattformens egen rödflaggsfamilj (jfr Signaturkandidat_J §5).
+ */
+export function singlesHistogramBySetting(
+  slice: WindowSlice,
+  binTicks = 128,
+): { bins0: Int32Array; bins1: Int32Array; numBins: number; binTicks: number } {
+  const maxDelay = 140_000;
+  const numBins = Math.ceil(maxDelay / binTicks);
+  const bins0 = new Int32Array(numBins);
+  const bins1 = new Int32Array(numBins);
+  for (let i = slice.startIdx; i <= slice.endIdx; i++) {
+    if (slice.clicked[i] !== 1) continue;
+    const setting = slice.setting[i];
+    if (setting !== 0 && setting !== 1) continue;
+    const d = slice.clickDelayTicks[i];
+    if (d < 0 || d >= maxDelay) continue;
+    (setting === 0 ? bins0 : bins1)[Math.floor(d / binTicks)]++;
+  }
+  return { bins0, bins1, numBins, binTicks };
+}
+
+/**
+ * Hittar sammanhängande fördröjningsintervall där singlesfrekvensen
+ * beror på EGEN inställning (relativ skillnad > `relThreshold`, båda
+ * binnarna över `minCount` för att undvika brustriggring) — kandidater
+ * för elektrisk kontamination (se singlesHistogramBySetting). Dessa
+ * intervall bör UTESLUTAS från grindval, inte användas som "toppen".
+ */
+export function detectContaminatedRanges(
+  hist: ReturnType<typeof singlesHistogramBySetting>,
+  relThreshold = 0.15,
+  minCount = 100,
+): DelayGate[] {
+  const flagged: boolean[] = new Array(hist.numBins).fill(false);
+  for (let b = 0; b < hist.numBins; b++) {
+    const c0 = hist.bins0[b];
+    const c1 = hist.bins1[b];
+    const mx = Math.max(c0, c1);
+    const mn = Math.min(c0, c1);
+    if (mx < minCount) continue;
+    if ((mx - mn) / mx > relThreshold) flagged[b] = true;
+  }
+  const ranges: DelayGate[] = [];
+  let start = -1;
+  for (let b = 0; b <= hist.numBins; b++) {
+    if (b < hist.numBins && flagged[b]) {
+      if (start < 0) start = b;
+    } else if (start >= 0) {
+      ranges.push({ loTicks: start * hist.binTicks, hiTicks: b * hist.binTicks - 1 });
+      start = -1;
+    }
+  }
+  return ranges;
+}
+
+export function delayHistogramAndGate(
+  slice: WindowSlice,
+  binTicks = 128,
+  excludeRanges: DelayGate[] = [],
+): {
+  bins: number[];
+  binTicks: number;
+  gate: DelayGate;
+  peakBin: number;
+  inGateFraction: number;
+  backgroundPerBin: number;
+} {
+  const maxDelay = 140_000; // > sync-perioden ~129 k tick
+  const numBins = Math.ceil(maxDelay / binTicks);
+  const bins = new Array<number>(numBins).fill(0);
+  let clickedCount = 0;
+  for (let i = slice.startIdx; i <= slice.endIdx; i++) {
+    if (slice.clicked[i] !== 1) continue;
+    const d = slice.clickDelayTicks[i];
+    if (d < 0 || d >= maxDelay) continue;
+    bins[Math.floor(d / binTicks)]++;
+    clickedCount++;
+  }
+
+  const excluded = new Array<boolean>(numBins).fill(false);
+  for (const r of excludeRanges) {
+    const loBin = Math.max(0, Math.floor(r.loTicks / binTicks));
+    const hiBin = Math.min(numBins - 1, Math.floor(r.hiTicks / binTicks));
+    for (let b = loBin; b <= hiBin; b++) excluded[b] = true;
+  }
+
+  let peakBin = 0;
+  for (let b = 1; b < numBins; b++) if (!excluded[b] && bins[b] > bins[peakBin]) peakBin = b;
+
+  // Grindval via SIGNIFIKANS ÖVER BAKGRUND, inte andel-av-topp: en part med
+  // hög platt bakgrund (t.ex. mörkerräkning utspridd över hela sync-perioden)
+  // har bakgrundsbinnar långt över någon fast %-av-toppen-golvnivå, och en
+  // andel-baserad expansion sväljer då hela fönstret (verifierat: alices
+  // första grindförsök behöll ~100 % av hennes klick). Bakgrunden skattas som
+  // medianbininnehåll; grinden är de sammanhängande binnar kring toppen som
+  // ligger > bakgrund + 5·√bakgrund (Poisson-5σ). Uteslutna binnar (känd
+  // kontamination) stoppar expansionen precis som bakgrundsgolvet gör.
+  const sorted = [...bins].sort((a, b) => a - b);
+  const backgroundPerBin = sorted[Math.floor(sorted.length / 2)];
+  const threshold = backgroundPerBin + 5 * Math.sqrt(backgroundPerBin + 1);
+  let lo = peakBin;
+  let hi = peakBin;
+  while (lo > 0 && !excluded[lo - 1] && bins[lo - 1] > threshold) lo--;
+  while (hi < numBins - 1 && !excluded[hi + 1] && bins[hi + 1] > threshold) hi++;
+  const gate: DelayGate = { loTicks: lo * binTicks, hiTicks: (hi + 1) * binTicks - 1 };
+  let inGate = 0;
+  for (let b = lo; b <= hi; b++) inGate += bins[b];
+  return {
+    bins,
+    binTicks,
+    gate,
+    peakBin,
+    inGateFraction: clickedCount > 0 ? inGate / clickedCount : 0,
+    backgroundPerBin,
+  };
 }
 
 function nearestIndex(arr: Float64Array, lo: number, hi: number, target: number): number {
