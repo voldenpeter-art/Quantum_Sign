@@ -10,7 +10,7 @@
 import type { AnalysisContext, SignatureResult } from './types';
 import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
-import { covMatrix, participationRatio, empiricalPValue } from './stats';
+import { covMatrix, participationRatio, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
 // Antal bins (inte binbredd) hålls fast. v1 hade en fast BIN_WIDTH_S=0.5s,
@@ -56,21 +56,34 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
   const tomographyEvents = stream.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
   const dEff = effectiveDimension(tomographyEvents, stream.duration);
 
+  // p⁽²⁾-regeln: ett p per surrogatfamilj (låg d_eff = farlig riktning),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullDs: number[] = [];
+  const pByFamily: number[] = [];
   for (const nullId of E_NULLS) {
+    const familyDs: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const surrogateTomography = surrogate.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
-      nullDs.push(effectiveDimension(surrogateTomography, surrogate.duration));
+      familyDs.push(effectiveDimension(surrogateTomography, surrogate.duration));
     }
+    pByFamily.push(empiricalPValue(dEff, familyDs, 'less'));
+    nullDs.push(...familyDs);
   }
-  const pValue = empiricalPValue(dEff, nullDs, 'less');
+  const pValue = pSquared(pByFamily);
 
+  // FÖRTJÄNAD NOMENKLATUR (types.ts): E är KVANTNEUTRAL — låg effektiv dimension
+  // (kompression) är klassisk vardag och utgör inget icke-klassicitetsvittne.
+  // Taket är 'structural', aldrig 'suspect'/'strong' (E-strong kräver dessutom
+  // ett oberoende vittne från disjunkt kedja som plattformen saknar, se filhuvud).
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'E-none';
   if (pValue < 1e-2) {
-    verdict = 'suspect'; // hård cap: strong kräver externt vittne, se filhuvud
-    verdictLabelSv = 'E-suspect (max — externt vittne saknas för strong)';
+    verdict = 'structural';
+    verdictLabelSv =
+      pValue < 1e-3
+        ? 'E-lågdim (strukturell, kvantneutral)'
+        : 'E-lågdim-svag (strukturell, kvantneutral)';
   }
 
   return {

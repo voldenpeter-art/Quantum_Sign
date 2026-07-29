@@ -10,7 +10,7 @@ import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
 import type { Rng } from '../sim/rng';
 import { computeG2Curve } from './coincidence';
-import { mean, variance, binCounts, rangeSymmetric, empiricalPValue } from './stats';
+import { mean, variance, binCounts, rangeSymmetric, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
 function channelTimestamps(events: { channel: string; detectedT: number }[], ch: 'D1' | 'D2') {
@@ -103,15 +103,21 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
   const fano = meanN > 0 ? varN / meanN : 1;
   const mandelQ = fano - 1;
 
+  // p⁽²⁾-regeln: ett p per surrogatfamilj (ε mer negativt = farlig riktning),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullEpsilons: number[] = [];
+  const pByFamily: number[] = [];
   for (const nullId of A_NULLS) {
+    const familyEps: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const [sd1, sd2] = deriveChannelPair(surrogate.events, channelRng.fork());
-      nullEpsilons.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
+      familyEps.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
     }
+    pByFamily.push(empiricalPValue(epsilonHat, familyEps, 'less'));
+    nullEpsilons.push(...familyEps);
   }
-  const pEpsilon = empiricalPValue(epsilonHat, nullEpsilons, 'less');
+  const pEpsilon = pSquared(pByFamily);
 
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'A-none';

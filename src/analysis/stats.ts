@@ -64,6 +64,25 @@ export function empiricalPValue(
   return (asExtreme + 1) / (nullValues.length + 1); // +1: konservativ (Q99-stil) korrigering
 }
 
+/**
+ * p⁽²⁾-regeln (syntesrapporten §7, punkt 1 — back-portad till alla A–H/M):
+ * beslutet bärs av det NÄST minsta p-värdet över surrogatfamiljerna, inte det
+ * minsta. En enda "lyckträff"-familj (en null som råkar ge ett litet p) räcker
+ * aldrig — minst två oberoende surrogatfamiljer måste peka åt samma håll för
+ * att ett litet p⁽²⁾ ska uppstå. Degenererar till det enda värdet vid en enda
+ * familj (då finns ingen andra att kräva) och till 1 vid noll familjer.
+ *
+ * OBS: detta är AVSIKTLIGT konservativt. Vid två familjer blir p⁽²⁾ = det
+ * större av de två p-värdena (andra minsta av två = det största), vilket är
+ * exakt "vittnet måste slå BÅDA" — samma logik som tvålagers-S4 kräver.
+ */
+export function pSquared(perFamilyP: number[]): number {
+  const ps = perFamilyP.filter((p) => Number.isFinite(p)).sort((a, b) => a - b);
+  if (ps.length === 0) return 1;
+  if (ps.length === 1) return ps[0];
+  return ps[1];
+}
+
 /** i.i.d. resampling-bootstrap (förenklad — ej blockbootstrap) för konfidensintervall. */
 export function bootstrapCI(
   xs: number[],

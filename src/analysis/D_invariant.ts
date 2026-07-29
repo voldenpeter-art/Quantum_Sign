@@ -10,11 +10,26 @@ import type { AnalysisContext, SignatureResult } from './types';
 import type { EventStream, PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
 import { computeBFeatures } from './bFeatures';
-import { eigenvaluesSym3, mean, variance, empiricalPValue } from './stats';
+import { eigenvaluesSym3, mean, variance, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
 const NUM_SEGMENTS = 4;
 const D_NULLS: NullId[] = ['S1', 'S3', 'S4'];
+
+// RF_stokes_bound (omöjlighetsdetektor, syntesrapporten §7 punkt 5): en äkta
+// Stokes-kovariansmatris är positivt semidefinit — alla egenvärden ≥ 0. Ett
+// MENINGSFULLT negativt egenvärde (mer negativt än numeriskt brus relativt
+// spåret) är en FYSIKALISK omöjlighet: det kan inte komma från en riktig
+// kovarians utan signalerar ett trasigt/normaliseringsfel i estimatorn. Vi
+// tillåter en liten tolerans för Jacobi-avrundning.
+const STOKES_PSD_TOL = 0.05; // andel av spåret
+
+function stokesPsdMargin(stream: EventStream): number {
+  const sigma = computeBFeatures(stream).sigma;
+  const eig = eigenvaluesSym3(sigma);
+  const traceAbs = eig.reduce((a, b) => a + Math.abs(b), 0) || 1;
+  return Math.min(...eig) / traceAbs; // < 0 ⇒ PSD-brott
+}
 
 function segmentStream(stream: EventStream, numSegments: number): EventStream[] {
   const segLen = stream.duration / numSegments;
@@ -68,40 +83,69 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
   const chi2Const = chi2ConstVec(invariants, varScale);
   const kD = chi2Const > 1e-9 ? kdFluxChi2 / chi2Const : 0;
 
+  // p⁽²⁾-regeln: ett p PER surrogatfamilj för stabilitetstestet (chi2_const),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras enbart för visualiseringen.
   const nullChi2s: number[] = [];
+  const stabPByFamily: number[] = [];
   for (const nullId of D_NULLS) {
+    const familyChi2s: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const segInv = segmentStream(surrogate, NUM_SEGMENTS).map(invariantOf);
-      nullChi2s.push(chi2ConstVec(segInv, varScale));
+      familyChi2s.push(chi2ConstVec(segInv, varScale));
     }
+    stabPByFamily.push(empiricalPValue(chi2Const, familyChi2s, 'less'));
+    nullChi2s.push(...familyChi2s);
   }
-  const pStab = empiricalPValue(chi2Const, nullChi2s, 'less');
+  const pStab = pSquared(stabPByFamily);
 
-  const nullFullInvariants: [number, number][] = [];
-  for (let i = 0; i < nullReplicates * D_NULLS.length; i++) {
-    const surrogate = generateNull('S4', stream, config, rng.fork());
-    nullFullInvariants.push(invariantOf(surrogate));
+  // Separationstestet — samma p⁽²⁾-disciplin: avstånd till VARJE familjs
+  // invariant-moln, andra minsta p bär. Tidigare mättes bara mot S4-molnet.
+  const sepPByFamily: number[] = [];
+  const nullDists: number[] = [];
+  const observedDistByFamily: number[] = [];
+  for (const nullId of D_NULLS) {
+    const familyInv: [number, number][] = [];
+    for (let i = 0; i < nullReplicates; i++) {
+      const surrogate = generateNull(nullId, stream, config, rng.fork());
+      familyInv.push(invariantOf(surrogate));
+    }
+    const fMean: [number, number] = [
+      mean(familyInv.map((p) => p[0])),
+      mean(familyInv.map((p) => p[1])),
+    ];
+    const dist = (p: [number, number]) => Math.hypot(p[0] - fMean[0], p[1] - fMean[1]);
+    const familyDists = familyInv.map(dist);
+    nullDists.push(...familyDists);
+    observedDistByFamily.push(dist(Ibar));
+    sepPByFamily.push(empiricalPValue(dist(Ibar), familyDists, 'greater'));
   }
-  const nullMean: [number, number] = [
-    mean(nullFullInvariants.map((p) => p[0])),
-    mean(nullFullInvariants.map((p) => p[1])),
-  ];
-  const dist = (p: [number, number]) => Math.hypot(p[0] - nullMean[0], p[1] - nullMean[1]);
-  const observedDist = dist(Ibar);
-  const nullDists = nullFullInvariants.map(dist);
-  const pSep = empiricalPValue(observedDist, nullDists, 'greater');
+  const pSep = pSquared(sepPByFamily);
+  // Representativt observerat separationsavstånd för UI (medel över familjerna).
+  const observedDist = mean(observedDistByFamily);
 
+  // Omöjlighetsdetektor: PSD-brott i den skattade Stokes-kovariansen.
+  const psdMargin = stokesPsdMargin(stream);
+  const stokesBoundViolated = psdMargin < -STOKES_PSD_TOL;
+
+  // FÖRTJÄNAD NOMENKLATUR (types.ts): D-pol är KVANTNEUTRAL — den mäter en
+  // instrumentinvariant, inte ett icke-klassicitetsvittne (D-rapporten §5.1/5.3:
+  // "ingen intern statistik kan skilja källans invariant från instrumentets").
+  // Taket är därför 'structural' (fingerprint), aldrig 'suspect'/'strong'. En
+  // äkta D-Q kräver ett korrigerat externt vittne som denna plattform saknar.
   const K_D_THRESHOLD = 10;
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'D-none';
-  if (pStab < 1e-2 && pSep < 1e-2 && kD > K_D_THRESHOLD) {
-    verdict = 'suspect';
-    verdictLabelSv = 'D-suspect';
-  }
-  if (pStab < 1e-3 && pSep < 1e-3 && kD > K_D_THRESHOLD * 1.5) {
-    verdict = 'strong';
-    verdictLabelSv = 'D-strong (approx. tröskel, v1)';
+  if (stokesBoundViolated) {
+    // Fysikalisk omöjlighet ⇒ ingen struktur-utsaga; estimatorn är trasig.
+    verdict = 'none';
+    verdictLabelSv = 'D-ogiltig (RF_stokes_bound: PSD-brott)';
+  } else if (pStab < 1e-2 && pSep < 1e-2 && kD > K_D_THRESHOLD) {
+    verdict = 'structural';
+    verdictLabelSv =
+      pStab < 1e-3 && pSep < 1e-3 && kD > K_D_THRESHOLD * 1.5
+        ? 'D-fingerprint (strukturell, kvantneutral)'
+        : 'D-fingerprint-svag (strukturell, kvantneutral)';
   }
 
   return {
@@ -130,6 +174,15 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
         labelSv: 'Kontrastkrav ej uppfyllt',
         triggered: kD <= K_D_THRESHOLD,
         detailSv: 'K_D under tröskel — omgivningen (flödet) varierade inte bevisligen mer än invarianten.',
+      },
+      {
+        code: 'RF_stokes_bound',
+        labelSv: 'Omöjlighetsdetektor: PSD-brott i Stokes-kovariansen',
+        triggered: stokesBoundViolated,
+        detailSv:
+          `Minsta egenvärde / spår = ${psdMargin.toFixed(3)} (tröskel −${STOKES_PSD_TOL}). En äkta ` +
+          'kovariansmatris är positivt semidefinit; ett meningsfullt negativt egenvärde är fysikaliskt ' +
+          'omöjligt och ogiltigförklarar D-utsagan (estimatorn/normaliseringen är trasig).',
       },
     ],
     nullsUsed: D_NULLS,

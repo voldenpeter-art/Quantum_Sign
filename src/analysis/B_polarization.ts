@@ -5,8 +5,8 @@
 import type { AnalysisContext, SignatureResult } from './types';
 import type { NullId } from '../types/signatures';
 import { computeBFeatures } from './bFeatures';
-import { empiricalPValue } from './stats';
-import { generateNull } from '../nulls';
+import { empiricalPValue, pSquared } from './stats';
+import { generateNull, generateS4Layer2 } from '../nulls';
 
 const STRUCTURAL_NULLS: NullId[] = ['S1', 'S2', 'S3'];
 const B_NULLS: NullId[] = [...STRUCTURAL_NULLS, 'S4'];
@@ -16,28 +16,47 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
   const features = computeBFeatures(stream);
   const rCSMax = Math.max(0, ...features.basisWitness.map((b) => b.rCSMax));
 
+  // p⁽²⁾-regeln på strukturdelen: ett p per surrogatfamilj, näst minsta bär.
   const dgCrossNulls: number[] = [];
+  const dgPByFamily: number[] = [];
   for (const nullId of STRUCTURAL_NULLS) {
+    const familyDg: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
-      dgCrossNulls.push(computeBFeatures(surrogate).dgCross);
+      familyDg.push(computeBFeatures(surrogate).dgCross);
     }
+    dgPByFamily.push(empiricalPValue(features.dgCross, familyDg, 'greater'));
+    dgCrossNulls.push(...familyDg);
   }
-  const pDgCross = empiricalPValue(features.dgCross, dgCrossNulls, 'greater');
+  const pDgCross = pSquared(dgPByFamily);
 
-  const rCSNulls: number[] = [];
+  // TVÅLAGERS-S4 på R_CS-vittnet: lager 1 = värsta-fall detektorartefakt (S4),
+  // lager 2 = S4 + analys-/urvalsstress (generateS4Layer2). p⁽²⁾ över de två
+  // lagren kräver att R_CS > 1 slår BÅDA — ett R_CS som bara klarar lager 1 är
+  // ett urvals-/detektorartefakt, inte ett Cauchy–Schwarz-brott.
+  const rcsOf = (s: ReturnType<typeof computeBFeatures>) =>
+    Math.max(0, ...s.basisWitness.map((b) => b.rCSMax));
+  const rCSNullsL1: number[] = [];
+  const rCSNullsL2: number[] = [];
   for (let i = 0; i < nullReplicates * 2; i++) {
-    const surrogate = generateNull('S4', stream, config, rng.fork());
-    const f = computeBFeatures(surrogate);
-    rCSNulls.push(Math.max(0, ...f.basisWitness.map((b) => b.rCSMax)));
+    rCSNullsL1.push(rcsOf(computeBFeatures(generateNull('S4', stream, config, rng.fork()))));
+    rCSNullsL2.push(rcsOf(computeBFeatures(generateS4Layer2(config, rng.fork()))));
   }
-  const pRCS = empiricalPValue(rCSMax, rCSNulls, 'greater');
+  const rCSNulls = [...rCSNullsL1, ...rCSNullsL2];
+  const pRCS = pSquared([
+    empiricalPValue(rCSMax, rCSNullsL1, 'greater'),
+    empiricalPValue(rCSMax, rCSNullsL2, 'greater'),
+  ]);
 
+  // FÖRTJÄNAD NOMENKLATUR (types.ts): R_CS > 1 ÄR ett äkta Cauchy–Schwarz-brott
+  // (klassiskt omöjligt) ⇒ suspect/strong är förtjänade kvantklasser. Enbart
+  // signifikant korsstruktur (dgCross) som överlevt surrogaten men UTAN R_CS > 1
+  // är kvantneutral ⇒ taket är 'structural' (B-struct-unresolved).
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'B-none';
   if (pDgCross < 1e-2) {
-    verdict = 'classical';
-    verdictLabelSv = 'B-classical';
+    verdict = 'structural';
+    verdictLabelSv = 'B-struct-unresolved (korsstruktur, kvantneutral)';
   }
   if (rCSMax > 1 && pRCS < 1e-2) {
     verdict = 'suspect';
@@ -82,7 +101,7 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: B_NULLS,
-    primaryNull: { labelSv: 'R_CS (max över baser) mot S4', observed: rCSMax, nullValues: rCSNulls },
+    primaryNull: { labelSv: 'R_CS (max över baser) mot tvålagers-S4 (L1 detektor + L2 urvalsstress)', observed: rCSMax, nullValues: rCSNulls },
     summarySv:
       'g²_ab-matris och Stokes-korrelationer beräknade på arm A:s tomografihändelser (HV/DA/RL). ' +
       'R_CS > 1 vore klassiskt omöjligt enligt Cauchy–Schwarz — se rödflagga om nämnarkaveat.',

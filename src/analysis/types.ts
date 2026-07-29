@@ -22,7 +22,14 @@ export interface SignatureComponent {
   primary?: boolean;
 }
 
-export type Verdict = 'none' | 'classical' | 'suspect' | 'strong';
+// Femgradig klassning med FÖRTJÄNAD quantum-nomenklatur (syntesrapporten §7,
+// punkt 3): orden "suspect"/"strong" (kvantanspråk) får BARA sättas där ett
+// äkta icke-klassicitetsvittne passerat — A:s antibunching (ε < 0), B:s
+// Cauchy–Schwarz R_CS > 1, C:s S > 2. Kvantneutrala signaturer (D-pol, E, samt
+// F-passiv) kan bära struktur som överlevt surrogaten men aldrig ett
+// kvantvittne; deras tak är därför 'structural', inte 'suspect'. 'classical' =
+// struktur aktivt förenlig med en klassisk modell; 'none' = inget över golvet.
+export type Verdict = 'none' | 'classical' | 'structural' | 'suspect' | 'strong';
 
 export interface RedFlag {
   code: string;
