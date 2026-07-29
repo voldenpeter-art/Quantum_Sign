@@ -11,6 +11,8 @@ export function fmtP(p: number | undefined): string {
 }
 
 export const VERDICT_COLOR: Record<string, string> = {
+  // notApplicable: dämpad/streckad känsla — "gäller inte här", skilt från none.
+  notApplicable: 'bg-neutral-900 text-neutral-500 border-neutral-800 border-dashed',
   none: 'bg-neutral-800 text-neutral-400 border-neutral-700',
   classical: 'bg-sky-950 text-sky-300 border-sky-800',
   // 'structural' (kvantneutral struktur) ligger färgmässigt MELLAN classical
@@ -22,6 +24,7 @@ export const VERDICT_COLOR: Record<string, string> = {
 };
 
 export const VERDICT_DOT: Record<string, string> = {
+  notApplicable: 'bg-neutral-700',
   none: 'bg-neutral-600',
   classical: 'bg-sky-400',
   structural: 'bg-teal-400',

@@ -95,9 +95,22 @@ function computeSForConfig(events: PhotonEvent[], config: RunConfig): number {
 
 function bootstrapSigmaS(pairs: ChshPair[], rng: Rng, reps: number): number {
   if (pairs.length < 4) return Infinity;
+  // STRATIFIERAD bootstrap (feedback 2026-07-29): omsampla INOM varje
+  // inställningspar-bucket och bevara varje buckets antal. En vanlig bootstrap
+  // över alla par blandar om proportionerna mellan (0,0)/(0,1)/(1,0)/(1,1) och
+  // ger en missvisande σ_S — CHSH-statistikan är en funktion av fyra separata
+  // korrelationer E(a,b), var och en skattad vid fast antal i sin bucket.
+  const buckets: Record<string, ChshPair[]> = { '0,0': [], '0,1': [], '1,0': [], '1,1': [] };
+  for (const p of pairs) buckets[`${p.settingA},${p.settingB}`].push(p);
+  // Alla fyra kombinationer måste ha minst ett par — annars är S ändå odefinierad.
+  const groups = Object.values(buckets);
+  if (groups.some((b) => b.length === 0)) return Infinity;
   const samples: number[] = [];
   for (let r = 0; r < reps; r++) {
-    const resample = Array.from({ length: pairs.length }, () => pairs[rng.uniformInt(pairs.length)]);
+    const resample: ChshPair[] = [];
+    for (const bucket of groups) {
+      for (let i = 0; i < bucket.length; i++) resample.push(bucket[rng.uniformInt(bucket.length)]);
+    }
     samples.push(computeS(resample));
   }
   return std(samples);

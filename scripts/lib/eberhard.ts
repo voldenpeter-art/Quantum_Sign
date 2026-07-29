@@ -1,10 +1,9 @@
 // CH-Eberhard-olikheten — den form NIST-/Wien-experimenten 2015 FAKTISKT
 // byggdes för (Eberhard 1993; Giustina et al. 2015, PRL 115:250401), till
-// skillnad från den symmetriska läroboks-CH74 i ch74.ts. Implementerad efter
-// K. Shalms hint (e-post juli 2026): "one has to be careful to use the
-// correct form which depends on both the measurement settings and prepared
-// state" — Eberhard-formen är skräddarsydd för asymmetriska (icke-maximalt
-// entanglade) tillstånd och enkel-detektor-per-part (klick/inget klick).
+// skillnad från den symmetriska läroboks-CH74 i ch74.ts. Rätt vittnesform beror
+// på både mätinställningarna och det preparerade tillståndet: Eberhard-formen är
+// skräddarsydd för asymmetriska (icke-maximalt entanglade) tillstånd och
+// enkel-detektor-per-part (klick/inget klick).
 //
 //   J = N++(a1,b1) − N+o(a1,b2) − No+(a2,b1) − N++(a2,b2)
 //

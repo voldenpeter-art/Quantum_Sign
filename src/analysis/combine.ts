@@ -67,6 +67,7 @@ export interface CombinedEvidence {
 // varje pelare når minst suspect, dvs ett äkta vittne). Se förtjänad
 // nomenklatur i types.ts.
 const VERDICT_RANK: Record<Verdict, number> = {
+  notApplicable: 0,
   none: 0,
   classical: 0,
   structural: 0,

@@ -29,7 +29,18 @@ export interface SignatureComponent {
 // F-passiv) kan bära struktur som överlevt surrogaten men aldrig ett
 // kvantvittne; deras tak är därför 'structural', inte 'suspect'. 'classical' =
 // struktur aktivt förenlig med en klassisk modell; 'none' = inget över golvet.
-export type Verdict = 'none' | 'classical' | 'structural' | 'suspect' | 'strong';
+//
+// 'notApplicable' är en SÄRSKILD sentinel, inte en styrkenivå: analysen gäller
+// inte för denna källa/dataström alls (t.ex. C/D/E på en enkanalig thermal-
+// källa utan armar). Den får ALDRIG blandas ihop med 'none' ("kördes, hittade
+// inget") — det vore att tolka ett icke-mätt värde som ett negativt resultat.
+export type Verdict =
+  | 'notApplicable'
+  | 'none'
+  | 'classical'
+  | 'structural'
+  | 'suspect'
+  | 'strong';
 
 export interface RedFlag {
   code: string;

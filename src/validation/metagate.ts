@@ -15,11 +15,14 @@ export interface MetagateVerdict {
 }
 
 export function evaluateMetagate(result: SignatureResult): MetagateVerdict {
+  if (result.verdict === 'notApplicable') {
+    return { passes: false, full: false, reasonSv: 'Analysen är inte tillämplig på denna källa — inget att gate:a.' };
+  }
   const activeRedFlags = result.redFlags.filter((f) => f.triggered && !f.code.endsWith('-DENOM') && !f.code.endsWith('-PASSIVE') && !f.code.endsWith('-PSEUDOSESSION') && !f.code.endsWith('-NOWITNESS'));
   const structurallyOk = result.verdict === 'suspect' || result.verdict === 'strong';
 
   if (!structurallyOk) {
-    return { passes: false, full: false, reasonSv: 'Verdict är none/classical — inget att gate:a.' };
+    return { passes: false, full: false, reasonSv: 'Verdict är none/classical/structural — inget kvantvittne att gate:a.' };
   }
   if (activeRedFlags.length > 0) {
     return {
