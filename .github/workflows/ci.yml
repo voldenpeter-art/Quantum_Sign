@@ -1,0 +1,39 @@
+# Kontinuerlig integration (feedback 2026-07-29: CI saknades helt). Kör på
+# push och pull request: låst installation → typecheck → lint → tester → build.
+# Determinism, detektorinvarianter och null-egenskaper täcks av testsviten
+# (src/**/*.test.ts) och körs alltså i "test"-steget.
+
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install (locked)
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc -b
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
