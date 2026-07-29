@@ -35,6 +35,28 @@ export function generateNull(
   }
 }
 
+/**
+ * Tvålagers-S4 (syntesrapporten §7, punkt 4 — back-portad till A–H/M).
+ * Lager 1 är den vanliga S4 (`generateS4`): värsta-fall DETEKTORartefakt.
+ * Lager 2 lägger en ANALYS-/URVALSSTRESS ovanpå lager 1 — en block-ombytes-
+ * bootstrap (S3-kärnan) på den redan detektor-adversariella strömmen. Den
+ * frågar: överlever ett påstått vittne inte bara värsta-fall-detektorn utan
+ * också ett värsta-fall lokalt tidsurval? Ett vittne som klarar lager 1 men
+ * faller på lager 2 är ett urvals-/struktureringsartefakt, inte signal.
+ *
+ * Anropas parallellt med lager 1 av B (R_CS) och C (motståndargrinden); p⁽²⁾
+ * över {lager 1, lager 2} kräver per konstruktion att vittnet slår det HÅRDARE
+ * av de två (andra minsta av två = det största p:t).
+ */
+export function generateS4Layer2(config: RunConfig, rng: Rng): EventStream {
+  const detectorAdversary = generateS4(config, rng.fork());
+  return blockBootstrapS3(
+    detectorAdversary,
+    rng.fork(),
+    Math.max(0.5, detectorAdversary.duration / 40),
+  );
+}
+
 /** Genererar `n` replikat av given nulltyp (empirisk nollfördelning, CLAUDE.md §7). */
 export function generateNullEnsemble(
   nullId: NullId,

@@ -10,7 +10,7 @@ import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
 import type { Rng } from '../sim/rng';
 import { computeG2Curve } from './coincidence';
-import { mean, variance, binCounts, rangeSymmetric, empiricalPValue } from './stats';
+import { mean, variance, binCounts, rangeSymmetric, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
 function channelTimestamps(events: { channel: string; detectedT: number }[], ch: 'D1' | 'D2') {
@@ -43,6 +43,22 @@ function deriveChannelPair(events: PhotonEvent[], rng: Rng): [number[], number[]
   return [d1, d2];
 }
 
+/**
+ * A-rapporten §6.2: w_k ∝ f(τ_k)/σ_k². GRANSKNINGSFYND: detta ser ut som att
+ * sakna invers-variansviktning (bara mallformen f(τ) används), men det är
+ * INTE en lucka — det ÄR den korrekta viktningen här. σ_k² under H0 skattas
+ * av den FÖRVÄNTADE (ackcidentella) räkningen rateA·rateB·T·Δτ, som är
+ * τ-oberoende för konstant takt — invers variansviktning reducerar därmed
+ * till en konstant faktor som inte påverkar det viktade medelvärdet.
+ *
+ * Ett granskningsförsök att vikta med det OBSERVERADE antalet n_k istället
+ * (en rimlig men fel tolkning av "1/σ_k²") visade sig vara självrefererande:
+ * n_k är just den storhet SIGNALEN trycker ner nära τ=0, så att vikta med n_k
+ * straffar exakt de bins som bär antibunchingen — verifierat genom att det
+ * fick regressionstestet (singleEmitter → ε<0) att slå om till ε>0. Se
+ * commit-historiken och sim/sources/singleEmitter.ts för den relaterade,
+ * verkliga bugg detta grävande avslöjade (källans artificiella periodicitet).
+ */
 function matchedFilterEpsilon(
   d1: number[],
   d2: number[],
@@ -87,15 +103,21 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
   const fano = meanN > 0 ? varN / meanN : 1;
   const mandelQ = fano - 1;
 
+  // p⁽²⁾-regeln: ett p per surrogatfamilj (ε mer negativt = farlig riktning),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullEpsilons: number[] = [];
+  const pByFamily: number[] = [];
   for (const nullId of A_NULLS) {
+    const familyEps: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const [sd1, sd2] = deriveChannelPair(surrogate.events, channelRng.fork());
-      nullEpsilons.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
+      familyEps.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
     }
+    pByFamily.push(empiricalPValue(epsilonHat, familyEps, 'less'));
+    nullEpsilons.push(...familyEps);
   }
-  const pEpsilon = empiricalPValue(epsilonHat, nullEpsilons, 'less');
+  const pEpsilon = pSquared(pByFamily);
 
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'A-none';
@@ -118,7 +140,7 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
     verdictLabelSv,
     components: [
       { key: 'g2_0', labelSv: 'g²(0), korskorrelation', value: g2Zero, classicalReference: 1 },
-      { key: 'epsilon', labelSv: 'ε (matchat filter, teckendiskriminator)', value: epsilonHat, pValue: pEpsilon, classicalReference: 0 },
+      { key: 'epsilon', labelSv: 'ε (matchat filter, teckendiskriminator)', value: epsilonHat, pValue: pEpsilon, classicalReference: 0, primary: true },
       { key: 'delta_anti', labelSv: 'Δ_anti (formvittne)', value: deltaAnti },
       { key: 'mandel_q', labelSv: 'Mandel Q', value: mandelQ, classicalReference: 0 },
       { key: 'fano', labelSv: 'Fano-faktor F', value: fano, classicalReference: 1 },

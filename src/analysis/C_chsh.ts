@@ -8,8 +8,8 @@ import type { AnalysisContext, SignatureResult } from './types';
 import type { NullId } from '../types/signatures';
 import type { PhotonEvent } from '../types/events';
 import type { RunConfig } from '../types/config';
-import { std, normalSurvival } from './stats';
-import { generateNull } from '../nulls';
+import { std, normalSurvival, median } from './stats';
+import { generateNull, generateS4Layer2 } from '../nulls';
 import type { Rng } from '../sim/rng';
 
 interface ChshPair {
@@ -95,9 +95,22 @@ function computeSForConfig(events: PhotonEvent[], config: RunConfig): number {
 
 function bootstrapSigmaS(pairs: ChshPair[], rng: Rng, reps: number): number {
   if (pairs.length < 4) return Infinity;
+  // STRATIFIERAD bootstrap (feedback 2026-07-29): omsampla INOM varje
+  // inställningspar-bucket och bevara varje buckets antal. En vanlig bootstrap
+  // över alla par blandar om proportionerna mellan (0,0)/(0,1)/(1,0)/(1,1) och
+  // ger en missvisande σ_S — CHSH-statistikan är en funktion av fyra separata
+  // korrelationer E(a,b), var och en skattad vid fast antal i sin bucket.
+  const buckets: Record<string, ChshPair[]> = { '0,0': [], '0,1': [], '1,0': [], '1,1': [] };
+  for (const p of pairs) buckets[`${p.settingA},${p.settingB}`].push(p);
+  // Alla fyra kombinationer måste ha minst ett par — annars är S ändå odefinierad.
+  const groups = Object.values(buckets);
+  if (groups.some((b) => b.length === 0)) return Infinity;
   const samples: number[] = [];
   for (let r = 0; r < reps; r++) {
-    const resample = Array.from({ length: pairs.length }, () => pairs[rng.uniformInt(pairs.length)]);
+    const resample: ChshPair[] = [];
+    for (const bucket of groups) {
+      for (let i = 0; i < bucket.length; i++) resample.push(bucket[rng.uniformInt(bucket.length)]);
+    }
     samples.push(computeS(resample));
   }
   return std(samples);
@@ -118,15 +131,41 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
   // Grov synlighetsskattning under antagande om optimala CHSH-vinklar (S = 2√2·V).
   const visibilityHat = S / (2 * Math.SQRT2);
 
-  const nullSs: number[] = [];
-  for (const nullId of C_NULLS) {
+  // S4 (den klassiska motståndaren) är AVSIKTLIGT konstruerad att sitta vid
+  // Bell-gränsen (visibility 1/√2, E[S]=2 exakt) — C-rapporten §6.1 kräver att
+  // den "aktivt trimmas" så nära gränsen som möjligt. Vid E[S]=2 exakt kommer
+  // ~hälften av enskilda surrogatdrag ändå överskrida 2 av ren stickprovsbrus.
+  // ETT svep över 1500 körningar visade att max() över en handfull sådana drag
+  // (en extrem ordningsstatistika) gav en rödflaggsfrekvens som mest speglade
+  // fältstyrkans inverkan på Math.max(konfigurerad, gräns)-formeln i S4, inte
+  // instrumentartefakter — se scripts/sweep.ts-analysen. Motståndarkontrollen
+  // använder därför MEDIANEN av enbart S4-replikaten (robust mot enstaka
+  // extremdrag) för verdikt-grinden, men rapporterar även max som diagnostik.
+  // TVÅLAGERS-S4 (syntesrapporten §7 punkt 4): lager 1 = värsta-fall
+  // detektorartefakt (S4, sitter avsiktligt vid Bell-gränsen), lager 2 = S4 +
+  // analys-/urvalsstress (generateS4Layer2). Motståndaren måste hålla linjen
+  // (median S ≤ 2) i BÅDA lagren — annars är vittnet inte försvarbart. Detta är
+  // p⁽²⁾-logiken (kräv att båda lagren håller) applicerad på C:s motståndargrind.
+  const S4_REPLICATES = nullReplicates * 3;
+  const s4NullSs: number[] = [];
+  const s4NullSsL2: number[] = [];
+  for (let i = 0; i < S4_REPLICATES; i++) {
+    s4NullSs.push(computeSForConfig(generateNull('S4', stream, config, rng.fork()).events, config));
+    s4NullSsL2.push(computeSForConfig(generateS4Layer2(config, rng.fork()).events, config));
+  }
+  const structuralNullSs: number[] = [];
+  for (const nullId of ['S1', 'S2', 'S3'] as const) {
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
-      nullSs.push(computeSForConfig(surrogate.events, config));
+      structuralNullSs.push(computeSForConfig(surrogate.events, config));
     }
   }
-  const maxNullS = nullSs.length ? Math.max(...nullSs) : 2;
-  const adversaryHoldsLine = maxNullS <= 2 + 1e-6;
+  const nullSs = [...structuralNullSs, ...s4NullSs, ...s4NullSsL2];
+  const medianS4 = median(s4NullSs);
+  const medianS4L2 = median(s4NullSsL2);
+  const maxS4 = s4NullSs.length ? Math.max(...s4NullSs) : 2;
+  // Kräv att BÅDA lagren håller linjen (max av de två medianerna ≤ 2).
+  const adversaryHoldsLine = medianS4 <= 2 + 1e-6 && medianS4L2 <= 2 + 1e-6;
 
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'C-none';
@@ -146,17 +185,24 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 's_global', labelSv: 'S (CHSH)', value: S, pValue: pFromK, classicalReference: 2 },
+      { key: 's_global', labelSv: 'S (CHSH)', value: S, pValue: pFromK, classicalReference: 2, primary: true },
       { key: 'k_sigma', labelSv: '(S − 2) / σ_S', value: k },
       { key: 'visibility', labelSv: 'Synlighet V (skattad)', value: visibilityHat, classicalReference: 1 / Math.SQRT2 },
       { key: 'coincidences', labelSv: 'Antal A/B-koincidenser', value: pairs.length },
+      { key: 's4_median', labelSv: 'S4-motståndare L1 (detektor), median', value: medianS4, classicalReference: 2 },
+      { key: 's4_median_l2', labelSv: 'S4-motståndare L2 (+urvalsstress), median', value: medianS4L2, classicalReference: 2 },
+      { key: 's4_max', labelSv: 'S4-motståndare, värsta drag (diagnostik)', value: maxS4, classicalReference: 2 },
     ],
     redFlags: [
       {
         code: 'C-RF-ADVERSARY',
-        labelSv: 'Klassisk motståndare bröt gränsen',
+        labelSv: 'Klassisk motståndare bröt gränsen (median, något lager)',
         triggered: !adversaryHoldsLine,
-        detailSv: 'S4-motståndaren gav S > 2 — vittnet är inte försvarbart (kategorifel, se C-rapporten §6.1).',
+        detailSv:
+          'Medianen av S4-motståndarens repliker gav S > 2 i minst ETT av de två lagren (L1 detektor / L2 ' +
+          '+urvalsstress) — vittnet är inte försvarbart (kategorifel, se C-rapporten §6.1). Ett enstaka ' +
+          'extremdrag räknas inte som brott (motståndaren sitter avsiktligt vid gränsen och enstaka drag ' +
+          'överskrider den av ren brus även när kontrollen är korrekt kalibrerad).',
       },
       {
         code: 'C-RF-LOWPAIRS',

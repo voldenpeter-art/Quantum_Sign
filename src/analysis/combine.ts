@@ -17,6 +17,11 @@ import type { SignatureId } from '../types/signatures';
 import type { SignatureResult, Verdict } from './types';
 
 export function getHeadlinePValue(result: SignatureResult): number | undefined {
+  // Vissa signaturer (B: dg_cross+r_cs_max; D: chi2_const+separation) har FLERA
+  // komponenter med pValue. "Första med pValue" är odefinierat vilken som är
+  // det egentliga vittnet — kräv den uttryckligt märkta primary-komponenten.
+  const primary = result.components.find((c) => c.primary && c.pValue !== undefined);
+  if (primary) return primary.pValue;
   return result.components.find((c) => c.pValue !== undefined)?.pValue;
 }
 
@@ -57,7 +62,18 @@ export interface CombinedEvidence {
   reasonSv: string;
 }
 
-const VERDICT_RANK: Record<Verdict, number> = { none: 0, classical: 0, suspect: 1, strong: 2 };
+// 'structural' rankas 0 (som none/classical): kvantneutral struktur bidrar
+// ALDRIG till en kombinerad KVANTutsaga (combined-suspect/-strong kräver att
+// varje pelare når minst suspect, dvs ett äkta vittne). Se förtjänad
+// nomenklatur i types.ts.
+const VERDICT_RANK: Record<Verdict, number> = {
+  notApplicable: 0,
+  none: 0,
+  classical: 0,
+  structural: 0,
+  suspect: 1,
+  strong: 2,
+};
 
 export function evaluateCombinedEvidence(picks: CombinedPick[]): CombinedEvidence {
   if (picks.length < 2) {

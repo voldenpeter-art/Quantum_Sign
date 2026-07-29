@@ -43,13 +43,34 @@ för detektorartefakter, drift och golvbeteende.
 
 ## 3. Källa till sanning (läsordning)
 
-1. `/rapporter/*.txt` — auktoritativa för varje signaturs metod, trösklar,
+1. `/rapporter/*` — auktoritativa för varje signaturs metod, trösklar,
    golvmönster och definitioner. **Läs relevant rapport innan du rör
-   motsvarande `analysis/`-fil.**
+   motsvarande `analysis/`-fil.** AKTUELL AUKTORITATIV VERSION är
+   `Signaturtyp_{A..H,M}_rapport_v0.2.md` (samt kandidatprotokollen
+   `Signaturkandidat_{I,J}_*_v0.0.txt` och `Partikelnot_*_v1.0.txt`). De äldre
+   v0.1-filerna (`Signaturtyp_A_ickeklassisk_fotonstatistik.txt` m.fl.) är
+   **superseded** — behålls för historik men styr inte längre.
 2. Denna `CLAUDE.md` — tvärgående principer och kartan.
 3. `TODO(spec)` — Peters egen visions-/UX-spec för plattformen styr UI och
    interaktionsflöde. Klistra in eller länka den här:
    `<< PETERS PLATTFORMS-/UX-SPEC — INFOGAS >>`
+
+> **v0.2-standarder (tvärgående, back-portade i alla A–H/M-rapporter — gäller
+> allt framtida analysarbete):** (1) **p⁽²⁾-regeln** — andra minsta p över
+> surrogatfamiljerna bär beslutet; ingen enskild null räcker. (2)
+> **Admissibility-gates** G_A/G_B/G_C/G_F/G_G (och H:s inverterade
+> känslighetsvolymkarta) — förutsagd effekt / minsta upplösbara, band
+> <1/1–3/>3/>10. (3) **Femgradig klassning med förtjänad quantum-nomenklatur**
+> — ordet "quantum" endast i klasser som passerat ett äkta icke-klassicitets­
+> vittne. (4) **Tvålagers-S4** (detektorlager + analyslager/urvalsstress). (5)
+> **Omöjlighetsdetektorer** RF_heisenberg / RF_stokes_bound / RF_energy_balance —
+> fysikaliska omöjligheter som inbyggda lögndetektorer. (6) **Mätbar-null-
+> principen** — där nollan kan mätas är den primär, surrogaten sekundära. (7)
+> **Informationsestimator-standarden** — varje entropi/MI-metrik kräver
+> biaskorrektion + matchat N + permutations-/modellnull. (8) **Lab/Astro-
+> klyvning** — protokollets giltighet skiljs från astronomispårets målbrist.
+> Denna kodbas (v1) implementerar en FÖRENKLAD delmängd; dessa standarder är
+> målbilden, inte nuläget.
 
 ---
 
@@ -84,20 +105,26 @@ rapporten uttryckligen säger annat.
 Fysik nedan är lärobokssäker. Allt *signaturspecifikt* (trösklar, golv, exakt
 estimator) → se rapport.
 
-| Fil | Signatur | Källa(or) | Ärver | Status | Fysik-ankare |
-|---|---|---|---|---|---|
-| `A_g2` | Andra ordningens koherens g²(0) | singleEmitter, coherent, thermal | — | Klar | antibunching g²(0)<1 = icke-klassisk; koherent≈1; termisk≈2 |
-| `B_polarization` | Polarisationskorrelationer | (se rapport) | — | Klar | **RÅDATAKÄLLA för D/E/F** |
-| `C_chsh` | CHSH / Bell | (se rapport) | — | Klar | klassisk gräns \|S\|≤2; Tsirelson 2√2≈2.828 |
-| `D_invariant` | Invariant | via B | **B** | Klar | se rapport |
-| `E_lowDim` | Lågdimensionsvittne | via B | **B** | Klar | se rapport |
-| `F_memory` | Minne / icke-Markovianitet | via B, memoryEcho | **B** | Klar | se rapport |
-| `G_squeezing` | Kvadratursqueezing | squeezedTwin | — | **PENDING** (stubbe) | brus under vakuumnivå |
-| `H_sensorNetwork` | Distribuerat sensornätverk | sensorNetworkH | — | Klar | **metodmall (4.4)** |
-| `M_echo` | Eko | memoryEcho | — | **PENDING** (stubbe) | se rapport |
+Kolumnen **v0.2-status** är rapportens egen statusetikett. Kolumnen **v1-kod**
+är vad DENNA kodbas faktiskt implementerar (en förenklad delmängd av v0.2).
 
-> G och M är **registrerade men ej färdiga**. Lämna dem som tydligt märkta
-> stubbar med `TODO(rapport)` — implementera inte metod du inte har underlag för.
+| Fil | Signatur | Ärver | v0.2-status (rapport) | v1-kod |
+|---|---|---|---|---|
+| `A_g2` | g²(0) fotonstatistik | — | protocol-ready, target-unresolved | förenklad |
+| `B_polarization` | Polarisation–tid (**RÅDATA för D/E/F**) | — | infrastructure-ready, B-2 blocked | förenklad |
+| `C_chsh` | CHSH / Bell | — | C-Lab/C-Link protocol-ready; C-Astro dormant | förenklad |
+| `D_invariant` | Stabil invariant | **B** | fingerprint-ready after code fixes | förenklad |
+| `E_lowDim` | Lågdim / kod-likhet | **B** | structure-ready after S5-E + fixes | förenklad |
+| `F_memory` | Non-Markovianitet / minne | **B** | memory-structure-ready, quantum-active-only | förenklad |
+| `G_squeezing` | Kvadratursqueezing | — | lab-strong, sky-blind (quad) / sky-gated (twin) | **stubbe** |
+| `H_sensorNetwork` | Sensornätverk (metodmall 4.4) | — | target-rich, method-exporting | **stubbe** |
+| `M_echo` | Eko / minne | — | intervention-ready (lab), awaiting W_env pilot | **stubbe** |
+
+> Fullständiga v0.2-rapporter finns nu i `/rapporter` för **samtliga** A–H och M
+> (F, G och M var tidigare oskrivna). Varje rapports §"Kodstatus" listar exakt
+> vad som återstår att implementera. G, H och M är fortfarande **stubbar** i
+> koden — lämna dem så tills ett medvetet implementationsbeslut tas; v0.2 ger
+> nu underlaget men inte en färdig modul.
 
 ---
 
@@ -113,6 +140,24 @@ estimator) → se rapport.
   rapport/spec innan den låses):
   `loss → jitter → deadTime → afterpulsing → darkCounts → crosstalk`
   `TODO(spec): bekräfta kanonisk ordning och per-detektor-parametrar.`
+
+### 6.1 Arkitektonisk gräns: statistik-nivå, inte tillstånds-nivå (bindande)
+
+Simuleringslagret evolverar ALDRIG ett kvanttillstånd (ingen täthetsmatris,
+ingen Hamiltonian, inga Krausoperatorer). Källor som `entangled.ts` samplar
+händelser DIREKT ur den sannolikhetsfördelning kvantmekaniken förutsäger för
+en given mätning (t.ex. E(a,b) = −V·(â·b̂) i Blochvektor-modellen), inte genom
+att evolvera ett tillstånd och simulera en mätning på det. Detta är legitim,
+standardpraxis för att generera testdata till en analyspipeline — men sätter
+en hård gräns: plattformen kan aldrig svara på frågor om tillståndsdynamik
+(Rabi-oscillationer, kontinuerlig dekoherens som process, blandade tillstånd
+bortom en skalär "visibility", kontinuerliga variabler). **Detta är den
+sannolika förklaringen till varför G (squeezing) korrekt lämnats som stubbe**
+— kvadratursqueezing är en kontinuerlig-variabel-egenskap (fältkvadraturer,
+homodyndetektion) som inte kan genereras med samma "sampla ur facit"-teknik
+som de diskreta klick-baserade källorna använder. G kräver en annan
+simuleringsmotor, inte bara en till källfil. Väg detta noga innan G/H/M
+implementeras — fråga först vilken simuleringsklass signaturen tillhör.
 
 ---
 

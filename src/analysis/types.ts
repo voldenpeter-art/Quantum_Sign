@@ -12,9 +12,35 @@ export interface SignatureComponent {
   /** Klassiskt/golv-relaterat referensvärde för visuell jämförelse i UI. */
   classicalReference?: number;
   unit?: string;
+  /**
+   * Markerar VILKEN komponent som är signaturens huvudvittne när flera
+   * komponenter bär ett pValue (t.ex. B har både dg_cross och r_cs_max; D har
+   * både chi2_const och separation). Utan denna flagga är "första komponenten
+   * med ett pValue" odefinierat vilken som väljs — se analysis/combine.ts och
+   * scripts/sweep.ts, som båda letar efter primary===true först.
+   */
+  primary?: boolean;
 }
 
-export type Verdict = 'none' | 'classical' | 'suspect' | 'strong';
+// Femgradig klassning med FÖRTJÄNAD quantum-nomenklatur (syntesrapporten §7,
+// punkt 3): orden "suspect"/"strong" (kvantanspråk) får BARA sättas där ett
+// äkta icke-klassicitetsvittne passerat — A:s antibunching (ε < 0), B:s
+// Cauchy–Schwarz R_CS > 1, C:s S > 2. Kvantneutrala signaturer (D-pol, E, samt
+// F-passiv) kan bära struktur som överlevt surrogaten men aldrig ett
+// kvantvittne; deras tak är därför 'structural', inte 'suspect'. 'classical' =
+// struktur aktivt förenlig med en klassisk modell; 'none' = inget över golvet.
+//
+// 'notApplicable' är en SÄRSKILD sentinel, inte en styrkenivå: analysen gäller
+// inte för denna källa/dataström alls (t.ex. C/D/E på en enkanalig thermal-
+// källa utan armar). Den får ALDRIG blandas ihop med 'none' ("kördes, hittade
+// inget") — det vore att tolka ett icke-mätt värde som ett negativt resultat.
+export type Verdict =
+  | 'notApplicable'
+  | 'none'
+  | 'classical'
+  | 'structural'
+  | 'suspect'
+  | 'strong';
 
 export interface RedFlag {
   code: string;

@@ -8,6 +8,13 @@ export function mean(xs: number[]): number {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0;
 }
 
+export function median(xs: number[]): number {
+  if (xs.length === 0) return NaN;
+  const s = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+
 /** Ensidig normal-överlevnadsfunktion P(Z > z), Abramowitz–Stegun 7.1.26-approximation av erf. */
 export function normalSurvival(z: number): number {
   if (!Number.isFinite(z)) return z > 0 ? 0 : 1;
@@ -55,6 +62,33 @@ export function empiricalPValue(
       ? nullValues.filter((v) => v >= observed).length
       : nullValues.filter((v) => v <= observed).length;
   return (asExtreme + 1) / (nullValues.length + 1); // +1: konservativ (Q99-stil) korrigering
+}
+
+/**
+ * p⁽²⁾-regeln (syntesrapporten §7, punkt 1 — back-portad till alla A–H/M):
+ * beslutet bärs av det NÄST minsta p-värdet över surrogatfamiljerna, inte det
+ * minsta. En enda "lyckträff"-familj (en null som råkar ge ett litet p) räcker
+ * aldrig — minst två oberoende surrogatfamiljer måste peka åt samma håll för
+ * att ett litet p⁽²⁾ ska uppstå. Degenererar till det enda värdet vid en enda
+ * familj (då finns ingen andra att kräva) och till 1 vid noll familjer.
+ *
+ * OBS: detta är AVSIKTLIGT konservativt. Vid två familjer blir p⁽²⁾ = det
+ * större av de två p-värdena (andra minsta av två = det största), vilket är
+ * exakt "vittnet måste slå BÅDA" — samma logik som tvålagers-S4 kräver.
+ *
+ * UPPLÖSNINGSGOLV (viktigt för tröskelläsning): varje familjs empiriska p har
+ * ett hårt golv på 1/(replikat+1). Eftersom p⁽²⁾ väger PER familj (inte poolat)
+ * kan p⁽²⁾ aldrig understiga 1/(replikat+1). En struktur-/kvantklass vid tröskel
+ * 1e-2 kräver därför ≥~100 surrogat PER familj. Vi byter MEDVETET INTE till en
+ * parametrisk (gaussisk) svans för att komma under golvet — det vore att hitta
+ * på signifikans surrogaten inte stöder, tvärtemot plattformens surrogat-först-
+ * princip (CLAUDE.md §4.3). Hellre ärligt 'none' än överdriven klass.
+ */
+export function pSquared(perFamilyP: number[]): number {
+  const ps = perFamilyP.filter((p) => Number.isFinite(p)).sort((a, b) => a - b);
+  if (ps.length === 0) return 1;
+  if (ps.length === 1) return ps[0];
+  return ps[1];
 }
 
 /** i.i.d. resampling-bootstrap (förenklad — ej blockbootstrap) för konfidensintervall. */

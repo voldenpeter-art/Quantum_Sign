@@ -13,7 +13,7 @@ import type { AnalysisContext, SignatureResult } from './types';
 import type { EventStream } from '../types/events';
 import type { NullId } from '../types/signatures';
 import { computeG2Curve } from './coincidence';
-import { rangeSymmetric, empiricalPValue } from './stats';
+import { rangeSymmetric, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
 const F_NULLS: NullId[] = ['S1', 'S3', 'S5'];
@@ -57,21 +57,34 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
   const [tsX, tsY] = extractPairTimestamps(stream);
   const { score, tauAt } = revivalScore(tsX, tsY, stream.duration);
 
+  // p⁽²⁾-regeln: ett p per surrogatfamilj (hög revival = farlig riktning),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullScores: number[] = [];
+  const pByFamily: number[] = [];
   for (const nullId of F_NULLS) {
+    const familyScores: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const [sx, sy] = extractPairTimestamps(surrogate);
-      nullScores.push(revivalScore(sx, sy, surrogate.duration).score);
+      familyScores.push(revivalScore(sx, sy, surrogate.duration).score);
     }
+    pByFamily.push(empiricalPValue(score, familyScores, 'greater'));
+    nullScores.push(...familyScores);
   }
-  const pValue = empiricalPValue(score, nullScores, 'greater');
+  const pValue = pSquared(pByFamily);
 
+  // FÖRTJÄNAD NOMENKLATUR (types.ts): F-passiv (det plattformen mäter) är
+  // KVANTNEUTRAL — en revival i g²(τ)-svansen kan lika gärna vara klassiskt
+  // långminne (flicker, se floorNote). Taket är 'structural'; en kvantstark
+  // F-aktiv kräver preparerbara probtillstånd (C/G-labbet) som saknas här.
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'F-none';
   if (score > 0 && pValue < 1e-2) {
-    verdict = 'suspect'; // hård cap: F-aktiv (C/G-labbet) krävs för starkare nivå
-    verdictLabelSv = 'F-suspect (max — F-aktiv-protokoll saknas)';
+    verdict = 'structural';
+    verdictLabelSv =
+      pValue < 1e-3
+        ? 'F-minne (strukturell, kvantneutral)'
+        : 'F-minne-svag (strukturell, kvantneutral)';
   }
 
   return {
@@ -79,7 +92,7 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 'revival_score', labelSv: 'Revival-poäng (max avvikelse från Markov-baslinje)', value: score, pValue },
+      { key: 'revival_score', labelSv: 'Revival-poäng (max avvikelse från Markov-baslinje)', value: score, pValue, primary: true },
       { key: 'tau_at', labelSv: 'τ vid maximal avvikelse (s)', value: tauAt, unit: 's' },
     ],
     redFlags: [

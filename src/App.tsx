@@ -5,6 +5,7 @@ import { IMPLEMENTED_SIGNATURES } from './types/signatures';
 import { generateEventStream } from './sim';
 import { Rng } from './sim/rng';
 import { ANALYSIS_REGISTRY, type AnalysisContext, type SignatureResult } from './analysis/registry';
+import { isSignatureCompatible, notApplicableResult } from './analysis/compatibility';
 import { ControlPanel } from './ui/ControlPanel';
 import { EventStreamView } from './ui/EventStreamView';
 import { SignatureDashboard } from './ui/SignatureDashboard';
@@ -37,6 +38,13 @@ export default function App() {
       for (const id of IMPLEMENTED_SIGNATURES) {
         const analyzer = ANALYSIS_REGISTRY[id];
         if (!analyzer) continue;
+        // Kompatibilitetsgrind: kör inte en analys som inte gäller källan —
+        // markera 'notApplicable' i stället för att låta den falla till 'none'.
+        const compat = isSignatureCompatible(id, stream, config);
+        if (!compat.compatible) {
+          next[id] = notApplicableResult(id, compat.reasonSv ?? 'Ej tillämplig.');
+          continue;
+        }
         const ctx: AnalysisContext = { stream, config, rng: rng.fork(), nullReplicates };
         next[id] = analyzer(ctx);
       }

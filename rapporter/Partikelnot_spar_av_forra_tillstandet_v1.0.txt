@@ -1,0 +1,97 @@
+# Partikelnot — Spår av det förra tillståndet i delningens produkter
+
+## Kartläggning av partikelfysikens spårtyper mot kvantsignatur-katalogen, metodnot version 1.0
+
+*Status: metodnot — varken signatur eller kandidat, utan katalogens förankringsdokument mot partikelfysiken. Noten besvarar programfrågan i dess partikelform: när materia delas — genom kollision, sönderfall eller excitation — bär det nya tillståndet läsbara spår av det förra? Svaret struktureras i tre delar: upplösningen av observationseffektens catch-22 (§2), sju etablerade spårtyper med katalogmappning (§3–4), och den ärliga gränsen för vad som alls kan läsas (§5). Scope: kvarkar, leptoner, hadroner, bosoner och fermioner. Noten definierar därtill A_f/femtoskopi-bryggan som plattformens första partikelmodul (§4, §7).*
+
+---
+
+## 1. Syfte
+
+Katalogens födelsefrågor — lämnar det som sker läsbara spår, och vad saknas för att förutbestämma en händelse? — har i partikelfysiken prövats industriellt i sjuttio år. Varje kolliderare är en delningsmaskin, varje detektor en spårläsare, och varje publicerad partikelegenskap är ett svar på frågan "vad kan det nya tillståndet berätta om det förra?". Noten kartlägger de etablerade svaren mot katalogens signaturer, av tre skäl: (i) den visar att katalogens frågor inte är spekulation utan industrialiserad praxis i en grannvetenskap; (ii) den identifierar färdiga metodimporter (mixed-event-tekniken, bevarandebokföringen, vinkeltomografin); (iii) den ger plattformen sina första materiemoduler med facit — golden tests hämtade ur läroboksfysik.
+
+## 2. Observationseffektens catch-22 — och dess upplösning
+
+Invändningen är verklig: en enskild detektion berättar inte partikelns historia. Mätningen projicerar tillståndet (mätpostulatet), utfallet är ett av flera möjliga, och partikeln har — korrekt formulerat — tilldelats ett nytt tillstånd snarare än förhörts om sitt gamla. För individen är detta en äkta gräns.
+
+Upplösningen är ensembleprincipen: ingen partikel förhörs ensam. Över miljontals identiskt preparerade delningar framträder fördelningen — invarianta massor, vinkelmönster, korrelationer — och fördelningen avslöjar det tidigare tillståndet med i princip godtycklig precision. En händelse är en punkt; mönstret är kunskapen. Detta är samma epistemik katalogen redan vilar på (en foton säger inget, g²-kurvan säger allt) och den skrivs härmed in som notens första bindande sats: **all historieläsning ur delningsprodukter är ensemblestatistik; anspråk på individhistorik bortom tillstånd, korrelationer och bevarade kvanttal är fysikaliskt ogrundade (§5).**
+
+## 3. De sju spårtyperna och deras katalogadresser
+
+### P1 — Invariant massa och resonansstruktur → D
+
+Sönderfallsprodukternas invarianta massa toppar vid förälderns massa, händelse efter händelse, oberoende av produktionssätt: Z-bosonen nära 91 GeV, Higgs nära 125 GeV. Detta är en stabil, Lorentz-invariant storhet som återkommer över sessioner, energier och detektorer — **D:s stabila invariant i sin renaste kända form**, med D-disciplinens hela apparat (separation, stabilitet, kontrast) implicit i partikelfysikens praxis: toppen separerar från bakgrundskontinuum (D-sep), står stilla över kampanjer (D-stab), medan allt icke-invariant runt den varierar (D-kontrast).
+
+### P2 — Sönderfallsträd, branching och linjebredd → J
+
+Varje instabil partikels dokumentation är exakt J:s mätobjekt: nivåer, övergångshastigheter Γ, branching-kvoter B, livstider τ och kanaltyper — sönderfallsträdet T_J i industriell drift, katalogiserat för tusentals tillstånd. Linjebredden ger livstiden via ΔE·Δt ≳ ħ (breda resonanser lever kort), vilket är J-materialets osäkerhetsrelation i acceleratorform. Urvalsreglernas roll syns i förbjudna och undertryckta kanaler — J:s metastabila lås. Partikelfysiken är därmed J-kandidatens existensbevis: signaturtypen är inte hypotetisk utan beskriver den mest datarika mätpraxis som finns.
+
+### P3 — Vinkelfördelningar och spinn-/polarisationsminne → B-släktet och tillståndstomografi
+
+Sönderfallsprodukternas vinkelmönster kodar förälderns spinn och polarisation: tau-leptonens sönderfallsriktningar avslöjar dess polarisation vid födseln, och Higgs-bosonens spinn-0 fastställdes ur vinkelfördelningarna i dess sönderfall. Det nya tillståndets geometri läser alltså det förra tillståndets kvanttal — polarisationsstrukturens informationsbärande roll är B:s grundtes, och den fulla formen (rekonstruktion av spinndensitetsmatriser ur vinkeldata) är kvanttillståndstomografi, den öppna forskningsfrontens huvudspår (§6).
+
+### P4 — Bevarandebokföring och saknad energi → energibokslutet (RF_energy_balance-familjen)
+
+Laddning, leptontal, baryontal, energi och rörelsemängd balanserar över varje delning. Saknas energi eller rörelsemängd i slutstaten har något osynligt burit bort den — neutrinerna upptäcktes och mäts rutinmässigt så: **det osedda läses ur bokslutet**. Detta är J-protokollets RF_energy_balance i sin ursprungsform och notens tydligaste metodimport: partikelfysiken uppfann energirevisorn, och plattformens bokslutsmodul (J §3.2) får härmed sin etablerade förlaga, inklusive dess ärliga baksida — bokslut kräver hermetisk detektortäckning, och varje otäckt rymdvinkel är en artefaktkälla för "saknad" energi.
+
+### P5 — Rumsliga vertexspår → M i geometrisk form
+
+En b-kvark hadroniserar till en B-hadron som flyger en mätbar sträcka före sitt sönderfall: den förskjutna vertexen är ett bokstavligt rumsligt minne av förälderns existens och livstid, och b-tagging — att läsa "här levde en b-kvark" ur spårgeometrin — är vardagsteknik. I katalogens språk: detektorn är miljöfragmentet, vertexgeometrin är det redundanta avtrycket, och avläsningen är M-witness i sin mest handfasta form — historik rekonstruerad ur spår i omgivningen, utan något anspråk på att individen själv "minns".
+
+### P6 — Parkorrelationer och entanglement i slutstater → C i materieform
+
+Delningens produkter är inte två oberoende nyheter utan ett korrelerat helt: spinn-korrelationer i topp–antitopp-par har uppmätts som genuin entanglement i kolliderardata, och B-mesonpar från B-fabriker används rutinmässigt som EPR-korrelerade par i CP-brottsmätningar. Korrelationen är ett spår av det gemensamma ursprunget — C-signaturen i materieform, med D-2arm/Horodecki-screeningen (D v0.2 §7) som naturlig förscreeningsmetod även här. Notera symmetrin med katalogens pargolv: kolliderarna har det C-Astro saknar — en parkälla med känd geometri — vilket är exakt därför entanglementmätning där är möjlig.
+
+### P7 — Identisk-partikel-statistik och femtoskopi → A_f (första bryggan, §4)
+
+Identiska bosoner i slutstaten bunchar (Bose–Einstein-förstärkning vid små relativimpulser), identiska fermioner antibunchar (Pauli) — och femtoskopin använder detta för att mäta källans storlek och geometri ur slutprodukternas korrelationsmönster. Emissionstillståndets form läses ur spåren i det nya tillståndet: programfrågan i etablerad drift sedan decennier, och katalogens A_f (A v0.2 §9.3) i färdig praxis.
+
+## 4. A_f/femtoskopi-bryggan — plattformens första partikelmodul
+
+### 4.1 Mätobjektet
+
+Korrelationsfunktionen C(q) bildas som kvoten mellan par-fördelningen i samma händelse och en referensfördelning av par från olika händelser (mixed events), som funktion av parets relativimpuls q. För identiska bosoner (pioner) uppträder en förstärkning vid små q vars bredd skalar omvänt mot källstorleken (~ħ/R) — källgeometrin ur interferensmönstret; för identiska fermioner (protoner) en undertryckning, modifierad av slutstatsinteraktioner. Formen parametriseras med en koherens-/renhetsparameter λ ≤ 1.
+
+### 4.2 Katalogmappningen (bindande för A_f-protokollet)
+
+**Hypotesstrukturen** är A v0.2 §9.3:s: H₀ = distinguerbar/klassisk partikelström + instrumentmodell; H₁ = identiska partiklar med kvantstatistik — och vittnesriktningen är omvänd mot foton-A: antibunching är här den *förväntade* kvantstatistiska effekten, distinguerbarhet nollan. **Mixed-event-referensen** är partikelfysikens motsvarighet till katalogens time-slide/accidentals (S2): par från olika händelser kan inte bära kvantkorrelation, och referensen delar single-particle-fördelningarna exakt — en etablerad, fältprövad nollmaskinsteknik som importeras till plattformens A_f-modul som S2:s partikelform. **Slutstatsinteraktionerna** (Coulomb-attraktion/repulsion, stark växelverkan mellan produkterna) är A_f:s instrumentlager: de förvränger C(q) åt båda hållen och måste modelleras i H₀ — korrigera modellen, inte datan (B v0.2 §7.2 gäller). **λ-parametern** är kontrastbudgetens partikelform: koherent emission, långlivade resonansers döttrar och felidentifierade partiklar späder korrelationen exakt som modutspädning späder ε — teckenbevarande men krympande, med A §8:s hela budgetlogik tillämplig. **Kanariefågeln:** distinguerbara partikelpar (olika arter) genom identisk pipeline ska ge platt C(q) — varje struktur där är instrument eller slutstatsfysik, aldrig statistik.
+
+### 4.3 Plattformsimplikation
+
+A_f-modulen blir plattformens första materiemodul (plattformsgranskningens Fermion-A-förslag, nu med etablerad metodförlaga): eventström med partikel-ID, mixed-event-motor, C(q)-estimator, λ-budget, Coulomb-lager i H₀, och golden tests med facit — bosonsimulering ska ge förstärkning med korrekt R-skalning, fermionsimulering undertryckning, distinguerbar ström platt kurva. Modulen återanvänder A-kärnans koincidens- och nollmaskineri med q i stället för τ som korrelationsvariabel.
+
+## 5. Gränsparagrafen: identiska partiklars minneslöshet (bindande)
+
+Här sätter naturen själv notens tak, och det formuleras utan omsvep: **en elementarpartikel har inga repor.** Varje elektron är exakt varje annan elektron; ingen individuell märkning, inget inre slitage, ingen dagbok följer med partikeln ur dess förra tillstånd. Allt minne av vad partikeln "utsattes för" bor på exakt tre ställen och inga andra:
+
+1. **Kvanttillståndet** — spinn, polarisation, rörelsemängd, energi och flavor-superpositioner; neutrinooscillationer är propagationshistorik lagrad i just superpositionen, läsbar som oscillationsmönster över ensemblen.
+2. **Korrelationerna** — entanglement och bevarandekopplingar med delningens övriga produkter (P4, P6).
+3. **De bevarade kvanttalen** — laddning, leptontal, baryontal: oförstörbara men också informationsfattiga, ty de säger vad partikeln är, inte var den varit.
+
+Tre konsekvenser är bindande för allt framtida katalogarbete i partikeldomänen. **(i)** No-cloning-teoremet förbjuder fullständig avläsning av ett enskilt okänt kvanttillstånd; individhistorik bortom listan ovan är inte svårmätt utan icke-existerande som fysikalisk storhet. **(ii)** För kvarkar tillkommer confinement: de observeras aldrig fria, och all kvarkkunskap är rekonstruerad ur hadronmönster — jets, vars substruktur i dag kan skilja kvark- från gluoninitierade skurar och identifiera boostade tunga föräldrar, men alltid via ensemblemönster i fragmenten, aldrig via partikeln själv. **(iii)** Varje plattformsmodul och varje framtida signaturtillämpning i partikeldomänen ska därför formulera sina anspråk som ensembleanspråk; formuleringar som antyder att en enskild partikel "bär spår av" eller "minns" sin historia utöver tillstånd–korrelation–kvanttal är förbjudna i katalogens dokument, av samma skäl som medicinska metaforer: de bjuder in feltolkning och ogrundade anspråk.
+
+Gränsen är ingen förlust — den är själva fyndet. Att minnet bor i tillstånd, korrelationer och bevarade tal, och ingenstans annars, är exakt vad som gör det mätbart: tre väldefinierade adresser i stället för en mystisk essens.
+
+## 6. Öppen forskningsfront: kvantinformation i kolliderardata
+
+Den genuint aktiva fronten dit programfrågan pekar är kvanttomografi av slutstater: mätning av fullständiga spinndensitetsmatriser, entanglementmått och Bell-olikhetstest i kollideringsdata — topp–antitopp-entanglementet är fältets första etablerade landmärke, och Bell-testning i acceleratormiljö är pågående arbete. Katalogens relevans är dubbelriktad: fronten möter exakt de strider katalogen kodifierat — estimatorbias i tomografi, look-elsewhere över kanaler, motståndarmodeller för detektoreffekter, disjunkthetskrav för korsbekräftelse — och katalogens metodbibliotek (p⁽²⁾, tvådelad inferens, förtjänad nomenklatur, omöjlighetsdetektorer) är formulerat för precis sådana lägen. Noten registrerar detta som långsiktig exportmöjlighet, utan anspråk: katalogen har metoder att erbjuda, fältet har data katalogen aldrig kommer att ha.
+
+## 7. Konsekvenser för plattformen
+
+(1) **A_f-modulen** enligt §4.3 — första materiemodulen, med mixed-event-motorn som återanvändbar nollmaskinskomponent; (2) **energibokslutsmodulen** (J §3.2) får missing-energy-form med hermeticitetsbudget som kalibreringsparameter; (3) **J:s T_J-syntax** valideras mot sönderfallsträdens etablerade tabellform, så att plattformens träd är kompatibla med fältets datastruktur från dag ett; (4) **golden tests med läroboksfacit:** boson-bunching med R-skalning, fermion-undertryckning, distinguerbar-platt kanariefågel, vertexförskjutning proportionell mot τ, invariant-massa-topp stabil över "sessioner"; (5) **entanglement-modulen** (P6) parkeras tills C-Lab-kärnan står — samma tillståndsbaserade datamodell (Sprint 1-spec regel 1) bär båda.
+
+## 8. Sammanfattande mappningstabell
+
+| Spårtyp | Etablerad praxis | Katalogadress | Importerad disciplin |
+|---|---|---|---|
+| P1 Invariant massa | Resonansrekonstruktion | D | Separation–stabilitet–kontrast i drift |
+| P2 Sönderfallsträd | Branching-/livstidstabeller | J | T_J-syntax, linjebredd ↔ τ |
+| P3 Vinkelfördelningar | Spinn-/polarisationsbestämning | B-släktet, tomografi | Vinkeltomografi, densitetsmatrisrekonstruktion |
+| P4 Bevarandebokföring | Missing energy/momentum | RF_energy_balance | Energirevisorn, hermeticitetsbudget |
+| P5 Förskjutna vertexar | b-tagging | M (geometrisk form) | Rumsligt livstidsminne i "miljön" |
+| P6 Slutstatskorrelationer | Topp-par-entanglement, B-par | C (materieform), D-2arm | Parkälla med känd geometri |
+| P7 Identisk statistik | Femtoskopi/HBT | **A_f (första bryggan)** | Mixed-event-null, λ-budget, Coulomb-lager |
+
+## 9. Slutsats
+
+Delningen är ingen informationsdöd — den är en översättning. Det förra tillståndet skrivs vid delningsögonblicket in i det nya på tre adresser: produkternas kvanttillstånd, deras inbördes korrelationer och de bevarade kvanttalen — och partikelfysiken har i sjuttio år demonstrerat att alla tre är läsbara, i ensemble, med precision nog att bygga ett standardmodellbygge på. Katalogens frågor visar sig därmed inte vara gäster i partikeldomänen utan hemmahörande: invarianten är D, trädet är J, korrelationen är C, statistiken är A_f, det rumsliga minnet är M, och bokslutet är revisorn hela katalogen nu delar. Gränsen är lika klar som möjligheterna: individen minns ingenting utöver sina tre adresser, och varje anspråk däröver är metaforik, inte mätning. Programfrågan — lämnar historien spår? — får i partikelform sitt skarpaste svar hittills: ja, alltid, på exakt tre ställen; aldrig fler, aldrig färre, och alla tre mätbara.

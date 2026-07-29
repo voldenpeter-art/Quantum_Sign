@@ -10,10 +10,18 @@
 import type { AnalysisContext, SignatureResult } from './types';
 import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
-import { covMatrix, participationRatio, empiricalPValue } from './stats';
+import { covMatrix, participationRatio, empiricalPValue, pSquared } from './stats';
 import { generateNull } from '../nulls';
 
-const BIN_WIDTH_S = 0.5;
+// Antal bins (inte binbredd) hålls fast. v1 hade en fast BIN_WIDTH_S=0.5s,
+// vilket gjorde att binantalet — och därmed skattningens brusnivå — växte
+// linjärt med mätfönstrets längd. 1500-körningssvepet visade en stark
+// korrelation (r≈0.57) mellan d_eff och duration som INTE var fysikalisk:
+// längre körning gav systematiskt högre uppmätt dimension oavsett källa,
+// alltså ett skattningsartefakt, inte signal. Fast binantal gör körningar
+// med olika längd jämförbara (viktigt för "Kombinera signaturer").
+const TARGET_BIN_COUNT = 24;
+const MIN_BIN_WIDTH_S = 0.1;
 const E_NULLS: NullId[] = ['S1', 'S3', 'S5'];
 
 const COLUMN_INDEX: Record<string, number> = {
@@ -38,7 +46,8 @@ function binFeatureVectors(events: PhotonEvent[], duration: number, binWidth: nu
 }
 
 function effectiveDimension(events: PhotonEvent[], duration: number): number {
-  const feats = binFeatureVectors(events, duration, BIN_WIDTH_S);
+  const binWidth = Math.max(MIN_BIN_WIDTH_S, duration / TARGET_BIN_COUNT);
+  const feats = binFeatureVectors(events, duration, binWidth);
   return participationRatio(covMatrix(feats));
 }
 
@@ -47,21 +56,34 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
   const tomographyEvents = stream.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
   const dEff = effectiveDimension(tomographyEvents, stream.duration);
 
+  // p⁽²⁾-regeln: ett p per surrogatfamilj (låg d_eff = farlig riktning),
+  // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullDs: number[] = [];
+  const pByFamily: number[] = [];
   for (const nullId of E_NULLS) {
+    const familyDs: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
       const surrogate = generateNull(nullId, stream, config, rng.fork());
       const surrogateTomography = surrogate.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
-      nullDs.push(effectiveDimension(surrogateTomography, surrogate.duration));
+      familyDs.push(effectiveDimension(surrogateTomography, surrogate.duration));
     }
+    pByFamily.push(empiricalPValue(dEff, familyDs, 'less'));
+    nullDs.push(...familyDs);
   }
-  const pValue = empiricalPValue(dEff, nullDs, 'less');
+  const pValue = pSquared(pByFamily);
 
+  // FÖRTJÄNAD NOMENKLATUR (types.ts): E är KVANTNEUTRAL — låg effektiv dimension
+  // (kompression) är klassisk vardag och utgör inget icke-klassicitetsvittne.
+  // Taket är 'structural', aldrig 'suspect'/'strong' (E-strong kräver dessutom
+  // ett oberoende vittne från disjunkt kedja som plattformen saknar, se filhuvud).
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'E-none';
   if (pValue < 1e-2) {
-    verdict = 'suspect'; // hård cap: strong kräver externt vittne, se filhuvud
-    verdictLabelSv = 'E-suspect (max — externt vittne saknas för strong)';
+    verdict = 'structural';
+    verdictLabelSv =
+      pValue < 1e-3
+        ? 'E-lågdim (strukturell, kvantneutral)'
+        : 'E-lågdim-svag (strukturell, kvantneutral)';
   }
 
   return {
@@ -69,7 +91,7 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
     verdict,
     verdictLabelSv,
     components: [
-      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, pValue, classicalReference: 6 },
+      { key: 'd_eff', labelSv: 'Effektiv dimension (deltagarkvot)', value: dEff, pValue, classicalReference: 6, primary: true },
     ],
     redFlags: [
       {
