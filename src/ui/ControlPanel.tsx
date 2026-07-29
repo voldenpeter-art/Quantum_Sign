@@ -173,10 +173,10 @@ export function ControlPanel({ config, setConfig, nullReplicates, setNullReplica
           label="Surrogat per nulltyp"
           value={nullReplicates}
           min={3}
-          max={60}
+          max={200}
           step={1}
           onChange={setNullReplicates}
-          hint="Fler surrogat → skarpare p-värden, långsammare analys."
+          hint="Empiriskt p har ett golv på 1/(N+1) PER familj (p⁽²⁾-regeln väger per familj). En strukturell/kvantklass vid tröskel 1e-2 kräver därför ≥~100 surrogat/familj — högre = skarpare men långsammare."
         />
       </Section>
     </div>

@@ -75,6 +75,14 @@ export function empiricalPValue(
  * OBS: detta är AVSIKTLIGT konservativt. Vid två familjer blir p⁽²⁾ = det
  * större av de två p-värdena (andra minsta av två = det största), vilket är
  * exakt "vittnet måste slå BÅDA" — samma logik som tvålagers-S4 kräver.
+ *
+ * UPPLÖSNINGSGOLV (viktigt för tröskelläsning): varje familjs empiriska p har
+ * ett hårt golv på 1/(replikat+1). Eftersom p⁽²⁾ väger PER familj (inte poolat)
+ * kan p⁽²⁾ aldrig understiga 1/(replikat+1). En struktur-/kvantklass vid tröskel
+ * 1e-2 kräver därför ≥~100 surrogat PER familj. Vi byter MEDVETET INTE till en
+ * parametrisk (gaussisk) svans för att komma under golvet — det vore att hitta
+ * på signifikans surrogaten inte stöder, tvärtemot plattformens surrogat-först-
+ * princip (CLAUDE.md §4.3). Hellre ärligt 'none' än överdriven klass.
  */
 export function pSquared(perFamilyP: number[]): number {
   const ps = perFamilyP.filter((p) => Number.isFinite(p)).sort((a, b) => a - b);
