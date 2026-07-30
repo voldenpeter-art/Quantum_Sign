@@ -1,0 +1,66 @@
+# Manuellt triggad valideringskörning (feedback P2): den förregistrerade
+# kontrollmatrisen i tvåstegsdesign (screening → confirmation). Kör INTE på varje
+# push (dyr) — bara via "Run workflow". Verifierar exakt 15 × <seeds> unika
+# (scenario, seed)-par och laddar upp resultatet som artifact.
+#
+# OBS: fulla spec-replikaten (screening 199 / confirmation 1999) × 100 seeds kan
+# överskrida en enskild runners tidsbudget. Inputs nedan låter dig välja lättare
+# nivåer; sharding över scenarier är ett dokumenterat TODO (feedback P2).
+
+name: validation-1500
+
+on:
+  workflow_dispatch:
+    inputs:
+      seeds:
+        description: 'Seeds per scenario (spec: 100 → 1500 körningar)'
+        default: '100'
+      screeningReplicates:
+        description: 'Surrogat/familj i screening (spec: 199)'
+        default: '199'
+      confirmReplicates:
+        description: 'Surrogat/familj i confirmation (spec: 1999)'
+        default: '999'
+      metaSeed:
+        description: 'Meta-seed (reproducerbarhet)'
+        default: '20260729'
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install (locked)
+        run: npm ci
+
+      - name: Run pre-registered control matrix (two-stage)
+        run: >
+          npx tsx scripts/controlMatrix.ts
+          "${{ github.event.inputs.seeds }}"
+          matrix-out
+          "${{ github.event.inputs.metaSeed }}"
+          "${{ github.event.inputs.screeningReplicates }}"
+          "${{ github.event.inputs.confirmReplicates }}"
+
+      - name: Verify exactly 15 × seeds unique (scenario, seed) pairs
+        run: |
+          node -e '
+            const m = require("./matrix-out/matrix_manifest.json");
+            const expected = 15 * Number("${{ github.event.inputs.seeds }}");
+            if (m.uniqueScenarioSeedPairs !== expected) {
+              console.error(`FAIL: ${m.uniqueScenarioSeedPairs} unika par, förväntade ${expected}`);
+              process.exit(1);
+            }
+            console.log(`OK: ${m.uniqueScenarioSeedPairs} unika (scenario,seed)-par (= 15 × ${{ github.event.inputs.seeds }}).`);
+          '
+
+      - name: Upload matrix results
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-matrix-${{ github.event.inputs.seeds }}seeds
+          path: matrix-out/

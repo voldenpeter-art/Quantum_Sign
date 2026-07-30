@@ -9,7 +9,7 @@ import type { NullId } from '../types/signatures';
 import type { PhotonEvent } from '../types/events';
 import type { RunConfig } from '../types/config';
 import { std, normalSurvival, median } from './stats';
-import { generateNull, generateS4Layer2 } from '../nulls';
+import { generateNull, generateS4Adversary, S4_CHSH_ADVERSARIES } from '../nulls';
 import type { Rng } from '../sim/rng';
 
 interface ChshPair {
@@ -141,18 +141,26 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
   // instrumentartefakter — se scripts/sweep.ts-analysen. Motståndarkontrollen
   // använder därför MEDIANEN av enbart S4-replikaten (robust mot enstaka
   // extremdrag) för verdikt-grinden, men rapporterar även max som diagnostik.
-  // TVÅLAGERS-S4 (syntesrapporten §7 punkt 4): lager 1 = värsta-fall
-  // detektorartefakt (S4, sitter avsiktligt vid Bell-gränsen), lager 2 = S4 +
-  // analys-/urvalsstress (generateS4Layer2). Motståndaren måste hålla linjen
-  // (median S ≤ 2) i BÅDA lagren — annars är vittnet inte försvarbart. Detta är
-  // p⁽²⁾-logiken (kräv att båda lagren håller) applicerad på C:s motståndargrind.
+  // NAMNGIVEN S4-MOTSTÅNDARFAMILJ (P2): vittnet måste hålla linjen (median S ≤ 2)
+  // mot VAR OCH EN av de klassiska motståndarna {lhvCapped, uncorrelated,
+  // detectorTrimmed, selectionStress}. Värsta medianen bär grinden — en enda
+  // motståndare som håller räcker inte, alla obligatoriska måste hålla.
   const S4_REPLICATES = nullReplicates * 3;
-  const s4NullSs: number[] = [];
-  const s4NullSsL2: number[] = [];
-  for (let i = 0; i < S4_REPLICATES; i++) {
-    s4NullSs.push(computeSForConfig(generateNull('S4', stream, config, rng.fork()).events, config));
-    s4NullSsL2.push(computeSForConfig(generateS4Layer2(config, rng.fork()).events, config));
+  const s4ByAdversary: { name: string; medianS: number }[] = [];
+  const s4NullSsAll: number[] = [];
+  for (const name of S4_CHSH_ADVERSARIES) {
+    const ss: number[] = [];
+    for (let i = 0; i < S4_REPLICATES; i++) {
+      ss.push(computeSForConfig(generateS4Adversary(name, config, rng.fork()).events, config));
+    }
+    s4ByAdversary.push({ name, medianS: median(ss) });
+    s4NullSsAll.push(...ss);
   }
+  const worstAdversary = s4ByAdversary.reduce((a, b) => (b.medianS > a.medianS ? b : a));
+  const worstMedianS4 = worstAdversary.medianS;
+  const maxS4 = s4NullSsAll.length ? Math.max(...s4NullSsAll) : 2;
+  const adversaryHoldsLine = s4ByAdversary.every((a) => a.medianS <= 2 + 1e-6);
+
   const structuralNullSs: number[] = [];
   for (const nullId of ['S1', 'S2', 'S3'] as const) {
     for (let i = 0; i < nullReplicates; i++) {
@@ -160,12 +168,7 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
       structuralNullSs.push(computeSForConfig(surrogate.events, config));
     }
   }
-  const nullSs = [...structuralNullSs, ...s4NullSs, ...s4NullSsL2];
-  const medianS4 = median(s4NullSs);
-  const medianS4L2 = median(s4NullSsL2);
-  const maxS4 = s4NullSs.length ? Math.max(...s4NullSs) : 2;
-  // Kräv att BÅDA lagren håller linjen (max av de två medianerna ≤ 2).
-  const adversaryHoldsLine = medianS4 <= 2 + 1e-6 && medianS4L2 <= 2 + 1e-6;
+  const nullSs = [...structuralNullSs, ...s4NullSsAll];
 
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'C-none';
@@ -189,20 +192,18 @@ export function analyzeC(ctx: AnalysisContext): SignatureResult {
       { key: 'k_sigma', labelSv: '(S − 2) / σ_S', value: k },
       { key: 'visibility', labelSv: 'Synlighet V (skattad)', value: visibilityHat, classicalReference: 1 / Math.SQRT2 },
       { key: 'coincidences', labelSv: 'Antal A/B-koincidenser', value: pairs.length },
-      { key: 's4_median', labelSv: 'S4-motståndare L1 (detektor), median', value: medianS4, classicalReference: 2 },
-      { key: 's4_median_l2', labelSv: 'S4-motståndare L2 (+urvalsstress), median', value: medianS4L2, classicalReference: 2 },
-      { key: 's4_max', labelSv: 'S4-motståndare, värsta drag (diagnostik)', value: maxS4, classicalReference: 2 },
+      { key: 's4_worst_median', labelSv: `S4-familj, värsta motståndare (${worstAdversary.name}), median`, value: worstMedianS4, classicalReference: 2 },
+      { key: 's4_max', labelSv: 'S4-familj, värsta drag (diagnostik)', value: maxS4, classicalReference: 2 },
     ],
     redFlags: [
       {
         code: 'C-RF-ADVERSARY',
-        labelSv: 'Klassisk motståndare bröt gränsen (median, något lager)',
+        labelSv: 'Klassisk motståndare bröt gränsen (median, någon i familjen)',
         triggered: !adversaryHoldsLine,
         detailSv:
-          'Medianen av S4-motståndarens repliker gav S > 2 i minst ETT av de två lagren (L1 detektor / L2 ' +
-          '+urvalsstress) — vittnet är inte försvarbart (kategorifel, se C-rapporten §6.1). Ett enstaka ' +
-          'extremdrag räknas inte som brott (motståndaren sitter avsiktligt vid gränsen och enstaka drag ' +
-          'överskrider den av ren brus även när kontrollen är korrekt kalibrerad).',
+          `Medianen gav S > 2 för minst en motståndare i S4-familjen (värst: ${worstAdversary.name}) — ` +
+          'vittnet är inte försvarbart (kategorifel, se C-rapporten §6.1). Ett enstaka extremdrag räknas inte ' +
+          'som brott (motståndarna sitter vid gränsen och enstaka drag överskrider den av ren brus).',
       },
       {
         code: 'C-RF-LOWPAIRS',
