@@ -6,11 +6,11 @@
 // (§2.1) — TODO(rapport): riktig flersessionsstöd krävs för skarp D-klassning.
 // Invariant-vektorn är korrigerad till d = 2 ([λ̃₁, λ̃₂]) per §4.3.
 
-import type { AnalysisContext, SignatureResult } from './types';
+import type { AnalysisContext, SignatureResult, NullFamilyResult } from './types';
 import type { EventStream, PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
 import { computeBFeatures } from './bFeatures';
-import { eigenvaluesSym3, mean, variance, empiricalPValue, pSquared } from './stats';
+import { eigenvaluesSym3, mean, variance, empiricalPValue, empiricalTail, pSquared, resolutionInsufficient } from './stats';
 import { generateNull } from '../nulls';
 
 const NUM_SEGMENTS = 4;
@@ -101,7 +101,7 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
 
   // Separationstestet — samma p⁽²⁾-disciplin: avstånd till VARJE familjs
   // invariant-moln, andra minsta p bär. Tidigare mättes bara mot S4-molnet.
-  const sepPByFamily: number[] = [];
+  const sepFamilyResults: NullFamilyResult[] = [];
   const nullDists: number[] = [];
   const observedDistByFamily: number[] = [];
   for (const nullId of D_NULLS) {
@@ -116,11 +116,13 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
     ];
     const dist = (p: [number, number]) => Math.hypot(p[0] - fMean[0], p[1] - fMean[1]);
     const familyDists = familyInv.map(dist);
+    const observedFamilyDist = dist(Ibar);
     nullDists.push(...familyDists);
-    observedDistByFamily.push(dist(Ibar));
-    sepPByFamily.push(empiricalPValue(dist(Ibar), familyDists, 'greater'));
+    observedDistByFamily.push(observedFamilyDist);
+    sepFamilyResults.push({ nullId, observed: observedFamilyDist, ...empiricalTail(observedFamilyDist, familyDists, 'greater') });
   }
-  const pSep = pSquared(sepPByFamily);
+  const pSep = pSquared(sepFamilyResults.map((f) => f.pEmpirical));
+  const insufficient = resolutionInsufficient(sepFamilyResults.map((f) => f.pResolution));
   // Representativt observerat separationsavstånd för UI (medel över familjerna).
   const observedDist = mean(observedDistByFamily);
 
@@ -186,6 +188,8 @@ export function analyzeD(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: D_NULLS,
+    nullFamilyResults: sepFamilyResults,
+    insufficientResolution: insufficient,
     primaryNull: { labelSv: 'χ²_const (stabilitet) mot S1/S3/S4', observed: chi2Const, nullValues: nullChi2s },
     summarySv: 'Basoberoende egenvärdesinvariant ur B:s Stokes-kovarians, testad för separation + stabilitet + kontrast.',
     floorNoteSv: 'Ingen intern statistik kan skilja källans invariant från instrumentets (D-rapporten §5.3).',

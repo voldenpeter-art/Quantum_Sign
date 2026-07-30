@@ -5,12 +5,12 @@
 // [ε, Δ_anti, Q] — de faktoriella kumulanterna κ₃ᶠ/κ₄ᶠ är TODO(rapport):
 // kräver högre ordningens klickstatistik, utanför v1-scope.
 
-import type { AnalysisContext, SignatureResult } from './types';
+import type { AnalysisContext, SignatureResult, NullFamilyResult } from './types';
 import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
 import type { Rng } from '../sim/rng';
 import { computeG2Curve } from './coincidence';
-import { mean, variance, binCounts, rangeSymmetric, empiricalPValue, pSquared } from './stats';
+import { mean, variance, binCounts, rangeSymmetric, empiricalTail, pSquared, resolutionInsufficient } from './stats';
 import { generateNull } from '../nulls';
 
 function channelTimestamps(events: { channel: string; detectedT: number }[], ch: 'D1' | 'D2') {
@@ -106,7 +106,7 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
   // p⁽²⁾-regeln: ett p per surrogatfamilj (ε mer negativt = farlig riktning),
   // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullEpsilons: number[] = [];
-  const pByFamily: number[] = [];
+  const familyResults: NullFamilyResult[] = [];
   for (const nullId of A_NULLS) {
     const familyEps: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
@@ -114,10 +114,11 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
       const [sd1, sd2] = deriveChannelPair(surrogate.events, channelRng.fork());
       familyEps.push(matchedFilterEpsilon(sd1, sd2, surrogate.duration, tauGrid, binWidth, tauChar));
     }
-    pByFamily.push(empiricalPValue(epsilonHat, familyEps, 'less'));
+    familyResults.push({ nullId, observed: epsilonHat, ...empiricalTail(epsilonHat, familyEps, 'less') });
     nullEpsilons.push(...familyEps);
   }
-  const pEpsilon = pSquared(pByFamily);
+  const pEpsilon = pSquared(familyResults.map((f) => f.pEmpirical));
+  const insufficient = resolutionInsufficient(familyResults.map((f) => f.pResolution));
 
   let verdict: SignatureResult['verdict'] = 'none';
   let verdictLabelSv = 'A-none';
@@ -163,6 +164,8 @@ export function analyzeA(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: A_NULLS,
+    nullFamilyResults: familyResults,
+    insufficientResolution: insufficient,
     primaryNull: { labelSv: 'ε (matchat filter) mot S1–S4', observed: epsilonHat, nullValues: nullEpsilons },
     summarySv:
       'g²(0) skattat via korskorrelation mellan två oberoende HBT-kanaler (aldrig enkeldetektor-autokorrelation). ' +

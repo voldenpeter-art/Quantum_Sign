@@ -49,6 +49,25 @@ export interface RedFlag {
   detailSv: string;
 }
 
+/**
+ * Separat redovisning per surrogatfamilj för huvudvittnet (granskningsfynd
+ * 2026-07-29: heterogena S-familjer fick inte poolas till EN nollfördelning i
+ * rapporteringen). p⁽²⁾-regeln väger dessa familjer var för sig; här surfas de
+ * med replikat, exceedances, empiriskt p och den finaste upplösbara p-nivån.
+ */
+export interface NullFamilyResult {
+  /** Familjens etikett (S1..S5, eller ett lager-suffix som "S4-L1"/"S4-L2"). */
+  nullId: string;
+  observed: number;
+  replicates: number;
+  /** Antal surrogat minst lika extrema som det observerade (i farlig riktning). */
+  exceedances: number;
+  /** (exceedances + 1) / (replicates + 1) — konservativ empirisk svans. */
+  pEmpirical: number;
+  /** 1 / (replicates + 1) — det minsta p denna familj kan upplösa. */
+  pResolution: number;
+}
+
 export interface SignatureResult {
   id: SignatureId;
   verdict: Verdict;
@@ -60,6 +79,14 @@ export interface SignatureResult {
   floorNoteSv: string;
   /** Nollfördelning för huvudstatistikan (NullDistributionPanel) + observerat värde. */
   primaryNull?: { labelSv: string; observed: number; nullValues: number[] };
+  /** Per-surrogatfamilj-redovisning för huvudvittnet (ersätter poolad rapportering). */
+  nullFamilyResults?: NullFamilyResult[];
+  /**
+   * Sant om p-upplösningen (1/(N+1) per familj, näst minsta) inte ens når den
+   * svagaste positiva tröskeln → ett 'none' kan dölja OSÄKERHET, inte frånvaro.
+   * Den korrekta signalen för "för få surrogat" (default 15 → golv 0.0625).
+   */
+  insufficientResolution?: boolean;
 }
 
 export interface AnalysisContext {

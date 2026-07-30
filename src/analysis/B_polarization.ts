@@ -2,10 +2,10 @@
 // B-0/B-1: g²_ab-matris + Stokes C_ij/Σ (via bFeatures, delas med D/E/F).
 // B-2: Cauchy–Schwarz-vittnet R_CS — klassisk gräns R_CS ≤ 1 (§4.1).
 
-import type { AnalysisContext, SignatureResult } from './types';
+import type { AnalysisContext, SignatureResult, NullFamilyResult } from './types';
 import type { NullId } from '../types/signatures';
 import { computeBFeatures } from './bFeatures';
-import { empiricalPValue, pSquared } from './stats';
+import { empiricalPValue, empiricalTail, pSquared, resolutionInsufficient } from './stats';
 import { generateNull, generateS4Layer2 } from '../nulls';
 
 const STRUCTURAL_NULLS: NullId[] = ['S1', 'S2', 'S3'];
@@ -43,10 +43,13 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
     rCSNullsL2.push(rcsOf(computeBFeatures(generateS4Layer2(config, rng.fork()))));
   }
   const rCSNulls = [...rCSNullsL1, ...rCSNullsL2];
-  const pRCS = pSquared([
-    empiricalPValue(rCSMax, rCSNullsL1, 'greater'),
-    empiricalPValue(rCSMax, rCSNullsL2, 'greater'),
-  ]);
+  // Per-lager-redovisning (tvålagers-S4 är R_CS-vittnets två surrogatfamiljer).
+  const rcsFamilyResults: NullFamilyResult[] = [
+    { nullId: 'S4-L1', observed: rCSMax, ...empiricalTail(rCSMax, rCSNullsL1, 'greater') },
+    { nullId: 'S4-L2', observed: rCSMax, ...empiricalTail(rCSMax, rCSNullsL2, 'greater') },
+  ];
+  const pRCS = pSquared(rcsFamilyResults.map((f) => f.pEmpirical));
+  const insufficient = resolutionInsufficient(rcsFamilyResults.map((f) => f.pResolution));
 
   // FÖRTJÄNAD NOMENKLATUR (types.ts): R_CS > 1 ÄR ett äkta Cauchy–Schwarz-brott
   // (klassiskt omöjligt) ⇒ suspect/strong är förtjänade kvantklasser. Enbart
@@ -101,6 +104,8 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: B_NULLS,
+    nullFamilyResults: rcsFamilyResults,
+    insufficientResolution: insufficient,
     primaryNull: { labelSv: 'R_CS (max över baser) mot tvålagers-S4 (L1 detektor + L2 urvalsstress)', observed: rCSMax, nullValues: rCSNulls },
     summarySv:
       'g²_ab-matris och Stokes-korrelationer beräknade på arm A:s tomografihändelser (HV/DA/RL). ' +

@@ -49,6 +49,14 @@ export function SignatureCard({
       {result && !loading && (
         <>
           <p className="text-xs text-neutral-400">{result.summarySv}</p>
+
+          {result.insufficientResolution && (
+            <div className="rounded-md border border-orange-900/50 bg-orange-950/30 p-2 text-[11px] text-orange-300">
+              <span className="font-semibold">Otillräcklig p-upplösning.</span> För få surrogat/familj för att nå
+              ens den svagaste positiva tröskeln (1e-2) — ett "{result.verdictLabelSv}" kan dölja osäkerhet,
+              inte frånvaro. Höj "Surrogat per nulltyp".
+            </div>
+          )}
           <table className="w-full text-xs">
             <tbody>
               {result.components.map((c) => (
@@ -63,6 +71,27 @@ export function SignatureCard({
               ))}
             </tbody>
           </table>
+
+          {result.nullFamilyResults && result.nullFamilyResults.length > 0 && (
+            <div className="rounded-md border border-neutral-800 bg-neutral-950/60 p-2">
+              <div className="mb-1 text-[10px] uppercase tracking-wide text-neutral-500">
+                Per surrogatfamilj (p⁽²⁾ = näst minsta) — ingen poolning
+              </div>
+              <table className="w-full text-[11px]">
+                <tbody>
+                  {result.nullFamilyResults.map((nf) => (
+                    <tr key={nf.nullId} className="border-t border-neutral-800/40">
+                      <td className="py-0.5 pr-2 font-mono text-neutral-400">{nf.nullId}</td>
+                      <td className="py-0.5 pr-2 text-right font-mono text-neutral-300">{fmtP(nf.pEmpirical)}</td>
+                      <td className="py-0.5 text-right font-mono text-neutral-600">
+                        {nf.exceedances}/{nf.replicates} · golv {fmtP(nf.pResolution)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {result.redFlags.some((f) => f.triggered) && (
             <div className="space-y-1 rounded-md border border-amber-900/50 bg-amber-950/30 p-2 text-[11px] text-amber-300">
