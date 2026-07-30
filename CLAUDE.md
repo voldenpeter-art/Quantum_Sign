@@ -48,8 +48,10 @@ för detektorartefakter, drift och golvbeteende.
    motsvarande `analysis/`-fil.** AKTUELL AUKTORITATIV VERSION är
    `Signaturtyp_{A..H,M}_rapport_v0.2.md` (samt kandidatprotokollen
    `Signaturkandidat_{I,J}_*_v0.0.txt` och `Partikelnot_*_v1.0.txt`). De äldre
-   v0.1-filerna (`Signaturtyp_A_ickeklassisk_fotonstatistik.txt` m.fl.) är
-   **superseded** — behålls för historik men styr inte längre.
+   v0.1-råutkasten är flyttade till `rapporter/arkiv/`
+   (`Signaturtyp_A_ickeklassisk_fotonstatistik.txt` m.fl.) och är **superseded**.
+   **Filer i `rapporter/arkiv/` är historiska råutkast — läs aldrig därifrån för
+   ett aktuellt metodbeslut.**
 2. Denna `CLAUDE.md` — tvärgående principer och kartan.
 3. `TODO(spec)` — Peters egen visions-/UX-spec för plattformen styr UI och
    interaktionsflöde. Klistra in eller länka den här:
@@ -246,8 +248,8 @@ npm run lint        # oxlint
       utan en separat UX-spec att stämma av mot.
 
 **Viktigt granskningsfynd vid inläsning av `/rapporter`:** filen
-`Signaturtyp_H_faltavtryck_sensornatverk_TIDIGT_UTKAST_felmarkt_som_F.txt`
-är rubricerad "Signaturtyp F" i sitt eget innehåll, men beskriver
+`rapporter/arkiv/Signaturtyp_H_faltavtryck_sensornatverk_TIDIGT_UTKAST_felmarkt_som_F.txt`
+(numera arkiverad) är rubricerad "Signaturtyp F" i sitt eget innehåll, men beskriver
 **fältavtryck i sensornätverk** (atomur/magnetometrar, GNOME-stil) — dvs.
 det som katalogens syntesrapport (§1) beskriver som bokstavskollisionen
 "sensornätverket → H". Filen är alltså ett tidigt utkast till **H**, inte en
