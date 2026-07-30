@@ -13,7 +13,8 @@ import type { AnalysisContext, SignatureResult } from './types';
 import type { EventStream } from '../types/events';
 import type { NullId } from '../types/signatures';
 import { computeG2Curve } from './coincidence';
-import { rangeSymmetric, empiricalPValue, pSquared } from './stats';
+import { rangeSymmetric, empiricalTail, pSquared, resolutionInsufficient } from './stats';
+import type { NullFamilyResult } from './types';
 import { generateNull } from '../nulls';
 
 const F_NULLS: NullId[] = ['S1', 'S3', 'S5'];
@@ -60,7 +61,7 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
   // p⁽²⁾-regeln: ett p per surrogatfamilj (hög revival = farlig riktning),
   // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullScores: number[] = [];
-  const pByFamily: number[] = [];
+  const familyResults: NullFamilyResult[] = [];
   for (const nullId of F_NULLS) {
     const familyScores: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
@@ -68,10 +69,11 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
       const [sx, sy] = extractPairTimestamps(surrogate);
       familyScores.push(revivalScore(sx, sy, surrogate.duration).score);
     }
-    pByFamily.push(empiricalPValue(score, familyScores, 'greater'));
+    familyResults.push({ nullId, observed: score, ...empiricalTail(score, familyScores, 'greater') });
     nullScores.push(...familyScores);
   }
-  const pValue = pSquared(pByFamily);
+  const pValue = pSquared(familyResults.map((f) => f.pEmpirical));
+  const insufficient = resolutionInsufficient(familyResults.map((f) => f.pResolution));
 
   // FÖRTJÄNAD NOMENKLATUR (types.ts): F-passiv (det plattformen mäter) är
   // KVANTNEUTRAL — en revival i g²(τ)-svansen kan lika gärna vara klassiskt
@@ -104,6 +106,8 @@ export function analyzeF(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: F_NULLS,
+    nullFamilyResults: familyResults,
+    insufficientResolution: insufficient,
     primaryNull: { labelSv: 'Revival-poäng mot S1/S3/S5', observed: score, nullValues: nullScores },
     summarySv: 'Sökning efter en revival-topp i g²(τ)-svansen ovanpå en monoton Markov-referenskurva.',
     floorNoteSv: 'Flicker (klassiskt långminne i varje detektor) är den huvudsakliga golv-/bedragarrisken.',

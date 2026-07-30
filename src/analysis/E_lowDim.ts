@@ -10,7 +10,8 @@
 import type { AnalysisContext, SignatureResult } from './types';
 import type { PhotonEvent } from '../types/events';
 import type { NullId } from '../types/signatures';
-import { covMatrix, participationRatio, empiricalPValue, pSquared } from './stats';
+import { covMatrix, participationRatio, empiricalTail, pSquared, resolutionInsufficient } from './stats';
+import type { NullFamilyResult } from './types';
 import { generateNull } from '../nulls';
 
 // Antal bins (inte binbredd) hålls fast. v1 hade en fast BIN_WIDTH_S=0.5s,
@@ -59,7 +60,7 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
   // p⁽²⁾-regeln: ett p per surrogatfamilj (låg d_eff = farlig riktning),
   // beslutet bärs av det NÄST minsta. Pooling bevaras för visualiseringen.
   const nullDs: number[] = [];
-  const pByFamily: number[] = [];
+  const familyResults: NullFamilyResult[] = [];
   for (const nullId of E_NULLS) {
     const familyDs: number[] = [];
     for (let i = 0; i < nullReplicates; i++) {
@@ -67,10 +68,11 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
       const surrogateTomography = surrogate.events.filter((e) => e.arm === 'A' && e.basis !== undefined);
       familyDs.push(effectiveDimension(surrogateTomography, surrogate.duration));
     }
-    pByFamily.push(empiricalPValue(dEff, familyDs, 'less'));
+    familyResults.push({ nullId, observed: dEff, ...empiricalTail(dEff, familyDs, 'less') });
     nullDs.push(...familyDs);
   }
-  const pValue = pSquared(pByFamily);
+  const pValue = pSquared(familyResults.map((f) => f.pEmpirical));
+  const insufficient = resolutionInsufficient(familyResults.map((f) => f.pResolution));
 
   // FÖRTJÄNAD NOMENKLATUR (types.ts): E är KVANTNEUTRAL — låg effektiv dimension
   // (kompression) är klassisk vardag och utgör inget icke-klassicitetsvittne.
@@ -102,6 +104,8 @@ export function analyzeE(ctx: AnalysisContext): SignatureResult {
       },
     ],
     nullsUsed: E_NULLS,
+    nullFamilyResults: familyResults,
+    insufficientResolution: insufficient,
     primaryNull: { labelSv: 'Effektiv dimension mot S1/S3/S5', observed: dEff, nullValues: nullDs },
     summarySv: 'Effektiv dimension hos B:s binnade räknefeature, jämförd mot S1/S3/S5 (inkl. drift-null).',
     floorNoteSv: 'Kompression/lågdim är klassisk vardag — E:s utsagokraft är strukturell, inte i sig kvantmässig.',

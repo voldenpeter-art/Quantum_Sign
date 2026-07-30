@@ -91,6 +91,44 @@ export function pSquared(perFamilyP: number[]): number {
   return ps[1];
 }
 
+/**
+ * Empirisk svans MED räknedetaljer (för per-familj-redovisning, se
+ * NullFamilyResult). Samma matematik som empiricalPValue men returnerar även
+ * exceedances, replikatantal och den finaste upplösbara p-nivån 1/(N+1).
+ */
+export function empiricalTail(
+  observed: number,
+  nullValues: number[],
+  direction: 'greater' | 'less',
+): { pEmpirical: number; exceedances: number; replicates: number; pResolution: number } {
+  const n = nullValues.length;
+  const exceedances =
+    direction === 'greater'
+      ? nullValues.filter((v) => v >= observed).length
+      : nullValues.filter((v) => v <= observed).length;
+  return {
+    pEmpirical: (exceedances + 1) / (n + 1),
+    exceedances,
+    replicates: n,
+    pResolution: 1 / (n + 1),
+  };
+}
+
+/** Den svagaste positiva verdict-tröskeln i A–F (structural/suspect vid 1e-2). */
+export const SIGNIFICANCE_FLOOR = 1e-2;
+
+/**
+ * Sant om p⁽²⁾-upplösningen (näst minsta familjs 1/(N+1)) inte når `floor` — då
+ * kan ingen positiv klass sättas oavsett signal, och ett 'none' är i själva
+ * verket "kunde inte upplösas". Den korrekta fixen på "default 15 surrogat".
+ */
+export function resolutionInsufficient(
+  perFamilyResolutions: number[],
+  floor = SIGNIFICANCE_FLOOR,
+): boolean {
+  return pSquared(perFamilyResolutions) > floor;
+}
+
 /** i.i.d. resampling-bootstrap (förenklad — ej blockbootstrap) för konfidensintervall. */
 export function bootstrapCI(
   xs: number[],
