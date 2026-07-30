@@ -1,39 +1,57 @@
-// Metagate (CLAUDE.md §8): "Ingen signatur passerar utan metagate." I v1
-// (interaktiv prototyp) väger vi samman surrogat-p + redFlags till en enkel
-// grind — INTE den fulla min-gate-över-pelare-disciplinen (surrogat + blind
-// injection + red flags, H-mönstret, CLAUDE.md §4.4). Det är en medveten
-// v1-avgränsning, inte en genväg som göms: `full: false` flaggar alltid detta.
-// TODO(rapport): koppla in blind injection-resultat och H-mönstrets
-// min-gate-över-pelare när plattformen får stöd för multi-session-körningar.
+// Metagate (CLAUDE.md §8): "Ingen signatur passerar utan metagate." Grinden är
+// en MIN-GATE över de pelare som är tillgängliga PER RESULTAT:
+//   P1 kvantvittne (verdict suspect/strong)  ·  P2 inga datadrivna rödflaggor
+//   ·  P3 tillräcklig p-upplösning (insufficientResolution === false)
+// ALLA måste hålla (min-gate). Den fulla §4.4-disciplinen kräver dessutom en
+// BLIND INJECTION-pelare och H-mönstrets flersessions-min-gate — dessa kan inte
+// härledas ur ETT resultat, så `full: false` flaggar alltid att den pelaren
+// saknas. Det är en medveten arkitekturgräns (single-session), inte en dold
+// genväg. TODO(rapport): koppla in blind injection + multi-session.
 
 import type { SignatureResult } from '../analysis/types';
 
+export interface MetagatePillar {
+  key: string;
+  labelSv: string;
+  passes: boolean;
+}
+
 export interface MetagateVerdict {
   passes: boolean;
+  /** Alltid false: blind injection-/flersessionspelaren kan inte härledas per resultat. */
   full: false;
+  pillars: MetagatePillar[];
   reasonSv: string;
 }
 
 export function evaluateMetagate(result: SignatureResult): MetagateVerdict {
   if (result.verdict === 'notApplicable') {
-    return { passes: false, full: false, reasonSv: 'Analysen är inte tillämplig på denna källa — inget att gate:a.' };
+    return { passes: false, full: false, pillars: [], reasonSv: 'Analysen är inte tillämplig på denna källa — inget att gate:a.' };
   }
-  const activeRedFlags = result.redFlags.filter((f) => f.triggered && !f.code.endsWith('-DENOM') && !f.code.endsWith('-PASSIVE') && !f.code.endsWith('-PSEUDOSESSION') && !f.code.endsWith('-NOWITNESS'));
-  const structurallyOk = result.verdict === 'suspect' || result.verdict === 'strong';
+  const activeRedFlags = result.redFlags.filter(
+    (f) => f.triggered && !f.code.endsWith('-DENOM') && !f.code.endsWith('-PASSIVE') && !f.code.endsWith('-PSEUDOSESSION') && !f.code.endsWith('-NOWITNESS'),
+  );
 
-  if (!structurallyOk) {
-    return { passes: false, full: false, reasonSv: 'Verdict är none/classical/structural — inget kvantvittne att gate:a.' };
+  const pillars: MetagatePillar[] = [
+    { key: 'witness', labelSv: 'Kvantvittne (suspect/strong)', passes: result.verdict === 'suspect' || result.verdict === 'strong' },
+    { key: 'redflags', labelSv: 'Inga datadrivna rödflaggor', passes: activeRedFlags.length === 0 },
+    { key: 'resolution', labelSv: 'Tillräcklig p-upplösning', passes: result.insufficientResolution !== true },
+  ];
+
+  const failed = pillars.filter((p) => !p.passes);
+  if (failed.length > 0) {
+    const reasonSv =
+      !pillars[0].passes
+        ? 'Verdict är none/classical/structural — inget kvantvittne att gate:a.'
+        : `Faller på pelare: ${failed.map((p) => p.labelSv).join(', ')}` +
+          (activeRedFlags.length ? ` (rödflaggor: ${activeRedFlags.map((f) => f.labelSv).join(', ')})` : '') + '.';
+    return { passes: false, full: false, pillars, reasonSv };
   }
-  if (activeRedFlags.length > 0) {
-    return {
-      passes: false,
-      full: false,
-      reasonSv: `Datadrivna rödflaggor utlösta: ${activeRedFlags.map((f) => f.labelSv).join(', ')}.`,
-    };
-  }
+
   return {
     passes: true,
     full: false,
-    reasonSv: 'Klarar v1:s lätta grind (surrogat-p + datadrivna rödflaggor). Full metagate (§4.4) ej implementerad.',
+    pillars,
+    reasonSv: 'Klarar min-gate över tillgängliga pelare (vittne + rödflaggor + upplösning). Blind injection-/flersessionspelaren (§4.4) saknas ännu.',
   };
 }

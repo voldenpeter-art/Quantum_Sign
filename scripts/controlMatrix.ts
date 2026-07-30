@@ -112,14 +112,21 @@ const scenarios: Scenario[] = [
 
 const DURATION = 20;
 const argSmoke = process.argv[2] === 'smoke';
-const SEEDS = argSmoke ? 1 : Number(process.argv[2] ?? 50);
+// Tvåstegsdesign (feedback P2): screening (grov replikatnivå) → confirmation
+// (fin replikatnivå) för KANDIDATER + ett slumpat audit-urval av negativa
+// kontroller (för att mäta falskpositivfrekvens vid confirmation-upplösning).
+const SEEDS = argSmoke ? 1 : Number(process.argv[2] ?? 100); // spec: 15 × 100
 const OUT_DIR = process.argv[3] ?? join(process.cwd(), 'scratchpad-matrix');
 const META_SEED = Number(process.argv[4] ?? 20260729);
+const SCREEN_REP = argSmoke ? 12 : Number(process.argv[5] ?? 199); // golv 1/200 = 0.005
+const CONFIRM_REP = argSmoke ? 40 : Number(process.argv[6] ?? 1999); // golv 1/2000 = 5e-4
+const CANDIDATE_P = 0.05; // förregistrerad kandidatgräns (headline-p under detta)
+const AUDIT_N = argSmoke ? 3 : 100; // slumpade negativa kontroller som också confirmas
 mkdirSync(OUT_DIR, { recursive: true });
 
 interface Row {
-  scenario: string; seedIndex: number; seed: number; source: string;
-  signature: SignatureId; role: Role; forced: boolean; applicable: boolean;
+  stage: 'screen' | 'confirm'; scenario: string; seedIndex: number; seed: number; source: string;
+  signature: SignatureId; role: Role; forced: boolean; applicable: boolean; replicates: number;
   verdict: string; headlineKey: string; headlineValue: number | ''; pValue: number | '';
   redFlags: string; ms: number;
 }
@@ -129,45 +136,83 @@ function headline(result: SignatureResult): { key: string; value: number | ''; p
   return { key: primary?.key ?? '', value: primary?.value ?? '', p: primary?.pValue ?? '' };
 }
 
+const POSITIVE_TIERS = new Set(['structural', 'suspect', 'strong']);
+function isCandidate(r: Row): boolean {
+  return POSITIVE_TIERS.has(r.verdict) || (typeof r.pValue === 'number' && r.pValue < CANDIDATE_P);
+}
+
+// En körning identifieras unikt av (scenario, seedIndex, signatur). En körnings
+// rng och ström beror bara på (scenario, seed) + signatur → reproducerbart.
+function runOne(
+  sc: Scenario, spec: SigSpec, seed: number, si: number, replicates: number, stage: 'screen' | 'confirm',
+): Row {
+  const config = sc.config({ ...DEFAULT_CONFIG, seed, duration: DURATION });
+  const stream = generateEventStream(config);
+  const applicable = isSignatureCompatible(spec.id, stream, config).compatible;
+  const base: Omit<Row, 'verdict' | 'headlineKey' | 'headlineValue' | 'pValue' | 'redFlags' | 'ms'> = {
+    stage, scenario: sc.id, seedIndex: si, seed, source: config.source, signature: spec.id,
+    role: spec.role, forced: !!spec.forced, applicable, replicates,
+  };
+  if (!applicable && !spec.forced) {
+    return { ...base, verdict: 'notApplicable', headlineKey: '', headlineValue: '', pValue: '', redFlags: '', ms: 0 };
+  }
+  const analyzer = ANALYSIS_REGISTRY[spec.id]!;
+  const arng = new Rng(seed + 1 + spec.id.charCodeAt(0)); // deterministiskt per (seed, signatur)
+  const ts = Date.now();
+  const res = analyzer({ stream, config, rng: arng.fork(), nullReplicates: replicates } as AnalysisContext);
+  const h = headline(res);
+  return { ...base, verdict: res.verdict, headlineKey: h.key, headlineValue: h.value, pValue: h.p,
+    redFlags: res.redFlags.filter((f) => f.triggered).map((f) => f.code).join(';'), ms: Date.now() - ts };
+}
+
 const metaRng = new Rng(META_SEED);
-// En fast seed-lista per scenario (samma seeds återanvänds så scenarier är jämförbara).
 const seedList = Array.from({ length: SEEDS }, () => Math.floor(metaRng.next() * 1e9));
 
-const rows: Row[] = [];
 const t0 = Date.now();
+// ---- STEG 1: screening ----
+const screenRows: Row[] = [];
 let done = 0;
 const total = scenarios.reduce((a, s) => a + s.signatures.length, 0) * SEEDS;
-
 for (const sc of scenarios) {
   for (let si = 0; si < SEEDS; si++) {
-    const seed = seedList[si];
-    const config = sc.config({ ...DEFAULT_CONFIG, seed, duration: DURATION });
-    const stream = generateEventStream(config);
-    const arng = new Rng(seed + 1);
     for (const spec of sc.signatures) {
-      const analyzer = ANALYSIS_REGISTRY[spec.id];
-      if (!analyzer) continue;
-      const compat = isSignatureCompatible(spec.id, stream, config);
-      const applicable = compat.compatible;
-      // Kör om kompatibel ELLER uttrycklig forced negativ kontroll.
-      if (!applicable && !spec.forced) {
-        rows.push({ scenario: sc.id, seedIndex: si, seed, source: config.source, signature: spec.id, role: spec.role, forced: !!spec.forced, applicable, verdict: 'notApplicable', headlineKey: '', headlineValue: '', pValue: '', redFlags: '', ms: 0 });
-        done++; continue;
-      }
-      const ts = Date.now();
-      const ctx: AnalysisContext = { stream, config, rng: arng.fork(), nullReplicates: spec.replicates };
-      const res = analyzer(ctx);
-      const ms = Date.now() - ts;
-      const h = headline(res);
-      rows.push({ scenario: sc.id, seedIndex: si, seed, source: config.source, signature: spec.id, role: spec.role, forced: !!spec.forced, applicable, verdict: res.verdict, headlineKey: h.key, headlineValue: h.value, pValue: h.p, redFlags: res.redFlags.filter((f) => f.triggered).map((f) => f.code).join(';'), ms });
-      done++;
-      if (done % 25 === 0 || argSmoke) {
-        const el = ((Date.now() - t0) / 1000).toFixed(1);
-        console.log(`[${el}s] ${done}/${total}  ${sc.id}/${spec.id} (${spec.role}) → ${res.verdict}  ${ms}ms`);
-      }
+      if (!ANALYSIS_REGISTRY[spec.id]) continue;
+      const r = runOne(sc, spec, seedList[si], si, SCREEN_REP, 'screen');
+      screenRows.push(r);
+      if (++done % 100 === 0 || argSmoke) console.log(`[screen ${((Date.now() - t0) / 1000).toFixed(1)}s] ${done}/${total} ${r.scenario}/${r.signature} → ${r.verdict}`);
     }
   }
 }
+
+// ---- UNIKHETSKONTROLL: exakt (scenario, seed) och (scenario, seed, signatur) ----
+const runKeys = new Set(screenRows.map((r) => `${r.scenario}|${r.seedIndex}|${r.signature}`));
+if (runKeys.size !== screenRows.length) throw new Error(`Duplicerade (scenario,seed,signatur)-nycklar: ${screenRows.length - runKeys.size}`);
+const scenSeedPairs = new Set(screenRows.map((r) => `${r.scenario}|${r.seedIndex}`));
+if (scenSeedPairs.size !== scenarios.length * SEEDS) throw new Error(`Förväntade ${scenarios.length * SEEDS} unika (scenario,seed)-par, fick ${scenSeedPairs.size}`);
+console.log(`Unikhet OK: ${scenSeedPairs.size} unika (scenario,seed)-par, ${screenRows.length} körningar.`);
+
+// ---- STEG 2: confirmation av kandidater + slumpat audit-urval av negativa ----
+const candidateRows = screenRows.filter(isCandidate);
+const negativeRows = screenRows.filter((r) => r.role === 'negative' && !isCandidate(r));
+// Deterministiskt audit-urval (Fisher–Yates med metaRng-fork).
+const auditRng = new Rng(META_SEED + 7);
+const shuffledNeg = [...negativeRows];
+for (let i = shuffledNeg.length - 1; i > 0; i--) { const j = auditRng.uniformInt(i + 1); [shuffledNeg[i], shuffledNeg[j]] = [shuffledNeg[j], shuffledNeg[i]]; }
+const auditRows = shuffledNeg.slice(0, Math.min(AUDIT_N, shuffledNeg.length));
+const toConfirm = [...candidateRows, ...auditRows];
+console.log(`Steg 2: ${candidateRows.length} kandidater + ${auditRows.length} audit-negativa = ${toConfirm.length} confirmations.`);
+
+const confirmRows: Row[] = [];
+let cdone = 0;
+for (const cr of toConfirm) {
+  const sc = scenarios.find((s) => s.id === cr.scenario)!;
+  const spec = sc.signatures.find((sp) => sp.id === cr.signature)!;
+  const r = runOne(sc, spec, cr.seed, cr.seedIndex, CONFIRM_REP, 'confirm');
+  confirmRows.push(r);
+  if (++cdone % 25 === 0 || argSmoke) console.log(`[confirm ${((Date.now() - t0) / 1000).toFixed(1)}s] ${cdone}/${toConfirm.length} ${r.scenario}/${r.signature} → ${r.verdict}`);
+}
+
+const rows = [...screenRows, ...confirmRows];
 
 // ---- aggregering: Wilson-95%-intervall för "fyrar"-frekvens per (scenario, signatur) ----
 function wilson(k: number, n: number): [number, number] {
@@ -179,27 +224,47 @@ function wilson(k: number, n: number): [number, number] {
 const QUANTUM = new Set(['suspect', 'strong']);
 const STRUCT_OK = new Set(['structural', 'suspect', 'strong']);
 type Agg = { n: number; quantum: number; structural: number; role: Role; source: string };
-const agg = new Map<string, Agg>();
-for (const r of rows) {
-  const key = `${r.scenario}|${r.signature}`;
-  const a = agg.get(key) ?? { n: 0, quantum: 0, structural: 0, role: r.role, source: r.source };
-  a.n++;
-  if (QUANTUM.has(r.verdict)) a.quantum++;
-  if (STRUCT_OK.has(r.verdict)) a.structural++;
-  agg.set(key, a);
+// Huvudtabellen aggregeras på SCREENING-steget (alla körningar); confirmation
+// redovisas separat (bara kandidater/audit).
+function aggregate(rowset: Row[]): Map<string, Agg> {
+  const m = new Map<string, Agg>();
+  for (const r of rowset) {
+    const key = `${r.scenario}|${r.signature}`;
+    const a = m.get(key) ?? { n: 0, quantum: 0, structural: 0, role: r.role, source: r.source };
+    a.n++;
+    if (QUANTUM.has(r.verdict)) a.quantum++;
+    if (STRUCT_OK.has(r.verdict)) a.structural++;
+    m.set(key, a);
+  }
+  return m;
 }
+const agg = aggregate(screenRows);
 
 const header = Object.keys(rows[0]) as (keyof Row)[];
 writeFileSync(join(OUT_DIR, 'matrix_runs.csv'), [header.join(','), ...rows.map((r) => header.map((k) => String(r[k])).join(','))].join('\n'));
 
-const summaryLines = ['scenario|signature|role|source|n|quantum_rate|quantum_wilson95|structural_rate|structural_wilson95'];
+const summaryLines = [`# STEG 1 screening (rep=${SCREEN_REP}), Wilson-95%`, 'scenario|signature|role|source|n|quantum_rate|quantum_wilson95|structural_rate|structural_wilson95'];
 for (const [key, a] of [...agg.entries()].sort()) {
   const [ql, qh] = wilson(a.quantum, a.n);
   const [sl, sh] = wilson(a.structural, a.n);
   summaryLines.push(`${key}|${a.role}|${a.source}|${a.n}|${(a.quantum / a.n).toFixed(3)}|[${ql.toFixed(3)},${qh.toFixed(3)}]|${(a.structural / a.n).toFixed(3)}|[${sl.toFixed(3)},${sh.toFixed(3)}]`);
 }
+// Confirmation-utfall: hur många kandidater/audit som höll vid fin upplösning.
+const confQuantum = confirmRows.filter((r) => QUANTUM.has(r.verdict)).length;
+const confStruct = confirmRows.filter((r) => STRUCT_OK.has(r.verdict)).length;
+const auditConfirmedPositive = confirmRows.filter((r) => r.role === 'negative' && STRUCT_OK.has(r.verdict)).length;
+summaryLines.push('', `# STEG 2 confirmation (rep=${CONFIRM_REP}): ${confirmRows.length} körningar`);
+summaryLines.push(`kandidater_bekräftade_quantum=${confQuantum} · struktur=${confStruct} · audit_negativa_som_blev_positiva=${auditConfirmedPositive}/${auditRows.length}`);
 writeFileSync(join(OUT_DIR, 'matrix_summary.txt'), summaryLines.join('\n'));
-writeFileSync(join(OUT_DIR, 'matrix_manifest.json'), JSON.stringify({ metaSeed: META_SEED, seedsPerScenario: SEEDS, duration: DURATION, scenarios: scenarios.map((s) => ({ id: s.id, descSv: s.descSv, signatures: s.signatures })), seedList, totalRows: rows.length, wallSeconds: (Date.now() - t0) / 1000 }, null, 2));
 
-console.log(`\nKLART: ${rows.length} rader, ${SEEDS} seeds/scenario, ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
+writeFileSync(join(OUT_DIR, 'matrix_manifest.json'), JSON.stringify({
+  metaSeed: META_SEED, seedsPerScenario: SEEDS, duration: DURATION,
+  screeningReplicates: SCREEN_REP, confirmReplicates: CONFIRM_REP, candidateP: CANDIDATE_P, auditN: AUDIT_N,
+  uniqueScenarioSeedPairs: scenSeedPairs.size, screeningRuns: screenRows.length,
+  candidates: candidateRows.length, auditRuns: auditRows.length, confirmations: confirmRows.length,
+  scenarios: scenarios.map((s) => ({ id: s.id, descSv: s.descSv, signatures: s.signatures })),
+  seedList, totalRows: rows.length, wallSeconds: (Date.now() - t0) / 1000,
+}, null, 2));
+
+console.log(`\nKLART: ${rows.length} rader (${screenRows.length} screen + ${confirmRows.length} confirm), ${SEEDS} seeds/scenario, ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
 console.log(summaryLines.join('\n'));
