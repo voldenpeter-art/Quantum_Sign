@@ -6,7 +6,7 @@ import type { AnalysisContext, SignatureResult, NullFamilyResult } from './types
 import type { NullId } from '../types/signatures';
 import { computeBFeatures } from './bFeatures';
 import { empiricalPValue, empiricalTail, pSquared, resolutionInsufficient } from './stats';
-import { generateNull, generateS4Layer2 } from '../nulls';
+import { generateNull, generateS4Adversary, S4_CHSH_ADVERSARIES } from '../nulls';
 
 const STRUCTURAL_NULLS: NullId[] = ['S1', 'S2', 'S3'];
 const B_NULLS: NullId[] = [...STRUCTURAL_NULLS, 'S4'];
@@ -30,25 +30,23 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
   }
   const pDgCross = pSquared(dgPByFamily);
 
-  // TVÅLAGERS-S4 på R_CS-vittnet: lager 1 = värsta-fall detektorartefakt (S4),
-  // lager 2 = S4 + analys-/urvalsstress (generateS4Layer2). p⁽²⁾ över de två
-  // lagren kräver att R_CS > 1 slår BÅDA — ett R_CS som bara klarar lager 1 är
-  // ett urvals-/detektorartefakt, inte ett Cauchy–Schwarz-brott.
+  // NAMNGIVEN S4-MOTSTÅNDARFAMILJ på R_CS-vittnet: R_CS > 1 måste slå VAR OCH EN
+  // av de klassiska motståndarna {lhvCapped, uncorrelated, detectorTrimmed,
+  // selectionStress}. Till skillnad från de STRUKTURELLA surrogaten (S1–S3, där
+  // p⁽²⁾/näst minsta gäller) är S4-familjen obligatoriska fysiska motståndare →
+  // "slå ALLA" = det STÖRSTA per-motståndar-p:t bär (max, inte p⁽²⁾).
   const rcsOf = (s: ReturnType<typeof computeBFeatures>) =>
     Math.max(0, ...s.basisWitness.map((b) => b.rCSMax));
-  const rCSNullsL1: number[] = [];
-  const rCSNullsL2: number[] = [];
-  for (let i = 0; i < nullReplicates * 2; i++) {
-    rCSNullsL1.push(rcsOf(computeBFeatures(generateNull('S4', stream, config, rng.fork()))));
-    rCSNullsL2.push(rcsOf(computeBFeatures(generateS4Layer2(config, rng.fork()))));
-  }
-  const rCSNulls = [...rCSNullsL1, ...rCSNullsL2];
-  // Per-lager-redovisning (tvålagers-S4 är R_CS-vittnets två surrogatfamiljer).
-  const rcsFamilyResults: NullFamilyResult[] = [
-    { nullId: 'S4-L1', observed: rCSMax, ...empiricalTail(rCSMax, rCSNullsL1, 'greater') },
-    { nullId: 'S4-L2', observed: rCSMax, ...empiricalTail(rCSMax, rCSNullsL2, 'greater') },
-  ];
-  const pRCS = pSquared(rcsFamilyResults.map((f) => f.pEmpirical));
+  const rCSNulls: number[] = [];
+  const rcsFamilyResults: NullFamilyResult[] = S4_CHSH_ADVERSARIES.map((name) => {
+    const nullVals: number[] = [];
+    for (let i = 0; i < nullReplicates * 2; i++) {
+      nullVals.push(rcsOf(computeBFeatures(generateS4Adversary(name, config, rng.fork()))));
+    }
+    rCSNulls.push(...nullVals);
+    return { nullId: name, observed: rCSMax, ...empiricalTail(rCSMax, nullVals, 'greater') };
+  });
+  const pRCS = Math.max(...rcsFamilyResults.map((f) => f.pEmpirical)); // slå ALLA
   const insufficient = resolutionInsufficient(rcsFamilyResults.map((f) => f.pResolution));
 
   // FÖRTJÄNAD NOMENKLATUR (types.ts): R_CS > 1 ÄR ett äkta Cauchy–Schwarz-brott
@@ -106,7 +104,7 @@ export function analyzeB(ctx: AnalysisContext): SignatureResult {
     nullsUsed: B_NULLS,
     nullFamilyResults: rcsFamilyResults,
     insufficientResolution: insufficient,
-    primaryNull: { labelSv: 'R_CS (max över baser) mot tvålagers-S4 (L1 detektor + L2 urvalsstress)', observed: rCSMax, nullValues: rCSNulls },
+    primaryNull: { labelSv: 'R_CS (max över baser) mot S4-motståndarfamiljen (slå alla)', observed: rCSMax, nullValues: rCSNulls },
     summarySv:
       'g²_ab-matris och Stokes-korrelationer beräknade på arm A:s tomografihändelser (HV/DA/RL). ' +
       'R_CS > 1 vore klassiskt omöjligt enligt Cauchy–Schwarz — se rödflagga om nämnarkaveat.',

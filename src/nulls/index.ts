@@ -5,8 +5,10 @@ import type { Rng } from '../sim/rng';
 import { shufflePolS1, shuffleGapsS1 } from './S1_shuffle';
 import { timeSlideS2 } from './S2_timeSlide';
 import { blockBootstrapS3 } from './S3_block';
-import { generateS4 } from './S4_detectorAdversary';
+import { generateS4, generateS4Adversary } from './S4_detectorAdversary';
 import { generateS5 } from './S5_drift';
+
+export { generateS4Adversary, S4_CHSH_ADVERSARIES, type S4AdversaryName } from './S4_detectorAdversary';
 
 const isPolarizationStream = (stream: EventStream) => stream.events.some((e) => e.arm);
 
@@ -49,12 +51,9 @@ export function generateNull(
  * av de två (andra minsta av två = det största p:t).
  */
 export function generateS4Layer2(config: RunConfig, rng: Rng): EventStream {
-  const detectorAdversary = generateS4(config, rng.fork());
-  return blockBootstrapS3(
-    detectorAdversary,
-    rng.fork(),
-    Math.max(0.5, detectorAdversary.duration / 40),
-  );
+  // = motståndarfamiljens 'selectionStress'-medlem (behålls som namngiven wrapper
+  // för bakåtkompatibilitet; B/C använder numera hela S4_CHSH_ADVERSARIES).
+  return generateS4Adversary('selectionStress', config, rng);
 }
 
 /** Genererar `n` replikat av given nulltyp (empirisk nollfördelning, CLAUDE.md §7). */
