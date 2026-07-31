@@ -6,6 +6,10 @@ import { analyzeC } from '../analysis/C_chsh';
 import type { AnalysisContext } from '../analysis/types';
 import { Rng } from './rng';
 
+// Simuleringstunga tester: explicit timeout så sviten inte faller sporadiskt på
+// vitests 5s-default när maskinen är belastad (samma disciplin som golden tests).
+const HEAVY_TIMEOUT_MS = 60_000;
+
 describe('generateEventStream', () => {
   it('is deterministic for a fixed seed', () => {
     const config = { ...DEFAULT_CONFIG, seed: 42, duration: 5 };
@@ -13,7 +17,7 @@ describe('generateEventStream', () => {
     const b = generateEventStream(config);
     expect(a.events.length).toBe(b.events.length);
     expect(a.events.map((e) => e.detectedT)).toEqual(b.events.map((e) => e.detectedT));
-  });
+  }, HEAVY_TIMEOUT_MS);
 
   it('singleEmitter shows antibunching: epsilon < 0 more often than not', () => {
     const config = {
@@ -29,7 +33,7 @@ describe('generateEventStream', () => {
     const result = analyzeA(ctx);
     const epsilon = result.components.find((c) => c.key === 'epsilon')!.value;
     expect(epsilon).toBeLessThan(0.2); // klart under klassisk bunching-nivå
-  });
+  }, HEAVY_TIMEOUT_MS);
 
   it('thermal source bunches: g2(0) roughly >= 1', () => {
     const config = {
@@ -44,7 +48,7 @@ describe('generateEventStream', () => {
     const result = analyzeA(ctx);
     const g2 = result.components.find((c) => c.key === 'g2_0')!.value;
     expect(g2).toBeGreaterThan(0.8);
-  });
+  }, HEAVY_TIMEOUT_MS);
 
   it('entangled source at default (optimal) CHSH angles violates S <= 2 without decoherence', () => {
     const config = {
@@ -61,5 +65,5 @@ describe('generateEventStream', () => {
     const result = analyzeC(ctx);
     const S = result.components.find((c) => c.key === 's_global')!.value;
     expect(S).toBeGreaterThan(2);
-  });
+  }, HEAVY_TIMEOUT_MS);
 });

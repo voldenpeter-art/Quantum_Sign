@@ -13,6 +13,7 @@ import { applyDeadTime } from './deadTime';
 import { applyAfterpulsing } from './afterpulsing';
 import { applyDarkCounts } from './darkCounts';
 import { applyCrosstalk } from './crosstalk';
+import { runStatefulDetector } from './statefulEngine';
 import { TWO_ARM_SOURCES } from '../sources';
 
 export function runDetectorPipeline(
@@ -25,9 +26,18 @@ export function runDetectorPipeline(
 ): PhotonEvent[] {
   const detectorKeys = TWO_ARM_SOURCES.includes(source) ? ['A', 'B'] : ['D1', 'D2'];
 
+  // Gemensamt förled i BÅDA motorerna: stråldelning, förlust och jitter sker
+  // fysiskt före lavinen och ägs därför inte av detektorns tillståndsmaskin.
   let stream = assignHbtChannels(events, rng);
   stream = applyLoss(stream, params.lossPct, rng);
   stream = applyJitter(stream, params.jitterPs, rng);
+
+  if (params.engine === 'stateful') {
+    // Tillståndsmotorn äger dödtid + mörkerräkning + afterpuls + crosstalk
+    // tillsammans, så att ALLA laviner passerar samma återhämtningsgrind.
+    return runStatefulDetector(stream, detectorKeys, duration, params, effects.backgroundRateHz, rng);
+  }
+
   stream = applyDeadTime(stream, params.deadTimeNs);
   stream = applyAfterpulsing(stream, params.afterpulseProb, params.afterpulseTauNs, duration, rng);
   stream = applyDarkCounts(stream, detectorKeys, effects.backgroundRateHz, duration, rng);
