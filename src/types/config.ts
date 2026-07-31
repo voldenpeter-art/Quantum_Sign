@@ -26,6 +26,18 @@ export interface Conditions {
   activationEnergyEV: number;
 }
 
+/**
+ * Detektormotor (P3). 'legacy' = den ursprungliga array-kedjan där dödtid
+ * appliceras före afterpulse/dark/crosstalk (känd begränsning, se
+ * detector.test.ts regressionsvakt). 'stateful' = tillståndsmaskin där ALLA
+ * laviner passerar samma återhämtningsgrind (sim/detector/statefulEngine.ts).
+ *
+ * Default är AVSIKTLIGT 'legacy': motorbytet ändrar detektorfysiken, och all
+ * hittills publicerad validering (kontrollmatrisen, G1–G7) är mätt på legacy.
+ * Flaggan gör före/efter-jämförelser möjliga i stället för en tyst ersättning.
+ */
+export type DetectorEngine = 'legacy' | 'stateful';
+
 export interface DetectorParams {
   lossPct: number;
   jitterPs: number;
@@ -34,6 +46,13 @@ export interface DetectorParams {
   afterpulseTauNs: number;
   darkCountRateHz: number;
   crosstalkProb: number;
+  /** Vilken detektormotor som körs. Utelämnad ⇒ 'legacy'. */
+  engine?: DetectorEngine;
+  /**
+   * Endast 'stateful': paralyserbar dödtid (en vetoad lavin retriggar ändå
+   * detektorn). Utelämnad ⇒ icke-paralyserbar.
+   */
+  deadTimeParalyzable?: boolean;
 }
 
 export interface CHSHSettings {
