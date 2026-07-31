@@ -108,6 +108,16 @@ describe('empiricalTail + resolutionInsufficient', () => {
     expect(resolutionInsufficient([1 / 16, 1 / 16, 1 / 16])).toBe(true); // 0.0625 > 1e-2
     expect(resolutionInsufficient([1 / 201, 1 / 201, 1 / 201])).toBe(false); // 0.005 < 1e-2
   });
+
+  // REGRESSION (pre-P3-baslinjen, N=99): verdict-trösklarna är STRIKTA (p < 1e-2),
+  // så en upplösning exakt LIKA MED golvet räcker inte — då blir minsta uppnåeliga
+  // p⁽²⁾ precis 1e-2 och kan aldrig understiga tröskeln. Med den gamla >-jämförelsen
+  // rapporterades "tillräcklig upplösning" vid N=99 fastän A omöjligt kunde fyra.
+  it('N=99 (upplösning exakt = golvet) räknas som OTILLRÄCKLIG, N=100 som tillräcklig', () => {
+    const res = (n: number) => Array(4).fill(1 / (n + 1));
+    expect(resolutionInsufficient(res(99))).toBe(true); // 1/100 = 1e-2, ej < 1e-2
+    expect(resolutionInsufficient(res(100))).toBe(false); // 1/101 < 1e-2
+  });
 });
 
 describe('pSquared (p⁽²⁾-regeln)', () => {

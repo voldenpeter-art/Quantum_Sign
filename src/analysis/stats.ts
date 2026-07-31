@@ -121,12 +121,19 @@ export const SIGNIFICANCE_FLOOR = 1e-2;
  * Sant om p⁽²⁾-upplösningen (näst minsta familjs 1/(N+1)) inte når `floor` — då
  * kan ingen positiv klass sättas oavsett signal, och ett 'none' är i själva
  * verket "kunde inte upplösas". Den korrekta fixen på "default 15 surrogat".
+ *
+ * GRÄNSFALLET (funnet i pre-P3-baslinjen, N=99): verdict-trösklarna är STRIKTA
+ * (p < 1e-2), så en upplösning som är exakt LIKA MED golvet räcker inte —
+ * minsta uppnåeliga p⁽²⁾ blir då precis 1e-2, vilket aldrig understiger
+ * tröskeln. Jämförelsen måste därför vara >=, inte >. Med > rapporterades
+ * "tillräcklig upplösning" vid N=99 trots att A omöjligt kunde fyra; hela
+ * A-spåret föll till 0 % i screening av den anledningen, inte av fysik.
  */
 export function resolutionInsufficient(
   perFamilyResolutions: number[],
   floor = SIGNIFICANCE_FLOOR,
 ): boolean {
-  return pSquared(perFamilyResolutions) > floor;
+  return pSquared(perFamilyResolutions) >= floor;
 }
 
 /** i.i.d. resampling-bootstrap (förenklad — ej blockbootstrap) för konfidensintervall. */
