@@ -24,6 +24,8 @@ const JOBS_MERMIN = [
   'd9nq9lk60llc73cadj8g', // 2026-08-02 20:13
   'd9nv3nssfqic73argcq0', // 2026-08-03 01:41
   'd9nvi6mij12s73fuc1ig', // 2026-08-03 02:12
+  'd9o0usgqs0bc73e3v17g', // 2026-08-03 03:48
+  'd9o1dpeij12s73fuebh0', // 2026-08-03 04:19
   'd9o3kmk60llc73canv90', // 2026-08-03 06:51
 ];
 
@@ -35,7 +37,7 @@ const JOBS_MERMIN = [
  */
 const POST_HOC_SPLIT = 2;
 
-type Feasibility = 'går' | 'går delvis' | 'går inte';
+type Feasibility = 'går' | 'går inte som D' | 'går inte';
 
 interface Row {
   id: string;
@@ -94,16 +96,20 @@ const MAP: Row[] = [
   {
     id: 'D',
     nameSv: 'Stabil invariant',
-    feasibility: 'går delvis',
+    feasibility: 'går inte som D',
     reasonSv:
       'D:s KODADE estimator (analysis/D_invariant.ts) går inte — den invarianten är ' +
       'egenvärdena hos Stokes-kovariansen, som ärver B:s rådata (arvsregeln) och ' +
-      'därmed faller med B. Men D:s METOD går: en basoberoende invariant mätt vid ' +
-      'S ≥ 2 OBEROENDE observationstillfällen, testad för separation + stabilitet + ' +
-      'kontrast. Mermin-korrelatorvektorn i två skilda jobb ger exakt det — och till ' +
+      'därmed faller med B. Vad som DÄREMOT går är en LONGITUDINELL DIAGNOSTIK i D:s ' +
+      'anda: samma observabel vid flera OBEROENDE observationstillfällen. Till ' +
       'skillnad från plattformens pseudosessioner (D-RF-PSEUDOSESSION) är sessionerna ' +
-      'här ÄKTA. Kontrastkravet K_D är däremot inte mätt: ingen omgivningsvariabel ' +
-      'registrerades, så vi kan inte visa att omgivningen varierade mer än invarianten.',
+      'här ÄKTA — det kan simuleringen inte göra. Men detta är INTE signatur D: ' +
+      '(1) Mermin-vektorn har aldrig visats invariant under de passiva ' +
+      'bastransformationer D kräver av en invariant; (2) D-sep är i D v0.2 §9.3 ett ' +
+      'Mahalanobis-avstånd mot EMPIRISKA SURROGATFÖRDELNINGAR med p⁽²⁾-disciplin — ' +
+      'det vi mäter är GHZ-armen mot kontrollarmen, en armseparation, inte D-sep; ' +
+      '(3) kontrastkravet K_D är omätt, ingen omgivningsvariabel registrerades. ' +
+      'Konstantmodellen förkastas dessutom, vilket enligt §10 utlöser D-none explicit.',
     ceilingSv:
       'D-none (D v0.2 §10: konstantmodellen förkastad ⇒ D-none). ' +
       'Redovisas hellre som D-INSPIRERAD LONGITUDINELL MERMIN-DIAGNOSTIK, ' +
@@ -314,7 +320,7 @@ function main(): void {
   console.log('Material: 4 jobb på ibm_marrakesh, 2026-08-02, sanerade fixturer.');
   console.log('Datatyp: shots utan tidsstämpel, diskreta utfall, ingen fotonantalsbas.\n');
 
-  const width = { id: 3, feas: 11 };
+  const width = { id: 3, feas: 16 };
   console.log('ÖVERSIKT');
   console.log('-'.repeat(72));
   for (const r of MAP) {
@@ -436,13 +442,13 @@ function main(): void {
   console.log('\n\nSAMMANFATTNING');
   console.log('='.repeat(72));
   const go = MAP.filter((r) => r.feasibility === 'går').map((r) => r.id);
-  const partial = MAP.filter((r) => r.feasibility === 'går delvis').map((r) => r.id);
+  const partial = MAP.filter((r) => r.feasibility === 'går inte som D').map((r) => r.id);
   const no = MAP.filter((r) => r.feasibility === 'går inte').map((r) => r.id);
   console.log(`  Går:        ${go.join(', ')}`);
-  console.log(`  Går delvis: ${partial.join(', ')}`);
+  console.log(`  Går inte som signatur (D-none, longitudinell diagnostik): ${partial.join(', ')}`);
   console.log(`  Går inte:   ${no.join(', ')}`);
   console.log('\n  Gemensam orsak för A, B, E, F: ingen tidsaxel. Fyra av katalogens');
-  console.log('  åtta signaturer förutsätter tidsupplöst detektion, inte bara');
+  console.log('  nio signaturer förutsätter tidsupplöst detektion, inte bara');
   console.log('  statistik. Det är en utsaga om katalogens räckvidd.');
   console.log('  G och H faller på instrumentklass (CV-fält respektive geografi),');
   console.log('  M på experimentdesign (ingen intervention i kretsen).');

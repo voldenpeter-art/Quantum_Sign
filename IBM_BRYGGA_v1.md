@@ -1,7 +1,7 @@
 # Bryggan IBM → Quantum_Sign, v1
 
 *Import av sanerad gate-model-shotdata från `ibm_marrakesh` (2026-08-02/03) in i
-signaturkatalogens analyskedja. Sju jobb, 48 PUB:ar, 196 608 shots.*
+signaturkatalogens analyskedja. Nio jobb, 64 PUB:ar, 262 144 shots.*
 
 ---
 
@@ -159,7 +159,9 @@ observationstillfällen — något plattformens pseudosessioner inte kan ge.
 | 2 | 08-02 20:13 | `d9nq9lk60llc73cadj8g` | 3,7788 ± 0,0102 | 1,0151 ± 0,0271 |
 | 3 | 08-03 01:41 | `d9nv3nssfqic73argcq0` | 3,8223 ± 0,0092 | 1,0454 ± 0,0272 |
 | 4 | 08-03 02:12 | `d9nvi6mij12s73fuc1ig` | 3,8052 ± 0,0096 | 0,9907 ± 0,0271 |
-| 5 | 08-03 06:51 | `d9o3kmk60llc73canv90` | 3,8330 ± 0,0089 | 1,0435 ± 0,0271 |
+| 5 | 08-03 03:48 | `d9o0usgqs0bc73e3v17g` | 3,8262 ± 0,0091 | 1,0122 ± 0,0271 |
+| 6 | 08-03 04:19 | `d9o1dpeij12s73fuebh0` | 3,8359 ± 0,0089 | 0,9868 ± 0,0271 |
+| 7 | 08-03 06:51 | `d9o3kmk60llc73canv90` | 3,8330 ± 0,0089 | 1,0435 ± 0,0271 |
 
 ### Klassningen är D-none, inte D-struct
 
@@ -175,30 +177,31 @@ under de passiva bastransformationer D kräver av en invariant.
 | D-ben | Status |
 |---|---|
 | D-stab | konstantmodellen **förkastas** → D-none |
-| D-sep | **EJ MÄTT.** D-sep är i §9.3 ett Mahalanobis-avstånd mot empiriska surrogatfördelningar med p⁽²⁾-disciplin. Det vi mätte är GHZ-arm mot kontrollarm — **armseparation**, 215,5σ, en annan storhet. |
+| D-sep | **EJ MÄTT.** D-sep är i §9.3 ett Mahalanobis-avstånd mot empiriska surrogatfördelningar med p⁽²⁾-disciplin. Det vi mätte är GHZ-arm mot kontrollarm — **armseparation**, 257,3σ, en annan storhet. |
 | D-kontrast (K_D) | **EJ MÄTT** — ingen omgivningsvariabel registrerad |
 
 ### Konstantmodelltest — skalär och vektor
 
 | Test | χ² | df | Dom |
 |---|---|---|---|
-| Skalär M, signal | 107,5 | 4 | förkastas |
-| Skalär M, kontroll | 5,2 | 4 | förenlig med konstant inom shot noise |
-| **Vektor** (per korrelator, summerad) | **127,9** | 16 | förkastas |
+| Skalär M, signal | 129,4 | 6 | förkastas |
+| Skalär M, kontroll | 6,1 | 6 | förenlig med konstant inom shot noise |
+| **Vektor** (per korrelator, summerad) | **155,9** | 24 | förkastas |
 
 Vektortestet är strängare och ligger närmare D:s invariantbegrepp — **en
 invariant är en vektor, inte ett tal.** Skalär-M är en summa där kompenserande
-termförändringar tar ut varandra. YXY bär mest av instabiliteten (χ² = 53,6 av
-127,9) och det syns inte i M.
+termförändringar tar ut varandra. Per term: XXX 23,1 · XYY 36,0 · **YXY 61,9** ·
+YYX 34,9. YXY bär 40 % av instabiliteten och det syns inte i M.
 
 ### Formen: tidig nivåförändring + platå, inte fortlöpande drift
 
 | Grupp | M̄ | χ² | df |
 |---|---|---|---|
 | Tidiga 2 (söndag kväll) | 3,7412 ± 0,0078 | 32,2 | 1 |
-| Senare 3 (måndag) | 3,8209 ± 0,0053 | **4,5** | 2 |
+| Senare 5 (måndag) | 3,8251 ± 0,0041 | **6,7** | 4 |
 
-Nivåskifte 8,4σ; platån håller även i vektortestet (χ² = 13,1, df = 8).
+Nivåskifte **9,5σ**; platån håller även i vektortestet (χ² = 22,0, df = 16).
+Stegen efter nivåskiftet är +1,58σ, +0,77σ, −0,23σ — rent brus.
 
 **Förändringspunkten är vald efter att datan setts och är därmed explorativ.**
 Den får inte behandlas som ett förregistrerat test.
@@ -265,7 +268,7 @@ tidsstämplar och kalibreringssnapshot är avsiktligt bevarade.
 
 - Inget loophole-fritt Bell-test (§5).
 - Inget D-fynd alls — utfallet är **D-none** (§4).
-- Ingen driftkurva. Fyra punkter över 6,5 timmar visar att variation **finns**
+- Ingen driftkurva. Sju punkter över 11 timmar visar att variation **finns**
   och är signifikant; de visar inte dess form, period eller orsak.
 - Ingen utvidgning av katalogen. Sju av nio signaturer går inte att köra på den
   här datatypen, och det är rapporterat som ett resultat, inte som en TODO.

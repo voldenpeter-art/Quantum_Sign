@@ -257,10 +257,16 @@ describe('Mermin-brygga', () => {
     expect(xParityExpectation(pubs[3]).value).toBeCloseTo(0.9155, 4);
   });
 
-  it('reproducerar Mermin 5 (M = 3.8330, kontroll 1.0435)', () => {
-    const pubs = load('d9o3kmk60llc73canv90');
-    expect(merminValue(pubs, 'ghz').M).toBeCloseTo(3.833, 4);
-    expect(merminValue(pubs, 'control').M).toBeCloseTo(1.0435, 4);
+  it('reproducerar Mermin 5-7', () => {
+    const exp: Array<[string, number, number]> = [
+      ['d9o0usgqs0bc73e3v17g', 3.8262, 1.0122],
+      ['d9o1dpeij12s73fuebh0', 3.8359, 0.9868],
+      ['d9o3kmk60llc73canv90', 3.833, 1.0435],
+    ];
+    for (const [job, m, c] of exp) {
+      expect(merminValue(load(job), 'ghz').M).toBeCloseTo(m, 4);
+      expect(merminValue(load(job), 'control').M).toBeCloseTo(c, 4);
+    }
   });
 
   it('reproducerar Mermin 3 och 4', () => {
@@ -287,6 +293,8 @@ describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
     'd9nq9lk60llc73cadj8g',
     'd9nv3nssfqic73argcq0',
     'd9nvi6mij12s73fuc1ig',
+    'd9o0usgqs0bc73e3v17g',
+    'd9o1dpeij12s73fuebh0',
     'd9o3kmk60llc73canv90',
   ];
 
@@ -319,9 +327,9 @@ describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
     // instabiliteten en analysartefakt hade den träffat båda armarna.
     const sig = constantModelFit(JOBS.map((j) => merminValue(load(j), 'ghz')));
     const ctl = constantModelFit(JOBS.map((j) => merminValue(load(j), 'control')));
-    expect(sig.df).toBe(4);
-    expect(sig.chi2).toBeCloseTo(107.5, 1);
-    expect(ctl.chi2).toBeCloseTo(5.2, 1);
+    expect(sig.df).toBe(6);
+    expect(sig.chi2).toBeCloseTo(129.4, 1);
+    expect(ctl.chi2).toBeCloseTo(6.1, 1);
     expect(sig.chi2 / ctl.chi2).toBeGreaterThan(15);
     // Kontrollens chi2 ligger nära df — precis vad brus ska ge.
     expect(ctl.chi2).toBeLessThan(3 * ctl.df);
@@ -345,17 +353,17 @@ describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
     // invariantbegrepp — en invariant är en vektor, inte ett tal.
     const g = JOBS.map((j) => merminValue(load(j), 'ghz'));
     const vec = vectorConstantFit(g);
-    expect(vec.df).toBe(16);
-    expect(vec.chi2).toBeCloseTo(127.9, 0);
+    expect(vec.df).toBe(24);
+    expect(vec.chi2).toBeCloseTo(155.9, 0);
     expect(vec.perTerm.map((t) => t.bases)).toEqual(['XXX', 'XYY', 'YXY', 'YYX']);
     // YXY bar mest av instabiliteten — syns inte i skalar-M.
-    expect(Math.max(...vec.perTerm.map((t) => t.chi2))).toBeCloseTo(53.6, 0);
+    expect(Math.max(...vec.perTerm.map((t) => t.chi2))).toBeCloseTo(61.9, 0);
   });
 
   it('platån håller även i vektortestet', () => {
     const g = JOBS.map((j) => merminValue(load(j), 'ghz'));
     const vec = vectorConstantFit(g.slice(2));
-    expect(vec.df).toBe(8);
+    expect(vec.df).toBe(16);
     expect(vec.chi2).toBeLessThan(2.5 * vec.df);
   });
 });
