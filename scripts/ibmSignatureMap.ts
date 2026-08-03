@@ -18,13 +18,22 @@ const load = (jobId: string) =>
 
 const JOB_CHSH = 'd9ndf7gqs0bc73e3adu0';
 const JOB_GHZ = 'd9nimlk60llc73ca58e0';
-/** Fyra Mermin-replikat, kronologiskt. Tiderna är UTC ur jobbens info-filer. */
+/** Mermin-replikat, kronologiskt. Tiderna är UTC ur jobbens info-filer. */
 const JOBS_MERMIN = [
   'd9npt5oqs0bc73e3ns90', // 2026-08-02 19:46
   'd9nq9lk60llc73cadj8g', // 2026-08-02 20:13
   'd9nv3nssfqic73argcq0', // 2026-08-03 01:41
   'd9nvi6mij12s73fuc1ig', // 2026-08-03 02:12
+  'd9o3kmk60llc73canv90', // 2026-08-03 06:51
 ];
+
+/**
+ * Post hoc-gräns för nivåskiftet. Söndagskörningarna (index < 2) ligger lågt,
+ * måndagskörningarna högt. Gränsen är vald EFTER att datan setts och är därmed
+ * EXPLORATIV — den får inte behandlas som ett förregistrerat test. Redovisas
+ * enbart som en beskrivning av formen, aldrig som ett p-värde att luta sig mot.
+ */
+const POST_HOC_SPLIT = 2;
 
 type Feasibility = 'går' | 'går delvis' | 'går inte';
 
@@ -95,7 +104,10 @@ const MAP: Row[] = [
       'skillnad från plattformens pseudosessioner (D-RF-PSEUDOSESSION) är sessionerna ' +
       'här ÄKTA. Kontrastkravet K_D är däremot inte mätt: ingen omgivningsvariabel ' +
       'registrerades, så vi kan inte visa att omgivningen varierade mer än invarianten.',
-    ceilingSv: 'D-struct — ofullständigt kontrastkrav (D v0.2 §10)',
+    ceilingSv:
+      'D-none (D v0.2 §10: konstantmodellen förkastad ⇒ D-none). ' +
+      'Redovisas hellre som D-INSPIRERAD LONGITUDINELL MERMIN-DIAGNOSTIK, ' +
+      'ej klassificerbar som signatur D.',
   },
   {
     id: 'E',
@@ -197,11 +209,49 @@ export function constantModelFit(values: Array<{ M: number; sigmaM: number }>): 
   return { mBar, sigmaBar: Math.sqrt(1 / W), chi2, df: values.length - 1 };
 }
 
+/**
+ * Vektortest: konstantmodell PER KORRELATOR, summerad.
+ *
+ * Skalär-M är en summa där kompenserande termförändringar tar ut varandra — en
+ * term kan röra sig signifikant utan att synas i M. Vektortestet är därför det
+ * strängare stabilitetstestet och det som ligger närmast D:s invariantbegrepp
+ * (en invariant är en VEKTOR, inte ett tal).
+ */
+export interface VectorFitResult {
+  perTerm: Array<{ bases: string; chi2: number; eBar: number }>;
+  chi2: number;
+  df: number;
+}
+
+export function vectorConstantFit(sessions: MerminResult[]): VectorFitResult {
+  const nTerms = sessions[0].terms.length;
+  const perTerm: VectorFitResult['perTerm'] = [];
+  let chi2 = 0;
+  for (let k = 0; k < nTerms; k++) {
+    const pts = sessions.map((s) => {
+      const t = s.terms[k];
+      return { M: t.expectation, sigmaM: Math.sqrt((1 - t.expectation ** 2) / t.shots) };
+    });
+    const fit = constantModelFit(pts);
+    perTerm.push({ bases: sessions[0].terms[k].bases, chi2: fit.chi2, eBar: fit.mBar });
+    chi2 += fit.chi2;
+  }
+  return { perTerm, chi2, df: nTerms * (sessions.length - 1) };
+}
+
 interface DAttempt {
   sessions: Array<{ jobId: string; utc: string; ghz: MerminResult; control: MerminResult }>;
   signalFit: ConstantModelFit;
   controlFit: ConstantModelFit;
-  separationSigma: number;
+  vectorFit: VectorFitResult;
+  /** Post hoc-uppdelning: nivå före/efter, och plateaufit på den senare gruppen. */
+  earlyFit: ConstantModelFit;
+  lateFit: ConstantModelFit;
+  lateControlFit: ConstantModelFit;
+  lateVectorFit: VectorFitResult;
+  levelShiftSigma: number;
+  /** GHZ-armen mot kontrollarmen. Detta är INTE D-sep (se MAP-posten för D). */
+  armSeparationSigma: number;
   steps: Array<{ delta: number; sigma: number }>;
   kdMeasured: false;
 }
@@ -226,8 +276,21 @@ function dAttempt(): DAttempt {
   const signalFit = constantModelFit(sessions.map((s) => s.ghz));
   const controlFit = constantModelFit(sessions.map((s) => s.control));
 
-  // Separationsbenet: skiljer invarianten signal från kontroll? Poolat.
-  const separationSigma =
+  const vectorFit = vectorConstantFit(sessions.map((s) => s.ghz));
+
+  // Post hoc-uppdelning (EXPLORATIV, se POST_HOC_SPLIT).
+  const early = sessions.slice(0, POST_HOC_SPLIT);
+  const late = sessions.slice(POST_HOC_SPLIT);
+  const earlyFit = constantModelFit(early.map((s) => s.ghz));
+  const lateFit = constantModelFit(late.map((s) => s.ghz));
+  const lateControlFit = constantModelFit(late.map((s) => s.control));
+  const lateVectorFit = vectorConstantFit(late.map((s) => s.ghz));
+  const levelShiftSigma =
+    (lateFit.mBar - earlyFit.mBar) / Math.hypot(lateFit.sigmaBar, earlyFit.sigmaBar);
+
+  // ARMSEPARATION — GHZ-armen mot kontrollarmen. Detta är INTE D-sep: D-sep är
+  // ett Mahalanobis-avstånd mot empiriska surrogatfördelningar (D v0.2 §9.3).
+  const armSeparationSigma =
     (signalFit.mBar - controlFit.mBar) / Math.hypot(signalFit.sigmaBar, controlFit.sigmaBar);
 
   const steps = sessions.slice(1).map((s, i) => {
@@ -236,7 +299,11 @@ function dAttempt(): DAttempt {
     return { delta, sigma: delta / Math.hypot(prev.sigmaM, s.ghz.sigmaM) };
   });
 
-  return { sessions, signalFit, controlFit, separationSigma, steps, kdMeasured: false };
+  return {
+    sessions, signalFit, controlFit, vectorFit,
+    earlyFit, lateFit, lateControlFit, lateVectorFit, levelShiftSigma,
+    armSeparationSigma, steps, kdMeasured: false,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -274,9 +341,9 @@ function main(): void {
   console.log('    Se scripts/importIbmChsh.ts — S = 2.5317383, sigma = 0.0241785 (21.99 sigma).');
 
   const d = dAttempt();
-  console.log('\n[D] Flersessions-invariant (D:s METOD, ej D_invariant.ts:s estimator)');
+  console.log('\n[D] Longitudinell Mermin-diagnostik (D-INSPIRERAD, ej signatur D)');
   console.log('-'.repeat(72));
-  console.log('    Invariant: Mermin-korrelatorvektorn (⟨XXX⟩,⟨XYY⟩,⟨YXY⟩,⟨YYX⟩)');
+  console.log('    Observabel: Mermin-korrelatorvektorn (⟨XXX⟩,⟨XYY⟩,⟨YXY⟩,⟨YYX⟩)');
   console.log(`    Sessioner: ${d.sessions.length} ÄKTA (skilda jobb) — inte pseudosessioner\n`);
   console.log('    UTC               jobb                   M (GHZ)            M (kontroll)');
   for (const s of d.sessions) {
@@ -295,7 +362,7 @@ function main(): void {
     );
   });
 
-  console.log('\n    Konstantmodelltest (viktat chi2 mot gemensamt medelvarde):');
+  console.log('\n    Konstantmodelltest, SKALAR M (viktat chi2 mot gemensamt medelvarde):');
   console.log(
     `      signal   : chi2 = ${d.signalFit.chi2.toFixed(1)}, df = ${d.signalFit.df}   ` +
       `Mbar = ${d.signalFit.mBar.toFixed(4)} +/- ${d.signalFit.sigmaBar.toFixed(4)}  -> FORKASTAS`,
@@ -304,22 +371,57 @@ function main(): void {
     `      kontroll : chi2 = ${d.controlFit.chi2.toFixed(1)}, df = ${d.controlFit.df}   ` +
       `Mbar = ${d.controlFit.mBar.toFixed(4)} +/- ${d.controlFit.sigmaBar.toFixed(4)}  -> HALLER`,
   );
-  console.log(
-    `      kvot     : ${(d.signalFit.chi2 / d.controlFit.chi2).toFixed(1)}x — samma matning, ` +
-      'samma qubitar, samma analyskedja',
-  );
 
-  console.log(`\n    D-sep (separation signal vs kontroll) : ${d.separationSigma.toFixed(1)} sigma  -> UPPFYLLT`);
-  console.log(`    D-stab (konstans over sessioner)      : chi2 = ${d.signalFit.chi2.toFixed(1)}, df = ${d.signalFit.df}  -> EJ UPPFYLLT`);
-  console.log('    D-kontrast (K_D)                      : EJ MATT — ingen omgivningsvariabel registrerad');
-  console.log('\n    Klassning: D-struct, och även det med reservation. Separationsbenet');
-  console.log('    bär, stabilitetsbenet faller (invarianten är INTE konstant mellan');
-  console.log('    sessionerna), kontrastbenet är omätt. Detta är inte ett uppfyllt');
-  console.log('    D-fynd — det är ett ofullständigt kontrastkrav med ett falsifierat');
-  console.log('    stabilitetsantagande. Rapporteras som sådant.');
-  console.log('\n    Att kontrollen är konstant medan signalen inte är det är det som');
-  console.log('    gör detta till en fysikutsaga och inte en analysartefakt: en');
-  console.log('    instabilitet i kedjan hade träffat båda.');
+  console.log('\n    Konstantmodelltest, VEKTOR (per korrelator, summerad):');
+  for (const t of d.vectorFit.perTerm) {
+    console.log(`      ${t.bases}: chi2 = ${t.chi2.toFixed(2).padStart(6)}   ebar = ${t.eBar.toFixed(4)}`);
+  }
+  console.log(`      SUMMA  : chi2 = ${d.vectorFit.chi2.toFixed(1)}, df = ${d.vectorFit.df}`);
+  console.log('      Skalar-M ar en SUMMA — kompenserande termforandringar tar ut');
+  console.log('      varandra och syns inte i M. Vektortestet ar det strangare, och');
+  console.log('      ligger narmare D:s invariantbegrepp (en invariant ar en vektor).');
+
+  console.log('\n    Post hoc-uppdelning (EXPLORATIV — gransen vald efter att datan setts):');
+  console.log(
+    `      tidiga ${d.earlyFit.df + 1} : Mbar = ${d.earlyFit.mBar.toFixed(4)} +/- ${d.earlyFit.sigmaBar.toFixed(4)}`,
+  );
+  console.log(
+    `      senare ${d.lateFit.df + 1} : Mbar = ${d.lateFit.mBar.toFixed(4)} +/- ${d.lateFit.sigmaBar.toFixed(4)}   ` +
+      `chi2 = ${d.lateFit.chi2.toFixed(2)}, df = ${d.lateFit.df}  -> platan haller`,
+  );
+  console.log(
+    `      vektor senare: chi2 = ${d.lateVectorFit.chi2.toFixed(2)}, df = ${d.lateVectorFit.df}`,
+  );
+  console.log(`      nivaskifte   : ${d.levelShiftSigma.toFixed(2)} sigma`);
+  console.log('      Bilden ar alltsa TIDIG NIVAFORANDRING + PLATA, inte fortlopande');
+  console.log('      drift. Forandringspunkten ar post hoc och far inte behandlas som');
+  console.log('      ett forregistrerat test.');
+
+  console.log('\n    KLASSNING enligt D v0.2 §10:');
+  console.log('    ------------------------------------------------------------------');
+  console.log('    D-stab      : konstantmodellen FORKASTAS  -> §10 utloser D-none');
+  console.log('    D-sep       : EJ MATT — D-sep ar Mahalanobis-avstand mot empiriska');
+  console.log('                  surrogatfordelningar med p(2)-disciplin (§9.3). Det vi');
+  console.log(`                  mater ar GHZ-arm mot kontrollarm: ${d.armSeparationSigma.toFixed(1)} sigma`);
+  console.log('                  ARMSEPARATION — en annan storhet.');
+  console.log('    D-kontrast  : EJ MATT — ingen omgivningsvariabel registrerad');
+  console.log('');
+  console.log('    => D-none. Redovisas hellre som D-INSPIRERAD LONGITUDINELL');
+  console.log('       MERMIN-DIAGNOSTIK, ej klassificerbar som signatur D: vektorn');
+  console.log('       har aldrig visats invariant under de passiva bastransformationer');
+  console.log('       D kraver.');
+
+  console.log('\n    VAD VARIATIONEN LOKALISERAS TILL:');
+  console.log('    Armarna delar qubitar, jobb, shots, analyskedja, bitordning och');
+  console.log('    teckenkonvention — men INTE kretsdjup: GHZ-armen har 2 tvaqubits-');
+  console.log('    grindar och djup ~12, kontrollen har 0 och djup 1-4. Variationen');
+  console.log('    lokaliseras darfor till ENTANGLING-KRETSENS PRESTANDA (tvaqubits-');
+  console.log('    grindfidelitet, GHZ-preparation, trequbitskoherens) — inte till ett');
+  console.log('    abstrakt "tillstand" isolerat fran grindkedjan.');
+  console.log('');
+  console.log('    Sprakgrans: sigma_M ar REN SHOT NOISE. Kontrollen ar "forenlig med');
+  console.log('    konstantmodell inom shot-noise-osakerheten", inte "bevisligen');
+  console.log('    konstant" — systematikbudgeten ar omatt.');
 
   const ghzPubs = load(JOB_GHZ);
   console.log('\n[koherensindikator] GHZ-jobb ' + JOB_GHZ);

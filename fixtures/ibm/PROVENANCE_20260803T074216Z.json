@@ -1,0 +1,48 @@
+{
+  "sanitizerVersion": "sanitize-export-0.1",
+  "sanitizationLevel": 1,
+  "levelDescription": "Endast user_id borttaget. Jobb-ID, tidsstamplar och kalibreringssnapshot behallna som proveniens.",
+  "removedKeys": [
+    "access_token",
+    "api_key",
+    "apikey",
+    "crn",
+    "email",
+    "instance_crn",
+    "password",
+    "secret",
+    "token",
+    "user_id",
+    "userid"
+  ],
+  "verifiedAgainst": [
+    "IBMid-identifierare",
+    "IBM Cloud CRN",
+    "e-postadress"
+  ],
+  "sanitized_utc": "20260803T074216Z",
+  "files": [
+    {
+      "sourceFile": "job-d9o3kmk60llc73canv90-info.json",
+      "sourceSha256": "b3034801f2bb3cb4f0b0917d10748f137ee4ceaad2aff2d69e7b85caa9cf4413",
+      "sanitizedFile": "sanitized_job-d9o3kmk60llc73canv90-info.json",
+      "sanitizedSha256": "254a810eccf2b201ff4c50c47883a0552bf27aab5c7ea3ebcd594e8d6e0ffda5",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9o3kmk60llc73canv90-result.json",
+      "sourceSha256": "c4a1e1af63863862fd319af964f4cb5a2015a8a81526d09884490361c0a87c70",
+      "sanitizedFile": "sanitized_job-d9o3kmk60llc73canv90-result.json",
+      "sanitizedSha256": "c4a1e1af63863862fd319af964f4cb5a2015a8a81526d09884490361c0a87c70",
+      "removed": [],
+      "removedCount": 0
+    }
+  ]
+}

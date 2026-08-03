@@ -28,7 +28,7 @@ import {
   toShotRecords,
 } from './ibmChshBridge';
 import { merminValue, parityOf, xParityExpectation } from './ibmMerminBridge';
-import { constantModelFit } from '../ibmSignatureMap';
+import { constantModelFit, vectorConstantFit } from '../ibmSignatureMap';
 
 const FIX = join(process.cwd(), 'fixtures/ibm');
 const load = (jobId: string) =>
@@ -257,6 +257,12 @@ describe('Mermin-brygga', () => {
     expect(xParityExpectation(pubs[3]).value).toBeCloseTo(0.9155, 4);
   });
 
+  it('reproducerar Mermin 5 (M = 3.8330, kontroll 1.0435)', () => {
+    const pubs = load('d9o3kmk60llc73canv90');
+    expect(merminValue(pubs, 'ghz').M).toBeCloseTo(3.833, 4);
+    expect(merminValue(pubs, 'control').M).toBeCloseTo(1.0435, 4);
+  });
+
   it('reproducerar Mermin 3 och 4', () => {
     const m3 = merminValue(load('d9nv3nssfqic73argcq0'), 'ghz');
     const m4 = merminValue(load('d9nvi6mij12s73fuc1ig'), 'ghz');
@@ -281,6 +287,7 @@ describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
     'd9nq9lk60llc73cadj8g',
     'd9nv3nssfqic73argcq0',
     'd9nvi6mij12s73fuc1ig',
+    'd9o3kmk60llc73canv90',
   ];
 
   it('kräver minst två punkter', () => {
@@ -312,20 +319,43 @@ describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
     // instabiliteten en analysartefakt hade den träffat båda armarna.
     const sig = constantModelFit(JOBS.map((j) => merminValue(load(j), 'ghz')));
     const ctl = constantModelFit(JOBS.map((j) => merminValue(load(j), 'control')));
-    expect(sig.df).toBe(3);
-    expect(sig.chi2).toBeCloseTo(84.2, 1);
-    expect(ctl.chi2).toBeCloseTo(3.7, 1);
+    expect(sig.df).toBe(4);
+    expect(sig.chi2).toBeCloseTo(107.5, 1);
+    expect(ctl.chi2).toBeCloseTo(5.2, 1);
     expect(sig.chi2 / ctl.chi2).toBeGreaterThan(15);
     // Kontrollens chi2 ligger nära df — precis vad brus ska ge.
     expect(ctl.chi2).toBeLessThan(3 * ctl.df);
   });
 
-  it('serien är icke-monoton: upp, upp, sedan platt', () => {
-    const ms = JOBS.map((j) => merminValue(load(j), 'ghz'));
-    const step = (a: number, b: number) =>
-      (ms[b].M - ms[a].M) / Math.hypot(ms[a].sigmaM, ms[b].sigmaM);
-    expect(step(0, 1)).toBeGreaterThan(3);
-    expect(step(1, 2)).toBeGreaterThan(3);
-    expect(Math.abs(step(2, 3))).toBeLessThan(2); // platt, inte fortsatt uppgång
+  it('formen är tidig nivåförändring + platå, inte fortlöpande drift', () => {
+    // POST HOC: gränsen mellan söndag och måndag valdes EFTER att datan setts.
+    // Redovisas som beskrivning av formen, aldrig som ett förregistrerat test.
+    const g = JOBS.map((j) => merminValue(load(j), 'ghz'));
+    const early = constantModelFit(g.slice(0, 2));
+    const late = constantModelFit(g.slice(2));
+    expect(late.chi2).toBeLessThan(3 * late.df); // platån håller
+    const shift =
+      (late.mBar - early.mBar) / Math.hypot(late.sigmaBar, early.sigmaBar);
+    expect(shift).toBeGreaterThan(5);
+  });
+
+  it('vektortestet är strängare än skalär-M', () => {
+    // Skalär-M är en summa: kompenserande termändringar tar ut varandra.
+    // Vektortestet ser dem. Det är också det som ligger närmast D:s
+    // invariantbegrepp — en invariant är en vektor, inte ett tal.
+    const g = JOBS.map((j) => merminValue(load(j), 'ghz'));
+    const vec = vectorConstantFit(g);
+    expect(vec.df).toBe(16);
+    expect(vec.chi2).toBeCloseTo(127.9, 0);
+    expect(vec.perTerm.map((t) => t.bases)).toEqual(['XXX', 'XYY', 'YXY', 'YYX']);
+    // YXY bar mest av instabiliteten — syns inte i skalar-M.
+    expect(Math.max(...vec.perTerm.map((t) => t.chi2))).toBeCloseTo(53.6, 0);
+  });
+
+  it('platån håller även i vektortestet', () => {
+    const g = JOBS.map((j) => merminValue(load(j), 'ghz'));
+    const vec = vectorConstantFit(g.slice(2));
+    expect(vec.df).toBe(8);
+    expect(vec.chi2).toBeLessThan(2.5 * vec.df);
   });
 });
