@@ -1,0 +1,92 @@
+{
+  "sanitizerVersion": "sanitize-export-0.1",
+  "sanitizationLevel": 1,
+  "levelDescription": "Endast user_id borttaget. Jobb-ID, tidsstamplar och kalibreringssnapshot behallna som proveniens.",
+  "removedKeys": [
+    "access_token",
+    "api_key",
+    "apikey",
+    "crn",
+    "email",
+    "instance_crn",
+    "password",
+    "secret",
+    "token",
+    "user_id",
+    "userid"
+  ],
+  "verifiedAgainst": [
+    "IBMid-identifierare",
+    "IBM Cloud CRN",
+    "e-postadress"
+  ],
+  "sanitized_utc": "20260802T105612Z",
+  "files": [
+    {
+      "sourceFile": "job-d9ndb4ssfqic73aqtpl0-info.json",
+      "sourceSha256": "37b03b286269a95a8c14922cdfb25b348c6af14744ddc52a07e2938c76438561",
+      "sanitizedFile": "sanitized_job-d9ndb4ssfqic73aqtpl0-info.json",
+      "sanitizedSha256": "f077662646a7251ecad38094ca306cad1a0ac45f920cf51188ac8b6b9098bc2e",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9ndb4ssfqic73aqtpl0-result.json",
+      "sourceSha256": "6ed0500e9a07a179c6049961ba4e9184177bd11fb2a073fed263ffeee2435173",
+      "sanitizedFile": "sanitized_job-d9ndb4ssfqic73aqtpl0-result.json",
+      "sanitizedSha256": "6ed0500e9a07a179c6049961ba4e9184177bd11fb2a073fed263ffeee2435173",
+      "removed": [],
+      "removedCount": 0
+    },
+    {
+      "sourceFile": "job-d9ndef0qs0bc73e3ad4g-info.json",
+      "sourceSha256": "b9ab3a349f1195aac598b1f26713f5bea7ca5aa127164b21859ca20f28825baf",
+      "sanitizedFile": "sanitized_job-d9ndef0qs0bc73e3ad4g-info.json",
+      "sanitizedSha256": "c4a61700c9dd36ca3334ff2d8dfbd7834b24f9379131d1c229d1ec9723178a92",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9ndef0qs0bc73e3ad4g-result.json",
+      "sourceSha256": "3a4d742f711fa68fc70eec3c93b575670553a90a8e28a439027a161c1d2b9b82",
+      "sanitizedFile": "sanitized_job-d9ndef0qs0bc73e3ad4g-result.json",
+      "sanitizedSha256": "3a4d742f711fa68fc70eec3c93b575670553a90a8e28a439027a161c1d2b9b82",
+      "removed": [],
+      "removedCount": 0
+    },
+    {
+      "sourceFile": "job-d9ndf7gqs0bc73e3adu0-info.json",
+      "sourceSha256": "028ad43aaaa1f0b28fb2747f306f6bcc62d24cb9619a134e3249f735a3bff30d",
+      "sanitizedFile": "sanitized_job-d9ndf7gqs0bc73e3adu0-info.json",
+      "sanitizedSha256": "9275e56c499900a81528d1bed9e5694590b78ae4109518b46fd443c4c308c8f7",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9ndf7gqs0bc73e3adu0-result.json",
+      "sourceSha256": "c6ca5b0accfd122303a8fbc9523c0ddabb84b9cb080b3fea6e505d247c855b02",
+      "sanitizedFile": "sanitized_job-d9ndf7gqs0bc73e3adu0-result.json",
+      "sanitizedSha256": "c6ca5b0accfd122303a8fbc9523c0ddabb84b9cb080b3fea6e505d247c855b02",
+      "removed": [],
+      "removedCount": 0
+    }
+  ]
+}

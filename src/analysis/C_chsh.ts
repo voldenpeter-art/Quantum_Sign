@@ -12,7 +12,11 @@ import { std, normalSurvival, median } from './stats';
 import { generateNull, generateS4Adversary, S4_CHSH_ADVERSARIES } from '../nulls';
 import type { Rng } from '../sim/rng';
 
-interface ChshPair {
+/**
+ * Ett CHSH-par: två utfall med var sin inställning. EXPORTERAD eftersom den är
+ * bryggans pardirekta ingång — se computeS nedan.
+ */
+export interface ChshPair {
   settingA: 0 | 1;
   settingB: 0 | 1;
   outcomeA: 1 | -1;
@@ -67,7 +71,21 @@ function extractChshPairs(events: PhotonEvent[], coincWindowS: number): ChshPair
   return pairs;
 }
 
-function computeS(pairs: ChshPair[]): number {
+/**
+ * S ur FÄRDIGA par. Detta är estimatorns pardirekta kärna: den vet ingenting om
+ * hur paren bildades.
+ *
+ * BRYGGANS INGÅNG (BRYGGSPEC_IBM_CHSH.md §0). Fotondata parar armar via
+ * tidsstämplar och koincidensfönster (`extractChshPairs` ovan). Gate-model-data
+ * från IBM har inga tidsstämplar — där mäts båda qubitarna i samma shot och
+ * paret existerar per konstruktion. Sådan data matas därför RAKT in här, utan
+ * att passera `extractChshPairs` och utan att konverteras till `PhotonEvent`.
+ *
+ * Att syntetisera tidsstämplar för att återanvända fotonvägen vore ett
+ * metodfel: nollhypoteserna (accidentals, time-slide) skulle då testa en fysik
+ * som inte finns i datan.
+ */
+export function computeS(pairs: ChshPair[]): number {
   const buckets: Record<string, { sum: number; n: number }> = {
     '0,0': { sum: 0, n: 0 },
     '0,1': { sum: 0, n: 0 },
