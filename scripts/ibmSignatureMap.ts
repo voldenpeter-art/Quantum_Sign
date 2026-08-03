@@ -18,8 +18,13 @@ const load = (jobId: string) =>
 
 const JOB_CHSH = 'd9ndf7gqs0bc73e3adu0';
 const JOB_GHZ = 'd9nimlk60llc73ca58e0';
-const JOB_MERMIN_1 = 'd9npt5oqs0bc73e3ns90';
-const JOB_MERMIN_2 = 'd9nq9lk60llc73cadj8g';
+/** Fyra Mermin-replikat, kronologiskt. Tiderna är UTC ur jobbens info-filer. */
+const JOBS_MERMIN = [
+  'd9npt5oqs0bc73e3ns90', // 2026-08-02 19:46
+  'd9nq9lk60llc73cadj8g', // 2026-08-02 20:13
+  'd9nv3nssfqic73argcq0', // 2026-08-03 01:41
+  'd9nvi6mij12s73fuc1ig', // 2026-08-03 02:12
+];
 
 type Feasibility = 'går' | 'går delvis' | 'går inte';
 
@@ -165,43 +170,73 @@ const MAP: Row[] = [
 // D-försöket. Kör D:s METOD på Mermin-korrelatorvektorn över två äkta sessioner.
 // ---------------------------------------------------------------------------
 
+export interface ConstantModelFit {
+  /** Viktat medelvärde under konstanthypotesen. */
+  mBar: number;
+  sigmaBar: number;
+  /** χ² = Σ w_i (M_i − M̄)², w_i = 1/σ_i². */
+  chi2: number;
+  df: number;
+}
+
+/**
+ * Konstantmodelltest: är serien av M-värden förenlig med ETT konstant värde?
+ *
+ * Detta ersätter den parvisa jämförelsen som var allt två punkter tillät. Med
+ * S ≥ 3 sessioner testar man hela serien mot en modell istället för att jaga
+ * enskilda steg — samma storhet D-rapporten kallar stabilitetsbenet, och den
+ * enda formuleringen som inte får fler frihetsgrader varje gång man lägger
+ * till en punkt.
+ */
+export function constantModelFit(values: Array<{ M: number; sigmaM: number }>): ConstantModelFit {
+  if (values.length < 2) throw new Error('Konstantmodelltestet kräver minst 2 punkter');
+  const w = values.map((v) => 1 / v.sigmaM ** 2);
+  const W = w.reduce((a, b) => a + b, 0);
+  const mBar = values.reduce((a, v, i) => a + v.M * w[i], 0) / W;
+  const chi2 = values.reduce((a, v, i) => a + w[i] * (v.M - mBar) ** 2, 0);
+  return { mBar, sigmaBar: Math.sqrt(1 / W), chi2, df: values.length - 1 };
+}
+
 interface DAttempt {
-  sessions: Array<{ jobId: string; ghz: MerminResult; control: MerminResult }>;
-  chi2Stability: number;
-  dfStability: number;
+  sessions: Array<{ jobId: string; utc: string; ghz: MerminResult; control: MerminResult }>;
+  signalFit: ConstantModelFit;
+  controlFit: ConstantModelFit;
   separationSigma: number;
+  steps: Array<{ delta: number; sigma: number }>;
   kdMeasured: false;
 }
 
 function dAttempt(): DAttempt {
-  const sessions = [JOB_MERMIN_1, JOB_MERMIN_2].map((jobId) => {
+  const sessions = JOBS_MERMIN.map((jobId) => {
     const pubs = load(jobId);
-    return { jobId, ghz: merminValue(pubs, 'ghz'), control: merminValue(pubs, 'control') };
+    const info = JSON.parse(
+      readFileSync(join(FIX, `sanitized_job-${jobId}-info.json`), 'utf-8'),
+    );
+    return {
+      jobId,
+      utc: String(info.created).slice(0, 16).replace('T', ' '),
+      ghz: merminValue(pubs, 'ghz'),
+      control: merminValue(pubs, 'control'),
+    };
   });
 
-  // Stabilitet: är invariantvektorn (4 korrelatorer) konstant mellan sessionerna?
-  // χ² = Σ_term (e₁−e₂)²/(σ₁²+σ₂²), df = antal termer.
-  const [s1, s2] = sessions;
-  let chi2 = 0;
-  s1.ghz.terms.forEach((t1, i) => {
-    const t2 = s2.ghz.terms[i];
-    const v1 = (1 - t1.expectation ** 2) / t1.shots;
-    const v2 = (1 - t2.expectation ** 2) / t2.shots;
-    chi2 += (t1.expectation - t2.expectation) ** 2 / (v1 + v2);
+  // Stabilitetsbenet: konstantmodell för signal OCH kontroll. Kontrollen är
+  // referensen — den kör samma analyskedja på ett separabelt tillstånd, så en
+  // instabilitet som syns i båda vore analysartefakt, inte fysik.
+  const signalFit = constantModelFit(sessions.map((s) => s.ghz));
+  const controlFit = constantModelFit(sessions.map((s) => s.control));
+
+  // Separationsbenet: skiljer invarianten signal från kontroll? Poolat.
+  const separationSigma =
+    (signalFit.mBar - controlFit.mBar) / Math.hypot(signalFit.sigmaBar, controlFit.sigmaBar);
+
+  const steps = sessions.slice(1).map((s, i) => {
+    const prev = sessions[i].ghz;
+    const delta = s.ghz.M - prev.M;
+    return { delta, sigma: delta / Math.hypot(prev.sigmaM, s.ghz.sigmaM) };
   });
 
-  // Separation: skiljer invarianten signal från den separabla kontrollen?
-  // Poolat över sessionerna.
-  const poolM = (rs: MerminResult[]) => {
-    const w = rs.map((r) => 1 / r.sigmaM ** 2);
-    const wsum = w.reduce((a, b) => a + b, 0);
-    return { M: rs.reduce((a, r, i) => a + r.M * w[i], 0) / wsum, sigma: Math.sqrt(1 / wsum) };
-  };
-  const g = poolM(sessions.map((s) => s.ghz));
-  const c = poolM(sessions.map((s) => s.control));
-  const separationSigma = (g.M - c.M) / Math.hypot(g.sigma, c.sigma);
-
-  return { sessions, chi2Stability: chi2, dfStability: 4, separationSigma, kdMeasured: false };
+  return { sessions, signalFit, controlFit, separationSigma, steps, kdMeasured: false };
 }
 
 // ---------------------------------------------------------------------------
@@ -242,26 +277,49 @@ function main(): void {
   console.log('\n[D] Flersessions-invariant (D:s METOD, ej D_invariant.ts:s estimator)');
   console.log('-'.repeat(72));
   console.log('    Invariant: Mermin-korrelatorvektorn (⟨XXX⟩,⟨XYY⟩,⟨YXY⟩,⟨YYX⟩)');
-  console.log('    Sessioner: 2 ÄKTA (skilda jobb, 27 min isär) — inte pseudosessioner\n');
+  console.log(`    Sessioner: ${d.sessions.length} ÄKTA (skilda jobb) — inte pseudosessioner\n`);
+  console.log('    UTC               jobb                   M (GHZ)            M (kontroll)');
   for (const s of d.sessions) {
-    console.log(`    ${s.jobId}`);
     console.log(
-      `      GHZ      M = ${s.ghz.M.toFixed(4)} +/- ${s.ghz.sigmaM.toFixed(4)}   ` +
-        s.ghz.terms.map((t) => `${t.bases}=${t.expectation.toFixed(4)}`).join('  '),
-    );
-    console.log(
-      `      kontroll M = ${s.control.M.toFixed(4)} +/- ${s.control.sigmaM.toFixed(4)}   ` +
-        s.control.terms.map((t) => `${t.bases}=${t.expectation.toFixed(4)}`).join('  '),
+      `    ${s.utc}  ${s.jobId}  ` +
+        `${s.ghz.M.toFixed(4)} +/- ${s.ghz.sigmaM.toFixed(4)}  ` +
+        `${s.control.M.toFixed(4)} +/- ${s.control.sigmaM.toFixed(4)}`,
     );
   }
+
+  console.log('\n    Steg för steg (GHZ):');
+  d.steps.forEach((st, i) => {
+    console.log(
+      `      ${i + 1} -> ${i + 2}:  dM = ${st.delta >= 0 ? '+' : ''}${st.delta.toFixed(4)}   ` +
+        `${st.sigma >= 0 ? '+' : ''}${st.sigma.toFixed(2)} sigma`,
+    );
+  });
+
+  console.log('\n    Konstantmodelltest (viktat chi2 mot gemensamt medelvarde):');
+  console.log(
+    `      signal   : chi2 = ${d.signalFit.chi2.toFixed(1)}, df = ${d.signalFit.df}   ` +
+      `Mbar = ${d.signalFit.mBar.toFixed(4)} +/- ${d.signalFit.sigmaBar.toFixed(4)}  -> FORKASTAS`,
+  );
+  console.log(
+    `      kontroll : chi2 = ${d.controlFit.chi2.toFixed(1)}, df = ${d.controlFit.df}   ` +
+      `Mbar = ${d.controlFit.mBar.toFixed(4)} +/- ${d.controlFit.sigmaBar.toFixed(4)}  -> HALLER`,
+  );
+  console.log(
+    `      kvot     : ${(d.signalFit.chi2 / d.controlFit.chi2).toFixed(1)}x — samma matning, ` +
+      'samma qubitar, samma analyskedja',
+  );
+
   console.log(`\n    D-sep (separation signal vs kontroll) : ${d.separationSigma.toFixed(1)} sigma  -> UPPFYLLT`);
-  console.log(`    D-stab (konstans över sessioner)      : chi2 = ${d.chi2Stability.toFixed(1)}, df = ${d.dfStability}  -> EJ UPPFYLLT`);
-  console.log(`    D-kontrast (K_D)                      : EJ MÄTT — ingen omgivningsvariabel registrerad`);
+  console.log(`    D-stab (konstans over sessioner)      : chi2 = ${d.signalFit.chi2.toFixed(1)}, df = ${d.signalFit.df}  -> EJ UPPFYLLT`);
+  console.log('    D-kontrast (K_D)                      : EJ MATT — ingen omgivningsvariabel registrerad');
   console.log('\n    Klassning: D-struct, och även det med reservation. Separationsbenet');
   console.log('    bär, stabilitetsbenet faller (invarianten är INTE konstant mellan');
   console.log('    sessionerna), kontrastbenet är omätt. Detta är inte ett uppfyllt');
   console.log('    D-fynd — det är ett ofullständigt kontrastkrav med ett falsifierat');
   console.log('    stabilitetsantagande. Rapporteras som sådant.');
+  console.log('\n    Att kontrollen är konstant medan signalen inte är det är det som');
+  console.log('    gör detta till en fysikutsaga och inte en analysartefakt: en');
+  console.log('    instabilitet i kedjan hade träffat båda.');
 
   const ghzPubs = load(JOB_GHZ);
   console.log('\n[koherensindikator] GHZ-jobb ' + JOB_GHZ);
@@ -303,4 +361,8 @@ function wrap(text: string, width: number): string[] {
   return lines;
 }
 
-main();
+// Kör bara när skriptet startas direkt. `constantModelFit` importeras av
+// testsviten, och den ska inte trigga en hel utskriftskörning.
+if (process.argv[1] && /ibmSignatureMap\.ts$/.test(process.argv[1])) {
+  main();
+}

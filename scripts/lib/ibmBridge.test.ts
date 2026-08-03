@@ -28,6 +28,7 @@ import {
   toShotRecords,
 } from './ibmChshBridge';
 import { merminValue, parityOf, xParityExpectation } from './ibmMerminBridge';
+import { constantModelFit } from '../ibmSignatureMap';
 
 const FIX = join(process.cwd(), 'fixtures/ibm');
 const load = (jobId: string) =>
@@ -256,11 +257,75 @@ describe('Mermin-brygga', () => {
     expect(xParityExpectation(pubs[3]).value).toBeCloseTo(0.9155, 4);
   });
 
+  it('reproducerar Mermin 3 och 4', () => {
+    const m3 = merminValue(load('d9nv3nssfqic73argcq0'), 'ghz');
+    const m4 = merminValue(load('d9nvi6mij12s73fuc1ig'), 'ghz');
+    expect(m3.M).toBeCloseTo(3.8223, 4);
+    expect(m4.M).toBeCloseTo(3.8052, 4);
+    expect(merminValue(load('d9nv3nssfqic73argcq0'), 'control').M).toBeCloseTo(1.0454, 4);
+    expect(merminValue(load('d9nvi6mij12s73fuc1ig'), 'control').M).toBeCloseTo(0.9907, 4);
+  });
+
   it('Z-basen är blind för koherens — X-basen är det inte', () => {
     // Z-PUB:arna ger paritet nära 0 för GHZ (jämnt fördelat 000/111 ⇒ +1/−1),
     // medan X-PUB:arna ger ≈ +1. Skillnaden är hela poängen med GHZ-batteriet.
     const pubs = load('d9nimlk60llc73ca58e0');
     expect(Math.abs(xParityExpectation(pubs[0]).value)).toBeLessThan(0.2);
     expect(xParityExpectation(pubs[1]).value).toBeGreaterThan(0.8);
+  });
+});
+
+describe('konstantmodelltest (D-stab över fyra sessioner)', () => {
+  const JOBS = [
+    'd9npt5oqs0bc73e3ns90',
+    'd9nq9lk60llc73cadj8g',
+    'd9nv3nssfqic73argcq0',
+    'd9nvi6mij12s73fuc1ig',
+  ];
+
+  it('kräver minst två punkter', () => {
+    expect(() => constantModelFit([{ M: 1, sigmaM: 1 }])).toThrow(/minst 2/);
+  });
+
+  it('ger chi2 = 0 för en perfekt konstant serie', () => {
+    const fit = constantModelFit([
+      { M: 2, sigmaM: 0.1 },
+      { M: 2, sigmaM: 0.2 },
+      { M: 2, sigmaM: 0.3 },
+    ]);
+    expect(fit.chi2).toBeCloseTo(0, 12);
+    expect(fit.mBar).toBeCloseTo(2, 12);
+    expect(fit.df).toBe(2);
+  });
+
+  it('viktar med 1/sigma^2 — den precisaste punkten drar mest', () => {
+    const fit = constantModelFit([
+      { M: 0, sigmaM: 1 },
+      { M: 1, sigmaM: 0.5 }, // fyra gånger tyngre
+    ]);
+    expect(fit.mBar).toBeCloseTo(0.8, 12);
+  });
+
+  it('förkastar konstanthypotesen för signalen men inte för kontrollen', () => {
+    // Detta är huvudresultatet i DRIFT_MERMIN: samma mätning, samma qubitar,
+    // samma analyskedja — och en storleksordnings skillnad i chi2. Vore
+    // instabiliteten en analysartefakt hade den träffat båda armarna.
+    const sig = constantModelFit(JOBS.map((j) => merminValue(load(j), 'ghz')));
+    const ctl = constantModelFit(JOBS.map((j) => merminValue(load(j), 'control')));
+    expect(sig.df).toBe(3);
+    expect(sig.chi2).toBeCloseTo(84.2, 1);
+    expect(ctl.chi2).toBeCloseTo(3.7, 1);
+    expect(sig.chi2 / ctl.chi2).toBeGreaterThan(15);
+    // Kontrollens chi2 ligger nära df — precis vad brus ska ge.
+    expect(ctl.chi2).toBeLessThan(3 * ctl.df);
+  });
+
+  it('serien är icke-monoton: upp, upp, sedan platt', () => {
+    const ms = JOBS.map((j) => merminValue(load(j), 'ghz'));
+    const step = (a: number, b: number) =>
+      (ms[b].M - ms[a].M) / Math.hypot(ms[a].sigmaM, ms[b].sigmaM);
+    expect(step(0, 1)).toBeGreaterThan(3);
+    expect(step(1, 2)).toBeGreaterThan(3);
+    expect(Math.abs(step(2, 3))).toBeLessThan(2); // platt, inte fortsatt uppgång
   });
 });

@@ -1,7 +1,7 @@
 # Bryggan IBM → Quantum_Sign, v1
 
-*Import av sanerad gate-model-shotdata från `ibm_marrakesh` (2026-08-02) in i
-signaturkatalogens analyskedja. Fyra jobb, 24 PUB:ar, 98 304 shots.*
+*Import av sanerad gate-model-shotdata från `ibm_marrakesh` (2026-08-02/03) in i
+signaturkatalogens analyskedja. Sex jobb, 40 PUB:ar, 163 840 shots.*
 
 ---
 
@@ -117,7 +117,7 @@ Fullständig körning: `npx tsx scripts/ibmSignatureMap.ts`.
 | Signatur | | Skäl i en mening |
 |---|---|---|
 | **C** CHSH/Bell | **går** | Paret existerar per konstruktion i varje shot — enda A–F-signaturen som överlever översättningen orörd. |
-| **D** Stabil invariant | **går delvis** | Kodad estimator faller med B, men D:s *metod* går på Mermin-vektorn över två äkta sessioner. |
+| **D** Stabil invariant | **går delvis** | Kodad estimator faller med B, men D:s *metod* går på Mermin-vektorn över fyra äkta sessioner. |
 | **A** g²(0) | går inte | g²(τ) är en koincidensstatistik över en tidsaxel; ingen tidsaxel, ingen fotonantalsfrihetsgrad. |
 | **B** Polarisation–tid | går inte | R_CS är en kvot mellan *rater*; ingen mättid att dividera med, ingen polarisationsfrihetsgrad. |
 | **E** Lågdim | går inte | Deltagarkvoten binnar i tid; shot-index är utbytbart, så varje "dimension" man mäter är shot noise. |
@@ -154,33 +154,50 @@ Stokes-kovariansen, som ärver B:s rådata (arvsregeln) och faller med B.
 
 D:s **metod** går däremot: en basoberoende invariant mätt vid S ≥ 2 oberoende
 observationstillfällen, testad för separation + stabilitet + kontrast.
-Mermin-korrelatorvektorn (⟨XXX⟩, ⟨XYY⟩, ⟨YXY⟩, ⟨YYX⟩) i två skilda jobb 27
-minuter isär ger exakt det. Och till skillnad från plattformens pseudosessioner
-(`D-RF-PSEUDOSESSION`, fyra tidssegment ur *en* körning) är sessionerna här
-**äkta**. IBM-materialet kan alltså något simuleringen inte kan.
+Mermin-korrelatorvektorn (⟨XXX⟩, ⟨XYY⟩, ⟨YXY⟩, ⟨YYX⟩) i **fyra** skilda jobb
+över 6,5 timmar ger exakt det. Och till skillnad från plattformens
+pseudosessioner (`D-RF-PSEUDOSESSION`, fyra tidssegment ur *en* körning) är
+sessionerna här **äkta**. IBM-materialet kan alltså något simuleringen inte kan.
 
-| Session | GHZ | Kontroll |
-|---|---|---|
-| `d9npt5oqs0bc73e3ns90` (19:46) | M = 3,6890 ± 0,0121 | 0,9761 ± 0,0271 |
-| `d9nq9lk60llc73cadj8g` (20:13) | M = 3,7788 ± 0,0102 | 1,0151 ± 0,0271 |
+| # | UTC | Jobb | GHZ | Kontroll |
+|---|---|---|---|---|
+| 1 | 08-02 19:46 | `d9npt5oqs0bc73e3ns90` | 3,6890 ± 0,0121 | 0,9761 ± 0,0271 |
+| 2 | 08-02 20:13 | `d9nq9lk60llc73cadj8g` | 3,7788 ± 0,0102 | 1,0151 ± 0,0271 |
+| 3 | 08-03 01:41 | `d9nv3nssfqic73argcq0` | 3,8223 ± 0,0092 | 1,0454 ± 0,0272 |
+| 4 | 08-03 02:12 | `d9nvi6mij12s73fuc1ig` | 3,8052 ± 0,0096 | 0,9907 ± 0,0271 |
+
+**Stabilitetsbenet mäts med ett konstantmodelltest** (`constantModelFit`),
+χ² = Σ w_i(M_i − M̄)², w_i = 1/σ_i², df = 3. Med S ≥ 3 sessioner testar man hela
+serien mot en modell istället för att jaga enskilda steg — och testet får inte
+fler frihetsgrader varje gång en punkt läggs till.
+
+| Arm | χ² | df | M̄ | Dom |
+|---|---|---|---|---|
+| Signal (GHZ) | **84,2** | 3 | 3,7834 ± 0,0051 | konstanthypotesen förkastas (p ≈ 3·10⁻¹⁸) |
+| Kontroll (\|+++⟩) | **3,7** | 3 | 1,0068 ± 0,0136 | förenlig med konstant (p ≈ 0,30) |
 
 | D-ben | Utfall | |
 |---|---|---|
-| **D-sep** (separation signal ↔ kontroll) | 132,7σ | uppfyllt |
-| **D-stab** (konstans över sessioner) | χ² = 33,3, df = 4 | **ej uppfyllt** |
+| **D-sep** (separation signal ↔ kontroll) | 191,8σ | uppfyllt |
+| **D-stab** (konstans över sessioner) | χ² = 84,2, df = 3 | **ej uppfyllt** |
 | **D-kontrast** (K_D) | ej mätt | **ingen omgivningsvariabel registrerad** |
 
 **Klassning: D-struct — och även det med reservation.** Separationsbenet bär,
-stabilitetsbenet *faller* (invarianten är inte konstant mellan sessionerna, χ² =
-33,3 på 4 frihetsgrader), och kontrastbenet är omätt. Detta är inte ett uppfyllt
+stabilitetsbenet *faller*, och kontrastbenet är omätt. Detta är inte ett uppfyllt
 D-fynd. Det är ett **ofullständigt kontrastkrav med ett falsifierat
 stabilitetsantagande**, och rapporteras som sådant (D v0.2 §10).
 
-Att stabiliteten faller är för övrigt samma fynd som drivrapporten redan
-dokumenterat: M₂ − M₁ = +0,0898 = +5,67σ, med den förregistrerade
-riktningsförutsägelsen (M₂ ≤ M₁) falsifierad. Kontrollen replikerade inom 1σ i
-båda körningarna, vilket är tolkningsnyckeln: variationen sitter i hårdvarans
-förmåga att preparera det sammanflätade tillståndet, inte i analyskedjan.
+**Kvoten 22× mellan signalens och kontrollens χ² är det som gör detta till en
+fysikutsaga och inte en analysartefakt.** Armarna delar allt — samma qubitar,
+samma jobb, samma antal shots, samma analyskedja, samma bitordning och
+teckenkonvention — utom tillståndet som prepareras. En instabilitet i kedjan
+hade träffat båda. Kontrollens χ² = 3,7 mot df = 3 är exakt vad rent brus ska ge.
+
+Serien är dessutom icke-monoton: +5,67σ, +3,15σ, −1,28σ. Datan utesluter både
+"konstant" och "monotont fallande", men kan inte skilja omkalibrering från
+långsam förbättring från fluktuation med okänd period. Den förregistrerade
+riktningsförutsägelsen (M₂ ≤ M₁) föll redan vid körning 2 och står kvar
+falsifierad. Se `Quantum_IBM/results/DRIFT_MERMIN.md`.
 
 För att komma vidare till ett riktigt K_D krävs att en omgivningsvariabel
 registreras (kalibreringstidpunkt, temperatur, backend-belastning) och visas
@@ -220,7 +237,7 @@ i `scripts/importNistBell.ts`, som stänger locality och detection.
 | `scripts/lib/ibmMerminBridge.ts` | Paritet, Mermin-värde per arm, ⟨X^⊗N⟩. |
 | `scripts/importIbmChsh.ts` | Reproduktionskravet + nullar. Avslutar med nollskild kod vid avvikelse. |
 | `scripts/ibmSignatureMap.ts` | Kartläggningen i §3 + D-försöket i §4. |
-| `scripts/lib/ibmBridge.test.ts` | 29 tester: avkodning, teckenkonvention, reproduktion, nullar, Mermin. |
+| `scripts/lib/ibmBridge.test.ts` | 35 tester: avkodning, teckenkonvention, reproduktion, nullar, Mermin, konstantmodell. |
 | `fixtures/ibm/` | Sanerade jobbfiler (endast `user_id` strippat) + PROVENANCE. |
 
 Fixturerna är IBM:s egna `result.json` med `user_id` borttaget. Shotdatan är
@@ -233,7 +250,7 @@ tidsstämplar och kalibreringssnapshot är avsiktligt bevarade.
 
 - Inget loophole-fritt Bell-test (§5).
 - Inget uppfyllt D-fynd (§4).
-- Ingen driftkurva — tre punkter över sju timmar räcker inte för att skilja
-  omkalibrering från långsam drift från fluktuation kring ett medelvärde.
+- Ingen driftkurva. Fyra punkter över 6,5 timmar visar att variation **finns**
+  och är signifikant; de visar inte dess form, period eller orsak.
 - Ingen utvidgning av katalogen. Sju av nio signaturer går inte att köra på den
   här datatypen, och det är rapporterat som ett resultat, inte som en TODO.
