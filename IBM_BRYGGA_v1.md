@@ -1,7 +1,15 @@
 # Bryggan IBM → Quantum_Sign, v1
 
 *Import av sanerad gate-model-shotdata från `ibm_marrakesh` (2026-08-02/03) in i
-signaturkatalogens analyskedja. Nio jobb, 64 PUB:ar, 262 144 shots.*
+signaturkatalogens analyskedja. Nio jobb, 64 PUB:ar, 262 144 shots — här kallat
+**P0-materialet**.*
+
+> **Läs tillsammans med `Quantum_IBM/P1_RESULTAT.md`.** P1-kampanjen
+> (2026-08-04/12, 34 körningar) prövade en förregistrerad tidshypotes och
+> kvalificerar två av slutsatserna nedan. Ställena är märkta *Uppdatering efter
+> P1*. Sammanfattat: armseparationsprincipen (§4) visade sig vara **empirisk och
+> materialberoende**, inte en metodprincip, och YXY-dominansen **replikerades
+> inte**. D-klassningen står kvar som D-none, nu på starkare grund.
 
 ---
 
@@ -191,7 +199,15 @@ under de passiva bastransformationer D kräver av en invariant.
 Vektortestet är strängare och ligger närmare D:s invariantbegrepp — **en
 invariant är en vektor, inte ett tal.** Skalär-M är en summa där kompenserande
 termförändringar tar ut varandra. Per term: XXX 23,1 · XYY 36,0 · **YXY 61,9** ·
-YYX 34,9. YXY bär 40 % av instabiliteten och det syns inte i M.
+YYX 34,9. YXY bär 40 % av instabiliteten i P0-materialet och det syns inte i M.
+
+> **Uppdatering efter P1** (`Quantum_IBM/P1_RESULTAT.md`). YXY-andelen var
+> 23,3 % i P1:s åtta primärkörningar. **Den starka YXY-dominansen från P0
+> replikerades alltså inte i P1.** Det är utsagan datan bär — inte att
+> dominansen var eller inte var en beständig instrumentegenskap. Åtta körningar
+> mot sju, en annan tidsperiod och en annan kalibreringscykel räcker inte för
+> att skilja en försvunnen egenskap från en som varierar långsammare än
+> mätfönstret.
 
 ### Formen: tidig nivåförändring + platå, inte fortlöpande drift
 
@@ -206,20 +222,73 @@ Stegen efter nivåskiftet är +1,58σ, +0,77σ, −0,23σ — rent brus.
 **Förändringspunkten är vald efter att datan setts och är därmed explorativ.**
 Den får inte behandlas som ett förregistrerat test.
 
-### Vad variationen lokaliseras till
+### Vad variationen lokaliseras till — och varför slutsatsen är materialberoende
 
 Armarna delar qubitar, jobb, shots, analyskedja, bitordning och
 teckenkonvention — men **inte kretsdjup**. GHZ-armen har 2 tvåqubitsgrindar och
-djup ~12; kontrollen har 0 och djup 1–4. Variationen lokaliseras därför till
-**entangling-kretsens prestanda** (tvåqubitsgrindfidelitet, GHZ-preparation,
-trequbitskoherens) — inte till ett abstrakt "tillstånd" isolerat från
-grindkedjan.
+djup ~12; kontrollen har 0 och djup 1–4.
+
+**I detta material** (P0, sju sessioner) var kontrollen förenlig med konstans i
+skalär M: χ² = 6,1 mot df = 6. Eftersom kontrollen låg stilla medan signalen inte
+gjorde det, lokaliseras variationen här till **entangling-kretsens prestanda** —
+tvåqubitsgrindfidelitet, GHZ-preparation, trequbitskoherens — snarare än till ett
+abstrakt "tillstånd" isolerat från grindkedjan.
+
+> **P1 fäller den generella versionen av detta argument.**
+>
+> I P1:s åtta primärkörningar **förkastar kontrollvektorn konstantmodellen**:
+> χ² = 87,1, df = 28, p = 6·10⁻⁸. 83 % av det (71,9 av 87,1) sitter i
+> ⟨XXX⟩_ctrl.
+>
+> **Armseparationsprincipen är alltså materialberoende och får inte antas.**
+> Formuleringen "kontrollen är stabil, alltså sitter variationen i
+> entangling-kretsen" är giltig för P0-materialet där premissen mättes och höll.
+> Den är *inte* en generell egenskap hos uppställningen. Varje nytt material
+> måste visa kontrollens stabilitet innan slutsatsen dras — och i P1 gick den
+> inte att visa.
+>
+> Detta är en av de mest användbara sakerna hela IBM-spåret har producerat: ett
+> argument som såg ut som en metodprincip visade sig vara en empirisk premiss.
+
+### Vad ⟨XXX⟩_ctrl faktiskt mäter
+
+Kontrollens ⟨XXX⟩ är en **proxy för gemensam multiplikativ paritetsattenuering**
+— inte ett rent läsfelsmått. §T7 i `P1_TILLAGG_BLINDAT.md` säger det själv:
+kontrollkretsen har djup 1–4, så ⟨XXX⟩_ctrl innehåller även en preparations- och
+enkelqubitskomponent utöver läsfelet. Normeringen M/⟨XXX⟩_ctrl är en
+förstaordningskorrektion, inte en läsfelskorrektion.
+
+Att symmetriskt läsfel med sannolikhet p skalar varje paritetsterm med (1−2p)³
+står kvar och är korrekt — men ⟨XXX⟩_ctrl mäter den *sammanlagda* multiplikativa
+faktorn, inte enbart p.
+
+### Skalär mot vektor — tvärgående resultat
+
+P0 visade det för signalen. P1 bekräftar det för kontrollen, och det gör
+lärdomen allmän:
+
+| Test | P1-kontrollen | Dom |
+|---|---|---|
+| Vektor, per korrelator, 8 primärkörningar | χ² = 87,1, df = 28 | förkastas |
+| Skalär M, hela serien om 34 körningar | χ² = 38,9, df = 33 | förenlig med konstans |
+
+Samma arm, samma data, motsatt dom. Termerna kompenserar varandra i summan.
+
+> **En skalär sammanfattning kan aldrig ensam bära ett stabilitetstest av en
+> vektorvärd observabel.** Mermin-M är en teckenviktad summa över fyra
+> korrelatorer; en förändring i XYY kan döljas av en motsatt förändring i YXY
+> utan att M rör sig. Stabilitetstestet måste därför göras per komponent och
+> summeras, inte på skalären.
+>
+> Detta gäller lika för signal och kontroll, och det gäller oavsett hur bekvämt
+> skalären är att rapportera.
 
 ### Språkgräns
 
 σ_M är **ren shot noise**. Kontrollen är *"förenlig med konstantmodell inom
 shot-noise-osäkerheten"*, inte *"bevisligen konstant"* — systematikbudgeten är
-omätt.
+omätt. P1 visar varför den skillnaden inte är pedantisk: samma kontroll som är
+förenlig med konstans i skalär M förkastar konstantmodellen i vektortest.
 
 ---
 
