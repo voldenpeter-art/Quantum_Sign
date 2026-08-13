@@ -1,0 +1,418 @@
+{
+  "__type__": "PrimitiveResult",
+  "__value__": {
+    "pub_results": [
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "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"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,cz_0_1,Qubit 0,1402,17,play\nmain,cz_0_1,Qubit 1,1402,17,play\nmain,cz_0_1,Qubit 0,1419,0,shift_phase\nmain,cz_0_1,Qubit 1,1419,0,shift_phase\nmain,rz_0,Qubit 0,1445,0,shift_phase\nmain,sx_0,Qubit 0,1445,9,play\nmain,sx_0,Qubit 0,1449,0,shift_phase\nmain,rz_0,Qubit 0,1454,0,shift_phase\nmain,rz_1,Qubit 1,1419,0,shift_phase\nmain,sx_1,Qubit 1,1419,9,play\nmain,sx_1,Qubit 1,1423,0,shift_phase\nmain,rz_1,Qubit 1,1428,0,shift_phase\nmain,rz_2,Qubit 2,1419,0,shift_phase\nmain,sx_2,Qubit 2,1419,9,play\nmain,sx_2,Qubit 2,1423,0,shift_phase\nmain,rz_2,Qubit 2,1428,0,shift_phase\nmain,cz_1_2,Qubit 1,1428,17,play\nmain,cz_1_2,Qubit 2,1428,17,play\nmain,cz_1_2,Qubit 1,1445,0,shift_phase\nmain,cz_1_2,Qubit 2,1445,0,shift_phase\nmain,rz_1,Qubit 1,1445,0,shift_phase\nmain,sx_1,Qubit 1,1445,9,play\nmain,sx_1,Qubit 1,1449,0,shift_phase\nmain,rz_1,Qubit 1,1454,0,shift_phase\nmain,measure_0,Qubit 0,1454,64,play\nmain,measure_0,Qubit 0,1518,108,play\nmain,measure_0,AWGR0_0,1575,325,capture\nmain,measure_0,Qubit 0,1626,64,play\nmain,measure_0,Qubit 0,1690,64,play\nmain,measure_1,Qubit 1,1454,64,play\nmain,measure_1,Qubit 1,1518,108,play\nmain,measure_1,AWGR0_1,1575,325,capture\nmain,measure_1,Qubit 1,1626,64,play\nmain,measure_1,Qubit 1,1690,64,play\nmain,measure_2,Qubit 2,1454,64,play\nmain,measure_2,Qubit 2,1518,108,play\nmain,measure_2,AWGR0_2,1575,325,capture\nmain,measure_2,Qubit 2,1626,64,play\nmain,measure_2,Qubit 2,1690,64,play\nmain,barrier,Qubit 0,2125,0,barrier\nmain,barrier,Qubit 1,2125,0,barrier\nmain,barrier,Qubit 2,2125,0,barrier\nmain,FINI_0,Qubit 0,2125,64,play\nmain,FINI_0,Qubit 0,2189,108,play\nmain,FINI_0,AWGR0_0,2246,325,capture\nmain,FINI_0,Qubit 0,2297,64,play\nmain,FINI_0,Qubit 0,2361,64,play\nmain,FINI_0,Qubit 0,2796,9,play\nmain,FINI_0,Qubit 0,2805,64,play\nmain,FINI_0,Qubit 0,2869,108,play\nmain,FINI_0,AWGR0_0,2926,325,capture\nmain,FINI_0,Qubit 0,2977,64,play\nmain,FINI_0,Qubit 0,3041,64,play\nmain,FINI_0,Qubit 0,3476,9,play\nmain,FINI_1,Qubit 1,2125,64,play\nmain,FINI_1,Qubit 1,2189,108,play\nmain,FINI_1,AWGR0_1,2246,325,capture\nmain,FINI_1,Qubit 1,2297,64,play\nmain,FINI_1,Qubit 1,2361,64,play\nmain,FINI_1,Qubit 1,2796,9,play\nmain,FINI_1,Qubit 1,2805,64,play\nmain,FINI_1,Qubit 1,2869,108,play\nmain,FINI_1,AWGR0_1,2926,325,capture\nmain,FINI_1,Qubit 1,2977,64,play\nmain,FINI_1,Qubit 1,3041,64,play\nmain,FINI_1,Qubit 1,3476,9,play\nmain,FINI_2,Qubit 2,2125,64,play\nmain,FINI_2,Qubit 2,2189,108,play\nmain,FINI_2,AWGR0_2,2246,325,capture\nmain,FINI_2,Qubit 2,2297,64,play\nmain,FINI_2,Qubit 2,2361,64,play\nmain,FINI_2,Qubit 2,2796,9,play\nmain,FINI_2,Qubit 2,2805,64,play\nmain,FINI_2,Qubit 2,2869,108,play\nmain,FINI_2,AWGR0_2,2926,325,capture\nmain,FINI_2,Qubit 2,2977,64,play\nmain,FINI_2,Qubit 2,3041,64,play\nmain,FINI_2,Qubit 2,3476,9,play\nmain,barrier,Qubit 0,3485,0,barrier\nmain,barrier,Qubit 1,3485,0,barrier\nmain,barrier,Qubit 2,3485,0,barrier\n",
+                "circuit_duration": 3485
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJyb7BfqGxDJyFDGUK2eklqcXKRupaBeU2qorqOgnpZfVFKUmBefX5SSChJ3S8wpTgWKF2ckFqQC+RomBpZmOgqGmjoKtQrkAS4G0gETGXpGwRAExEf0aJIYBSMAjCbzUTB0ASMFekdT/iigNWCjo12j6ZkIwDLQDhgFgwbgSQuU1CvUBKN5mgwAANjoHBU="
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,measure_0,Qubit 0,1393,64,play\nmain,measure_0,Qubit 0,1457,108,play\nmain,measure_0,AWGR0_0,1514,325,capture\nmain,measure_0,Qubit 0,1565,64,play\nmain,measure_0,Qubit 0,1629,64,play\nmain,measure_1,Qubit 1,1393,64,play\nmain,measure_1,Qubit 1,1457,108,play\nmain,measure_1,AWGR0_1,1514,325,capture\nmain,measure_1,Qubit 1,1565,64,play\nmain,measure_1,Qubit 1,1629,64,play\nmain,measure_2,Qubit 2,1393,64,play\nmain,measure_2,Qubit 2,1457,108,play\nmain,measure_2,AWGR0_2,1514,325,capture\nmain,measure_2,Qubit 2,1565,64,play\nmain,measure_2,Qubit 2,1629,64,play\nmain,barrier,Qubit 0,2064,0,barrier\nmain,barrier,Qubit 1,2064,0,barrier\nmain,barrier,Qubit 2,2064,0,barrier\nmain,FINI_0,Qubit 0,2064,64,play\nmain,FINI_0,Qubit 0,2128,108,play\nmain,FINI_0,AWGR0_0,2185,325,capture\nmain,FINI_0,Qubit 0,2236,64,play\nmain,FINI_0,Qubit 0,2300,64,play\nmain,FINI_0,Qubit 0,2735,9,play\nmain,FINI_0,Qubit 0,2744,64,play\nmain,FINI_0,Qubit 0,2808,108,play\nmain,FINI_0,AWGR0_0,2865,325,capture\nmain,FINI_0,Qubit 0,2916,64,play\nmain,FINI_0,Qubit 0,2980,64,play\nmain,FINI_0,Qubit 0,3415,9,play\nmain,FINI_1,Qubit 1,2064,64,play\nmain,FINI_1,Qubit 1,2128,108,play\nmain,FINI_1,AWGR0_1,2185,325,capture\nmain,FINI_1,Qubit 1,2236,64,play\nmain,FINI_1,Qubit 1,2300,64,play\nmain,FINI_1,Qubit 1,2735,9,play\nmain,FINI_1,Qubit 1,2744,64,play\nmain,FINI_1,Qubit 1,2808,108,play\nmain,FINI_1,AWGR0_1,2865,325,capture\nmain,FINI_1,Qubit 1,2916,64,play\nmain,FINI_1,Qubit 1,2980,64,play\nmain,FINI_1,Qubit 1,3415,9,play\nmain,FINI_2,Qubit 2,2064,64,play\nmain,FINI_2,Qubit 2,2128,108,play\nmain,FINI_2,AWGR0_2,2185,325,capture\nmain,FINI_2,Qubit 2,2236,64,play\nmain,FINI_2,Qubit 2,2300,64,play\nmain,FINI_2,Qubit 2,2735,9,play\nmain,FINI_2,Qubit 2,2744,64,play\nmain,FINI_2,Qubit 2,2808,108,play\nmain,FINI_2,AWGR0_2,2865,325,capture\nmain,FINI_2,Qubit 2,2916,64,play\nmain,FINI_2,Qubit 2,2980,64,play\nmain,FINI_2,Qubit 2,3415,9,play\nmain,barrier,Qubit 0,3424,0,barrier\nmain,barrier,Qubit 1,3424,0,barrier\nmain,barrier,Qubit 2,3424,0,barrier\n",
+                "circuit_duration": 3424
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "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"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,cz_0_1,Qubit 0,1402,17,play\nmain,cz_0_1,Qubit 1,1402,17,play\nmain,cz_0_1,Qubit 0,1419,0,shift_phase\nmain,cz_0_1,Qubit 1,1419,0,shift_phase\nmain,rz_0,Qubit 0,1445,0,shift_phase\nmain,sx_0,Qubit 0,1445,9,play\nmain,sx_0,Qubit 0,1449,0,shift_phase\nmain,rz_0,Qubit 0,1454,0,shift_phase\nmain,rz_1,Qubit 1,1419,0,shift_phase\nmain,sx_1,Qubit 1,1419,9,play\nmain,sx_1,Qubit 1,1423,0,shift_phase\nmain,rz_1,Qubit 1,1428,0,shift_phase\nmain,rz_2,Qubit 2,1419,0,shift_phase\nmain,sx_2,Qubit 2,1419,9,play\nmain,sx_2,Qubit 2,1423,0,shift_phase\nmain,rz_2,Qubit 2,1428,0,shift_phase\nmain,cz_1_2,Qubit 1,1428,17,play\nmain,cz_1_2,Qubit 2,1428,17,play\nmain,cz_1_2,Qubit 1,1445,0,shift_phase\nmain,cz_1_2,Qubit 2,1445,0,shift_phase\nmain,sx_1,Qubit 1,1445,9,play\nmain,sx_1,Qubit 1,1449,0,shift_phase\nmain,rz_1,Qubit 1,1454,0,shift_phase\nmain,rz_2,Qubit 2,1445,0,shift_phase\nmain,sx_2,Qubit 2,1445,9,play\nmain,sx_2,Qubit 2,1449,0,shift_phase\nmain,rz_2,Qubit 2,1454,0,shift_phase\nmain,measure_0,Qubit 0,1454,64,play\nmain,measure_0,Qubit 0,1518,108,play\nmain,measure_0,AWGR0_0,1575,325,capture\nmain,measure_0,Qubit 0,1626,64,play\nmain,measure_0,Qubit 0,1690,64,play\nmain,measure_1,Qubit 1,1454,64,play\nmain,measure_1,Qubit 1,1518,108,play\nmain,measure_1,AWGR0_1,1575,325,capture\nmain,measure_1,Qubit 1,1626,64,play\nmain,measure_1,Qubit 1,1690,64,play\nmain,measure_2,Qubit 2,1454,64,play\nmain,measure_2,Qubit 2,1518,108,play\nmain,measure_2,AWGR0_2,1575,325,capture\nmain,measure_2,Qubit 2,1626,64,play\nmain,measure_2,Qubit 2,1690,64,play\nmain,barrier,Qubit 0,2125,0,barrier\nmain,barrier,Qubit 1,2125,0,barrier\nmain,barrier,Qubit 2,2125,0,barrier\nmain,FINI_0,Qubit 0,2125,64,play\nmain,FINI_0,Qubit 0,2189,108,play\nmain,FINI_0,AWGR0_0,2246,325,capture\nmain,FINI_0,Qubit 0,2297,64,play\nmain,FINI_0,Qubit 0,2361,64,play\nmain,FINI_0,Qubit 0,2796,9,play\nmain,FINI_0,Qubit 0,2805,64,play\nmain,FINI_0,Qubit 0,2869,108,play\nmain,FINI_0,AWGR0_0,2926,325,capture\nmain,FINI_0,Qubit 0,2977,64,play\nmain,FINI_0,Qubit 0,3041,64,play\nmain,FINI_0,Qubit 0,3476,9,play\nmain,FINI_1,Qubit 1,2125,64,play\nmain,FINI_1,Qubit 1,2189,108,play\nmain,FINI_1,AWGR0_1,2246,325,capture\nmain,FINI_1,Qubit 1,2297,64,play\nmain,FINI_1,Qubit 1,2361,64,play\nmain,FINI_1,Qubit 1,2796,9,play\nmain,FINI_1,Qubit 1,2805,64,play\nmain,FINI_1,Qubit 1,2869,108,play\nmain,FINI_1,AWGR0_1,2926,325,capture\nmain,FINI_1,Qubit 1,2977,64,play\nmain,FINI_1,Qubit 1,3041,64,play\nmain,FINI_1,Qubit 1,3476,9,play\nmain,FINI_2,Qubit 2,2125,64,play\nmain,FINI_2,Qubit 2,2189,108,play\nmain,FINI_2,AWGR0_2,2246,325,capture\nmain,FINI_2,Qubit 2,2297,64,play\nmain,FINI_2,Qubit 2,2361,64,play\nmain,FINI_2,Qubit 2,2796,9,play\nmain,FINI_2,Qubit 2,2805,64,play\nmain,FINI_2,Qubit 2,2869,108,play\nmain,FINI_2,AWGR0_2,2926,325,capture\nmain,FINI_2,Qubit 2,2977,64,play\nmain,FINI_2,Qubit 2,3041,64,play\nmain,FINI_2,Qubit 2,3476,9,play\nmain,barrier,Qubit 0,3485,0,barrier\nmain,barrier,Qubit 1,3485,0,barrier\nmain,barrier,Qubit 2,3485,0,barrier\n",
+                "circuit_duration": 3485
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydl71uZVUMhT2W5YKnSBeQUjASQoIHoAPRUFChiAmiQAxKgAZ4Cl6Y4+/zvpmacOdy7vnZ215eXl7n32+++/rb79/En/HX/bunlx+f77+8u//7j7f3D3f3P71//v358dcf3j+/e5rzXz3+8vJ0nX/5+fG3p+v3x599+sXnD3dvP3m4++fu//191JVVlddXZEVUZ3f0dZx9na+o6DnVdX3Ca5XR80jP1eiMmqeqr+PrK3v+i5jn5v68Ls7d14mIvP7Kc+ntPd9c79nlWjCb53NWvbaKDB69rl335iwWxDVX5gluaiKfg2v1K5Er3J695lOExY2T1PX0deckS+zh0fzN1qRCGtfR7A0OOcjM+QmJECaBBe3ap9lntihyA4QQVWJOVrvWJXIzE+pFLijEJDVBDMKDekzs5HOFQk7dxjJnQYyVWPy6l4wpgFHMSpSqF53Y6rjKxN0l1kEC7j/bUoOYbJuEYyoWAz17U0huCkGdNTljVYZDIbMGxlmUFApU5vlFBtAF1s2gR0m2wSrlzRyRKrEvxBNywz8hoYqzN/8aHkjM6xo/cgIjhLkysGZJ8FmJ7OFSUNsG1aHDMKVl4HXbFdcbUJN/5Q5yC2BaWjR8BKdcgKHr0Ib+AhlZUEBkgJPMKQm9AyEoW5s1dYCNlLgWFok711hrS+1uNu0skbbvXM7yTkp2NkpYM+clWBl+i+iwdHIGcEo4T0FqdlE+IMPAPLDf2hCKh5TgpvmRFHpWtAVoV8KcetDN84GpaRshMJMu21mWZF2acb5iVS2XpYMXCJXNIBl627FoLEicqwUpsKTR/uxN26opWSqioFMCRO4mMeB+KwJRoqLgSdlyxYY0bfMldAlxGl/Y6KRNb4fKpgxsoT2GFRNHqNrIK5iH5YIQFLRf+1FNpYWVuVSRW3FbeYfEAHjGRZkKhIk0LFuql+UN1fqIcNtqtc+iTuC0Uh6yM06v02UIO9v2QhCSLFDj9HrJDHifinnIHucUQiX4Huw0KhJ3zPVBib6MLTm13JAX2kS+TqeuftvTLmdHnJ7pM8cIA02lU8LZmmY2hDxSafdl2DrKZcFcJ0gILuOlbAAU4UZi/l8KREUp4XzEkRFPSH3wL3cmvsq1BfAS+U97N08oNAJDWlvgsL4JGmpSC6/8KIYg63BPS62lQJeysw6BYUCXq4OUivypgbKuJve2j0NrrUM6XsASGaNtjmSGTdUKpJSmzFawVQ/9wGbfi1GLVCsrgGoTo0WMArunNCJxPAgEddSFTqcdCMqDvsih5EDTRNg9Oh1GlLVYO0KzgAG6h0OCT1oomph8gRGKL4N6/V/7iOqh1Gk3cu1D9bEzq+sEeoZsCWg5MlKjB0ND6SqZom90ADnMHcQ7LSjPkgKdP/ohf5043dvrtVYRBZFXRJr6LL1rHueiew1nTTkqDeV0mnIpQdaTcbySRXW4y+rRJLQGxdfL0bvaQYevownummPeJk47p4SstR96LTtvg09Rip01jtJyouSOvTXOWhZCcqLVegogo2v1geuSKJXQ7uH6L1fLPiXXDOWa+BWALWjYRm6ap4O3yx2XzIQli1DIMWFnyKE2SnMfH9EruyJetaamjmlj4504zlJG9A7bVNnlqdjuSO26iYKOE2lcB3e03JIoNeflh7ErrI6/dYwY46VAiKoqRFO0FtheQwfW+ykuNpkmfxNZtcA0R+17Bm69aweLUkNb9W3UrKmhnLGivrpC6L5lANGrX6qVV98SpG3fTMOGipZ0KjnMoB21x0b4KpDL2HUQBF8aK16byKlqNxAHCuB8sLCEGY41ZyuVytfWIbfM482hhl6LQFunbGVu3mRfo7QygcB4KqUxkSARVONI/4pUrBuTLhUfSPi+M2AdGNU6Xt/Kdg4yzLS4O67qg/ec/QGWvnEzfY4QYLqsSq8/NJ9+NeHOlrZ/vG3f2JYHquRqXFnw+g+WO02o"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,rz_2,Qubit 2,1393,0,shift_phase\nmain,sx_2,Qubit 2,1393,9,play\nmain,sx_2,Qubit 2,1397,0,shift_phase\nmain,rz_2,Qubit 2,1402,0,shift_phase\nmain,measure_0,Qubit 0,1402,64,play\nmain,measure_0,Qubit 0,1466,108,play\nmain,measure_0,AWGR0_0,1523,325,capture\nmain,measure_0,Qubit 0,1574,64,play\nmain,measure_0,Qubit 0,1638,64,play\nmain,measure_1,Qubit 1,1402,64,play\nmain,measure_1,Qubit 1,1466,108,play\nmain,measure_1,AWGR0_1,1523,325,capture\nmain,measure_1,Qubit 1,1574,64,play\nmain,measure_1,Qubit 1,1638,64,play\nmain,measure_2,Qubit 2,1402,64,play\nmain,measure_2,Qubit 2,1466,108,play\nmain,measure_2,AWGR0_2,1523,325,capture\nmain,measure_2,Qubit 2,1574,64,play\nmain,measure_2,Qubit 2,1638,64,play\nmain,barrier,Qubit 0,2073,0,barrier\nmain,barrier,Qubit 1,2073,0,barrier\nmain,barrier,Qubit 2,2073,0,barrier\nmain,FINI_0,Qubit 0,2073,64,play\nmain,FINI_0,Qubit 0,2137,108,play\nmain,FINI_0,AWGR0_0,2194,325,capture\nmain,FINI_0,Qubit 0,2245,64,play\nmain,FINI_0,Qubit 0,2309,64,play\nmain,FINI_0,Qubit 0,2744,9,play\nmain,FINI_0,Qubit 0,2753,64,play\nmain,FINI_0,Qubit 0,2817,108,play\nmain,FINI_0,AWGR0_0,2874,325,capture\nmain,FINI_0,Qubit 0,2925,64,play\nmain,FINI_0,Qubit 0,2989,64,play\nmain,FINI_0,Qubit 0,3424,9,play\nmain,FINI_1,Qubit 1,2073,64,play\nmain,FINI_1,Qubit 1,2137,108,play\nmain,FINI_1,AWGR0_1,2194,325,capture\nmain,FINI_1,Qubit 1,2245,64,play\nmain,FINI_1,Qubit 1,2309,64,play\nmain,FINI_1,Qubit 1,2744,9,play\nmain,FINI_1,Qubit 1,2753,64,play\nmain,FINI_1,Qubit 1,2817,108,play\nmain,FINI_1,AWGR0_1,2874,325,capture\nmain,FINI_1,Qubit 1,2925,64,play\nmain,FINI_1,Qubit 1,2989,64,play\nmain,FINI_1,Qubit 1,3424,9,play\nmain,FINI_2,Qubit 2,2073,64,play\nmain,FINI_2,Qubit 2,2137,108,play\nmain,FINI_2,AWGR0_2,2194,325,capture\nmain,FINI_2,Qubit 2,2245,64,play\nmain,FINI_2,Qubit 2,2309,64,play\nmain,FINI_2,Qubit 2,2744,9,play\nmain,FINI_2,Qubit 2,2753,64,play\nmain,FINI_2,Qubit 2,2817,108,play\nmain,FINI_2,AWGR0_2,2874,325,capture\nmain,FINI_2,Qubit 2,2925,64,play\nmain,FINI_2,Qubit 2,2989,64,play\nmain,FINI_2,Qubit 2,3424,9,play\nmain,barrier,Qubit 0,3433,0,barrier\nmain,barrier,Qubit 1,3433,0,barrier\nmain,barrier,Qubit 2,3433,0,barrier\n",
+                "circuit_duration": 3433
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydl02OJUUMhMsuv2eJU/SuQZoFIyEkOAA7EBsWrNCIacQCMagb2ACn4MI4vnD1AejRdL+XVen0T0TY+e8333397fdx/Hn89fj+6eXH58cvHx7//uPt45uHx58+PP/+/O7XHz48v3/S+lfvfnl5mvWXn9/99jTfP/7s0y8+f/Pw9pM3D/88/L+fj/qojOjo6vKnnE+tPxU16yxkZvQ8ncWK7Hmgt+fXPJgXZp3HZ+jP9e58kFE2p0xGeWX+zs4eYzKjI/X+LM/n1vtYq2Bhvms54ggfJh/m65we2BpHxk4qhnM2nSz17E6Z1UnZ91m4sTnPkCPeMLZ1ctgMbsy+xmRleFU/pSDHZTlShFdOiUJIeSOrtuMPMh15anvrJHKgB+OQQ8P27LvLQWWD5zKgFLQyQWrkUCoyTlPyKdZ1NunJ5ti0A3hPlpzl7FuSDh/fR1C9cukoUfRtXp7QUsaVAf0maKHikNNyMu0UtUq8VMlmE4DIU6dRZD0FIvLgKqFOlLkCJUUmWdOSMj8HxKZDEQa10sHAJDDXBmbGfWvgPQoXa2xV2KpgO4L2qnJ/0wOlQ48UCvupUZA3JdyH6LXOW6YSFhs30ahWuBl5KLg0tpU+AwVMU2IlSeWi/H2PvHgTrlCBnTpfMy7+BF5MpcgkdV6y6AzDsIg7+HKBsFwHVT/gLa85fQnCdJ5joJzmpjxSHXXa0aAQcuSN4pLcNhpJPgzuow9lm/rpHxmkwEUNcQygm93Xa1d46fB7MTannM7aPY6qFRjIyrHhIAJHURQCLjBu4BbaVXWogvZcO5ZQec7ScaSZAO8Pkt+XzEDIcooD5pMji45tD3lwtyEd5oljk+3idJ89hGrjVFagT5g75RN7y41EoQQ+wRoIDTPteu4BxJzgxRWCVRbv/WQyAPRAg1fkZuUWtieAueoIgCXaqjz1HsxZHhSJFb/g6AHPvc+EM+IBBDVmj5hg/SyTwMbNKseaq/Au+k0Pziv1Ei+TA2kz2fA4oWfDqbCeiHl1dY+NFK8MBkRe/t3dOuDgBMhvUnre2l1qGXn24oHcph10gwLQoMZ6llhYSUS6Fvku2zbT0QfeRWOVGxxzfWx/+hrsQh+BMMG1FCENqEQDt2fRgq//vX2qzUmkZ5xXpY1fQ684KtBKXuTJ9Muui4N5M1O3cXatrkCQ8eFEUM1Cdx6DtciXtjUpAU7WbyxhFEYZuocTeDjrZ/Ui0n0RUbNyQBg6WriR1SsNTGhrQNE4icOTR7m/u6JuMd531eoG+JTWGzVep8udZ3uz+9pVllttAZ3T2HkGJLclmpFEzYCz6Kv2ANyQe2ftrFd9N2jdSelREAQdKSKxznhcgeU4Cy56Won9dWe2+2Od4aTgKvhpa5cdb5JrVSwEwQzrvKrVOwyl6K4opgXdncdC78OdhQ+E6N7paQnTLrhcPGqJCqYQig7PJdtkQIXzQN6Y6cjCpax54P7NFPcQtUG1R7xyr9+RqTxFYmE0q1+pEW6e1NpfrOn4CqFIQvip5dSz1EInN32MKWUFFPGPSiNbWnGumkLFo1cRLobGDszludTsxlc+AhrSTpO7kAYF3KWJyn0q+zV9nA9McNwjzCHHz8VTIM1w975iQDZXkWunU88xEp/wfAd+ywcTfl192zMUbQzMD2Da6UPD0QAPcjsO12ppGeaHewntwqphEQ03X46Ysw4fi+1VUCQlN6ubxLZupAdmr7uFuXv21sCNYAfHw1NZXi/tbAui20M9ir9i03E/2iO4x9Bt4ekLTXsWmp9zcQin2o2Dk/3q9jjPWx7B05ejXs0Lzz2x+TcQ6Q47EBc9SvtubWrjbxoxG6OvXovcjr0tpCc1J+vuOSSuYN1ifR3B4Lk3gp2LLKsetNrA2WFyX1mmM3HsLXAj4z26f9mHMnrrtTOlgcGcmu5mvePibD3CV02PumTEQ14uJq2f7cF8lfdKjoHjKc/6ktMH3OHGszsQP3upWXFdT3Y69XXShUlfLsj4bFkCGVJWsZ39fQ311a98KT6NAG3e66+nAauDg7dWWVAtHnzz/O9GknuV2vjpIO5H7ofc7HovW3dP+nsnLg/cO2vMz38kYlMl"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,cz_0_1,Qubit 0,1402,17,play\nmain,cz_0_1,Qubit 1,1402,17,play\nmain,cz_0_1,Qubit 0,1419,0,shift_phase\nmain,cz_0_1,Qubit 1,1419,0,shift_phase\nmain,sx_0,Qubit 0,1445,9,play\nmain,sx_0,Qubit 0,1449,0,shift_phase\nmain,rz_0,Qubit 0,1454,0,shift_phase\nmain,rz_1,Qubit 1,1419,0,shift_phase\nmain,sx_1,Qubit 1,1419,9,play\nmain,sx_1,Qubit 1,1423,0,shift_phase\nmain,rz_1,Qubit 1,1428,0,shift_phase\nmain,rz_2,Qubit 2,1419,0,shift_phase\nmain,sx_2,Qubit 2,1419,9,play\nmain,sx_2,Qubit 2,1423,0,shift_phase\nmain,rz_2,Qubit 2,1428,0,shift_phase\nmain,cz_1_2,Qubit 1,1428,17,play\nmain,cz_1_2,Qubit 2,1428,17,play\nmain,cz_1_2,Qubit 1,1445,0,shift_phase\nmain,cz_1_2,Qubit 2,1445,0,shift_phase\nmain,rz_1,Qubit 1,1445,0,shift_phase\nmain,sx_1,Qubit 1,1445,9,play\nmain,sx_1,Qubit 1,1449,0,shift_phase\nmain,rz_1,Qubit 1,1454,0,shift_phase\nmain,rz_2,Qubit 2,1445,0,shift_phase\nmain,sx_2,Qubit 2,1445,9,play\nmain,sx_2,Qubit 2,1449,0,shift_phase\nmain,rz_2,Qubit 2,1454,0,shift_phase\nmain,measure_0,Qubit 0,1454,64,play\nmain,measure_0,Qubit 0,1518,108,play\nmain,measure_0,AWGR0_0,1575,325,capture\nmain,measure_0,Qubit 0,1626,64,play\nmain,measure_0,Qubit 0,1690,64,play\nmain,measure_1,Qubit 1,1454,64,play\nmain,measure_1,Qubit 1,1518,108,play\nmain,measure_1,AWGR0_1,1575,325,capture\nmain,measure_1,Qubit 1,1626,64,play\nmain,measure_1,Qubit 1,1690,64,play\nmain,measure_2,Qubit 2,1454,64,play\nmain,measure_2,Qubit 2,1518,108,play\nmain,measure_2,AWGR0_2,1575,325,capture\nmain,measure_2,Qubit 2,1626,64,play\nmain,measure_2,Qubit 2,1690,64,play\nmain,barrier,Qubit 0,2125,0,barrier\nmain,barrier,Qubit 1,2125,0,barrier\nmain,barrier,Qubit 2,2125,0,barrier\nmain,FINI_0,Qubit 0,2125,64,play\nmain,FINI_0,Qubit 0,2189,108,play\nmain,FINI_0,AWGR0_0,2246,325,capture\nmain,FINI_0,Qubit 0,2297,64,play\nmain,FINI_0,Qubit 0,2361,64,play\nmain,FINI_0,Qubit 0,2796,9,play\nmain,FINI_0,Qubit 0,2805,64,play\nmain,FINI_0,Qubit 0,2869,108,play\nmain,FINI_0,AWGR0_0,2926,325,capture\nmain,FINI_0,Qubit 0,2977,64,play\nmain,FINI_0,Qubit 0,3041,64,play\nmain,FINI_0,Qubit 0,3476,9,play\nmain,FINI_1,Qubit 1,2125,64,play\nmain,FINI_1,Qubit 1,2189,108,play\nmain,FINI_1,AWGR0_1,2246,325,capture\nmain,FINI_1,Qubit 1,2297,64,play\nmain,FINI_1,Qubit 1,2361,64,play\nmain,FINI_1,Qubit 1,2796,9,play\nmain,FINI_1,Qubit 1,2805,64,play\nmain,FINI_1,Qubit 1,2869,108,play\nmain,FINI_1,AWGR0_1,2926,325,capture\nmain,FINI_1,Qubit 1,2977,64,play\nmain,FINI_1,Qubit 1,3041,64,play\nmain,FINI_1,Qubit 1,3476,9,play\nmain,FINI_2,Qubit 2,2125,64,play\nmain,FINI_2,Qubit 2,2189,108,play\nmain,FINI_2,AWGR0_2,2246,325,capture\nmain,FINI_2,Qubit 2,2297,64,play\nmain,FINI_2,Qubit 2,2361,64,play\nmain,FINI_2,Qubit 2,2796,9,play\nmain,FINI_2,Qubit 2,2805,64,play\nmain,FINI_2,Qubit 2,2869,108,play\nmain,FINI_2,AWGR0_2,2926,325,capture\nmain,FINI_2,Qubit 2,2977,64,play\nmain,FINI_2,Qubit 2,3041,64,play\nmain,FINI_2,Qubit 2,3476,9,play\nmain,barrier,Qubit 0,3485,0,barrier\nmain,barrier,Qubit 1,3485,0,barrier\nmain,barrier,Qubit 2,3485,0,barrier\n",
+                "circuit_duration": 3485
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydl0tuZkUMhe1uWy2xiswCUga0hJBgAcxATBgwQhEd1ANEowSYAKtgw1x/nythzJ+HknurXH4cH5/655vvvv72+4w/4s/bdw9PPz7efnlz+9fvb2/vbm5/+vD42+P9Lz98eHz3MM+/uv/56eF6/vT+/teH6/+PP/v0i8/vbt5+cnfz983/+3wUkVGV3XH9yq6M6LoeVPnHPLj+a74ia5bPT8e1g6d9meiMzGt9jpmx1J3Jq2vhrL9+XQavhdea69ecl7vjMjurr7f8WdeOeXHtnWXXxwfjKP7NNvbOjjmg8WXODg/Dd6wRQOrM5fy41ONrs/96kAQygcYYnng45jLzeoxfn/GoMVcb2Tgxqbh2tNsu75Ojxk7NeYnfdbI5PnPihDwxNMkicZNsElizwlOD/JyVs7de7UuyMQ/GpTlw6jKfSYI1mF21Vma9WZyEEW5SwLFiIhtHJsxNHa/HaY/zPV9kvTBPCFOVOQ1/eGZ+69lEFm+TVM6B4/dkCN8ATJpoEpqijiysD3NQgc8xtskOsEdog8jGh0FqbpFJPRgQkqRy/LD2lCVAfFGGA/8B58C1WSEmQGKRiMmSrhb7QPnxb05jM/kJzx5TIpXztla1+azeMuZmXlyPk6Sf6BcrQJlkzPeklo3j+zgD2Ps03JTSRApVW1HAGxbAKvNCrqutcC+kzap5ZgGFxEcLyHFTpDS0ptj2zLyrtVQSyWK1y14vyGDqG9SrpJGxjJOBT5NSaQVXaJI4gIxTwjLFHJXtugmnrKYNCSLmLewjG4huIEqEk0jbqz37EBmsQdqLukKHJlVWmlX6H7oDGMUXPWMVdLtkkLYPfdmdp9RVxlBSYVE1GaRNTSzKbSyaEriv27gugQ6SGis0rjSL5yAFY1EnZyJhFgX0sV6B+wBVKWlb6e3WziVGXxRgH+OHY7ffQsAMaoP0w0BZEgZwmegCNMAdFgMn9vii36BaKIXOMQCb2LrSky1VGQOsH8uKuWAH9gFBADazlS2jhcaWXW1/yCYkbtmiDZnCZG7zEyBNdgKDf4TIdnMAt3KATtyx3EyHEZLtDSRgQnre0m8kfmuFQShLCgNbHttllL0zKClX0HhtVGETC+mlAXvLY6ETgRpyP941HCn8YoFGYVpWBMJZyzxwACMfdsncmbHtSLGYhwAQ3Du8toYrE4h0pccZA8Iwd0TF0qTldDq3ztLy8k7v1F06AAR5Eg1XhxSky6xfMGQd8qus5WKn+7FR6zlqBHHzwkgoBXYCGHWWkgZv5WR50pG5bHTm0mI78ySMpoUTggnDEUkLv2mHuoiNg9byL+nZMdpKE+eS+iAdmr0zAK/DaPO5q2mBWmyvTsyj1gAGMIXKmCRtAyqW1FJmaOrxhn04CLFWimwxXis7N6+zd4mgdyYBPrKvg0ytM2VTyWuB0W8yfCsDQqzlERa4tCqi0opbfXstnOeoM7lseZVcrEamGH2mWz2DlhEffeYwMw9SwKKCqPoNkw1gM2mWtHaYoiU2SARzZB5tbGLkbhQtk8/uqm2LfpEbUOlJuO3VO+3EtfyyEiJ1dLN7uq3yyDNcqpXoUpLQXPWE+ynYFTshq+08rRX1XhGcX/pskZVdO3RUbc4UJb7tvdK8ZamWMp0ubeUJVyUtPaNqZZFYeFE+5WyoU03Qym1pDoHr0GUeS6UkqXK5MO1I18ch+xKcqTJSONZyAwzupUpIp/ec2AsIbBrx0i9RW0xZBy5Wc9TeOWr7aWM8jboZWO5Cue/1rldwbMFWmFnTVqaAzRUb55Jzur8lcy8TqioHWO3AsBJIeCmknolQeO0VR+bYG9lzP3q1dDeKJFeyL3pb4QAad+pZ/zYyWT53fJZidLF3Jn+tQksnc++Vx/F0Lo62JFShssuNpFdgGtAr8KQG1EzupF4BqOCO2gDSsREiyUt0/eeus9fdlV/XvtcyrpPNyZ0OizoPFO0Z/wJWhUT9"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_2,Qubit 2,1393,0,shift_phase\nmain,sx_2,Qubit 2,1393,9,play\nmain,sx_2,Qubit 2,1397,0,shift_phase\nmain,rz_2,Qubit 2,1402,0,shift_phase\nmain,measure_0,Qubit 0,1402,64,play\nmain,measure_0,Qubit 0,1466,108,play\nmain,measure_0,AWGR0_0,1523,325,capture\nmain,measure_0,Qubit 0,1574,64,play\nmain,measure_0,Qubit 0,1638,64,play\nmain,measure_1,Qubit 1,1402,64,play\nmain,measure_1,Qubit 1,1466,108,play\nmain,measure_1,AWGR0_1,1523,325,capture\nmain,measure_1,Qubit 1,1574,64,play\nmain,measure_1,Qubit 1,1638,64,play\nmain,measure_2,Qubit 2,1402,64,play\nmain,measure_2,Qubit 2,1466,108,play\nmain,measure_2,AWGR0_2,1523,325,capture\nmain,measure_2,Qubit 2,1574,64,play\nmain,measure_2,Qubit 2,1638,64,play\nmain,barrier,Qubit 0,2073,0,barrier\nmain,barrier,Qubit 1,2073,0,barrier\nmain,barrier,Qubit 2,2073,0,barrier\nmain,FINI_0,Qubit 0,2073,64,play\nmain,FINI_0,Qubit 0,2137,108,play\nmain,FINI_0,AWGR0_0,2194,325,capture\nmain,FINI_0,Qubit 0,2245,64,play\nmain,FINI_0,Qubit 0,2309,64,play\nmain,FINI_0,Qubit 0,2744,9,play\nmain,FINI_0,Qubit 0,2753,64,play\nmain,FINI_0,Qubit 0,2817,108,play\nmain,FINI_0,AWGR0_0,2874,325,capture\nmain,FINI_0,Qubit 0,2925,64,play\nmain,FINI_0,Qubit 0,2989,64,play\nmain,FINI_0,Qubit 0,3424,9,play\nmain,FINI_1,Qubit 1,2073,64,play\nmain,FINI_1,Qubit 1,2137,108,play\nmain,FINI_1,AWGR0_1,2194,325,capture\nmain,FINI_1,Qubit 1,2245,64,play\nmain,FINI_1,Qubit 1,2309,64,play\nmain,FINI_1,Qubit 1,2744,9,play\nmain,FINI_1,Qubit 1,2753,64,play\nmain,FINI_1,Qubit 1,2817,108,play\nmain,FINI_1,AWGR0_1,2874,325,capture\nmain,FINI_1,Qubit 1,2925,64,play\nmain,FINI_1,Qubit 1,2989,64,play\nmain,FINI_1,Qubit 1,3424,9,play\nmain,FINI_2,Qubit 2,2073,64,play\nmain,FINI_2,Qubit 2,2137,108,play\nmain,FINI_2,AWGR0_2,2194,325,capture\nmain,FINI_2,Qubit 2,2245,64,play\nmain,FINI_2,Qubit 2,2309,64,play\nmain,FINI_2,Qubit 2,2744,9,play\nmain,FINI_2,Qubit 2,2753,64,play\nmain,FINI_2,Qubit 2,2817,108,play\nmain,FINI_2,AWGR0_2,2874,325,capture\nmain,FINI_2,Qubit 2,2925,64,play\nmain,FINI_2,Qubit 2,2989,64,play\nmain,FINI_2,Qubit 2,3424,9,play\nmain,barrier,Qubit 0,3433,0,barrier\nmain,barrier,Qubit 1,3433,0,barrier\nmain,barrier,Qubit 2,3433,0,barrier\n",
+                "circuit_duration": 3433
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "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"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,cz_0_1,Qubit 0,1402,17,play\nmain,cz_0_1,Qubit 1,1402,17,play\nmain,cz_0_1,Qubit 0,1419,0,shift_phase\nmain,cz_0_1,Qubit 1,1419,0,shift_phase\nmain,sx_0,Qubit 0,1445,9,play\nmain,sx_0,Qubit 0,1449,0,shift_phase\nmain,rz_0,Qubit 0,1454,0,shift_phase\nmain,rz_1,Qubit 1,1419,0,shift_phase\nmain,sx_1,Qubit 1,1419,9,play\nmain,sx_1,Qubit 1,1423,0,shift_phase\nmain,rz_1,Qubit 1,1428,0,shift_phase\nmain,rz_2,Qubit 2,1419,0,shift_phase\nmain,sx_2,Qubit 2,1419,9,play\nmain,sx_2,Qubit 2,1423,0,shift_phase\nmain,rz_2,Qubit 2,1428,0,shift_phase\nmain,cz_1_2,Qubit 1,1428,17,play\nmain,cz_1_2,Qubit 2,1428,17,play\nmain,cz_1_2,Qubit 1,1445,0,shift_phase\nmain,cz_1_2,Qubit 2,1445,0,shift_phase\nmain,sx_1,Qubit 1,1445,9,play\nmain,sx_1,Qubit 1,1449,0,shift_phase\nmain,rz_1,Qubit 1,1454,0,shift_phase\nmain,measure_0,Qubit 0,1454,64,play\nmain,measure_0,Qubit 0,1518,108,play\nmain,measure_0,AWGR0_0,1575,325,capture\nmain,measure_0,Qubit 0,1626,64,play\nmain,measure_0,Qubit 0,1690,64,play\nmain,measure_1,Qubit 1,1454,64,play\nmain,measure_1,Qubit 1,1518,108,play\nmain,measure_1,AWGR0_1,1575,325,capture\nmain,measure_1,Qubit 1,1626,64,play\nmain,measure_1,Qubit 1,1690,64,play\nmain,measure_2,Qubit 2,1454,64,play\nmain,measure_2,Qubit 2,1518,108,play\nmain,measure_2,AWGR0_2,1575,325,capture\nmain,measure_2,Qubit 2,1626,64,play\nmain,measure_2,Qubit 2,1690,64,play\nmain,barrier,Qubit 0,2125,0,barrier\nmain,barrier,Qubit 1,2125,0,barrier\nmain,barrier,Qubit 2,2125,0,barrier\nmain,FINI_0,Qubit 0,2125,64,play\nmain,FINI_0,Qubit 0,2189,108,play\nmain,FINI_0,AWGR0_0,2246,325,capture\nmain,FINI_0,Qubit 0,2297,64,play\nmain,FINI_0,Qubit 0,2361,64,play\nmain,FINI_0,Qubit 0,2796,9,play\nmain,FINI_0,Qubit 0,2805,64,play\nmain,FINI_0,Qubit 0,2869,108,play\nmain,FINI_0,AWGR0_0,2926,325,capture\nmain,FINI_0,Qubit 0,2977,64,play\nmain,FINI_0,Qubit 0,3041,64,play\nmain,FINI_0,Qubit 0,3476,9,play\nmain,FINI_1,Qubit 1,2125,64,play\nmain,FINI_1,Qubit 1,2189,108,play\nmain,FINI_1,AWGR0_1,2246,325,capture\nmain,FINI_1,Qubit 1,2297,64,play\nmain,FINI_1,Qubit 1,2361,64,play\nmain,FINI_1,Qubit 1,2796,9,play\nmain,FINI_1,Qubit 1,2805,64,play\nmain,FINI_1,Qubit 1,2869,108,play\nmain,FINI_1,AWGR0_1,2926,325,capture\nmain,FINI_1,Qubit 1,2977,64,play\nmain,FINI_1,Qubit 1,3041,64,play\nmain,FINI_1,Qubit 1,3476,9,play\nmain,FINI_2,Qubit 2,2125,64,play\nmain,FINI_2,Qubit 2,2189,108,play\nmain,FINI_2,AWGR0_2,2246,325,capture\nmain,FINI_2,Qubit 2,2297,64,play\nmain,FINI_2,Qubit 2,2361,64,play\nmain,FINI_2,Qubit 2,2796,9,play\nmain,FINI_2,Qubit 2,2805,64,play\nmain,FINI_2,Qubit 2,2869,108,play\nmain,FINI_2,AWGR0_2,2926,325,capture\nmain,FINI_2,Qubit 2,2977,64,play\nmain,FINI_2,Qubit 2,3041,64,play\nmain,FINI_2,Qubit 2,3476,9,play\nmain,barrier,Qubit 0,3485,0,barrier\nmain,barrier,Qubit 1,3485,0,barrier\nmain,barrier,Qubit 2,3485,0,barrier\n",
+                "circuit_duration": 3485
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydlzuOZFUQRPMDDqtor0Bqg5EQ0swC8EA4GFioxTTCQAzqBhxgFWyYm+fkqwUwRk/Vq/vJT0RkvH+/+e7rb7/P+DP+ur1/fv3x5fbu4fb3H29ujw+3nz68/P7y9OsPH17eP8/zr55+eX0+z19/fvrt+Xz/9IvP3375+PDms8eHfx7+379PKiq6qiKrs6MjI6Iqz/fseRJ9Ps2i6LMuM116HrHtPOyz+DybTd0xP/O059DksPNDzlHcdR6ec8/Tc5fXdbG751GcU+bus6XYtH/Pkp5Hc0ZOADGXTng90U2wc3YT5tlx7s8J7+zvieZ8ZkfOzx46MdSmdCLqCXA2ThgTQJn9/DIhF4Emj87+mqCq+TvBJCUipJp45oi5i3Bn5SRYBDxXTtQVbp4izd1zrpVryk1ckdwRFM2PtRlOkZqLZ33RDurBleeXvYZzJmB/IbNyF4fNn6ZXbQep6XSKkgbdnlWA4pwanpq2avDQXjV5tD1LA0ieUWl70lRwChLAgvoOZqYKXsSPe2YBL1o/Feg5rM2EduUiglDamFx0Ag+TJgPCyy03YEqSB5QtWtLaFxhxAQenfbL4IVSmA+Bp0UivqDMXxmQMnuaSKWORtYkQYscijyOhHRnWwmG+L3LmoKZUNbVsqypq7TptqE0e0A0Gp2bzcbbC8yB/GgH+qF7QgJKivYcXaJw0cisE/KlCWOAQugMPCU1latkz6kG/56cFQcJ1EqM/7eHy1M4HKE/kAPpbKFufs6qVDdaH/bP2sIdqkzHQ4ITJgfqWNG6KJ7ZZsb0iHngWyz1ViOpJBhAG5VKe0vxdODWTpypAqScCnmyC6JQduEsHIRUniZFlW5dgEqKKrEojPFKh9JRpEW1Hd9FLlCNTJliBbVmhJYUAS677VwRTbMwZBYJz9QwVgbX0MsxoatmAcvRvMZLmBbhkuudOd3lGwaZfhM3lXOf4CDMvaVGkm4C6SgbUip7qet0qamfZhT+YiryKDz5sydODxbeyTJphOoQnapRlbrC0dcHFHNjXkrZXTyleq9GK6zYcfaVTiCcATGsjfxD0zm2cgdHoWjJkq6Alezir+woGZVhCgxoXrMKHQ68dy4v+dAjR2HKqWj41Se2HECg+Ylw79HKHeO6UdfIKcDEiAgjdhs93aKbw5bLk3n/RTVAOGZUA5Ksm4bhHl7L32thxoRVRu3EXSMHOR4cQHG0Vz6GV+oOQP72uJC6FJ/0drsBI7SmnD71qBD+ZLaXoymBWt5gkXIug01Dx1NdaixIiEhjspOZ8SoY01z11y7EDjwuMI/Ijh0Sp2YpixpZdPsAFNPyk/PGGl8v4dsAJMS2c6kyzBYIVX9pxuaxHo9Bn8kG6Sn/Ebt0koJcBmBEqddmvuPSyr1kFLJ0UOwJtr/MKamqZSrcFmms7iqOQZAOPvsdXO03tbOyOXvECKnkZgrVocU1m7d22fmcj3SFTztsoGMV1lV9ytMNkfaEE7MtPekxdRhJpSYaDNjtrycTdhGvddNmty0pT6cu+1nbdgZt18VulDz1/bCEXemuSL/ytgcgdtjTH1wb8gm8Klk7R5H/QV31/vVi8o+3Ah0vkTfpKQVOQ/8hLWp2iiquWWPO2CopA3sVV0wNp113ovhAsHX6uodRtgyz3tfXVkqxy6PeQ6JLitYMu1pm0wuxCoZO55nqtdtnauugTOyxjbYPEovips09dbOrknKGXHLeF0BdcZdvcV8VQj3asqfROIJUKyPaltrXKezecsXPFAULH+IvD6EWkhM+4hqvSquqhkb5Npi99mwk21e7yKtZCHbLG0kKqrmVeDHGG8ImdF+jJyu7KS+pxKDCnSmrfYSSN3mfHsG8I6dF03PEO60SbRV0fqbPLXjbp7XPHAWGrROkkLRuxTipMfF+fW9YSv7oZS6SlBOfqrcjTIaFNBDGtWWQM4EA1/Vo32Irfbd8FQ1fIhv8AmDY0DA=="
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {},
+            "compilation": {
+              "scheduler_timing": {
+                "timing": "main,barrier,Qubit 2,33,0,barrier\nmain,INIT_0,Qubit 0,33,64,play\nmain,INIT_0,Qubit 0,97,108,play\nmain,INIT_0,AWGR0_0,154,325,capture\nmain,INIT_0,Qubit 0,205,64,play\nmain,INIT_0,Qubit 0,269,64,play\nmain,INIT_0,Qubit 0,704,9,play\nmain,INIT_0,Qubit 0,713,64,play\nmain,INIT_0,Qubit 0,777,108,play\nmain,INIT_0,AWGR0_0,834,325,capture\nmain,INIT_0,Qubit 0,885,64,play\nmain,INIT_0,Qubit 0,949,64,play\nmain,INIT_0,Qubit 0,1384,9,play\nmain,INIT_1,Qubit 1,33,64,play\nmain,INIT_1,Qubit 1,97,108,play\nmain,INIT_1,AWGR0_1,154,325,capture\nmain,INIT_1,Qubit 1,205,64,play\nmain,INIT_1,Qubit 1,269,64,play\nmain,INIT_1,Qubit 1,704,9,play\nmain,INIT_1,Qubit 1,713,64,play\nmain,INIT_1,Qubit 1,777,108,play\nmain,INIT_1,AWGR0_1,834,325,capture\nmain,INIT_1,Qubit 1,885,64,play\nmain,INIT_1,Qubit 1,949,64,play\nmain,INIT_1,Qubit 1,1384,9,play\nmain,INIT_2,Qubit 2,33,64,play\nmain,INIT_2,Qubit 2,97,108,play\nmain,INIT_2,AWGR0_2,154,325,capture\nmain,INIT_2,Qubit 2,205,64,play\nmain,INIT_2,Qubit 2,269,64,play\nmain,INIT_2,Qubit 2,704,9,play\nmain,INIT_2,Qubit 2,713,64,play\nmain,INIT_2,Qubit 2,777,108,play\nmain,INIT_2,AWGR0_2,834,325,capture\nmain,INIT_2,Qubit 2,885,64,play\nmain,INIT_2,Qubit 2,949,64,play\nmain,INIT_2,Qubit 2,1384,9,play\nmain,barrier,Qubit 0,1393,0,barrier\nmain,barrier,Qubit 1,1393,0,barrier\nmain,barrier,Qubit 2,1393,0,barrier\nmain,rz_0,Qubit 0,1393,0,shift_phase\nmain,sx_0,Qubit 0,1393,9,play\nmain,sx_0,Qubit 0,1397,0,shift_phase\nmain,rz_0,Qubit 0,1402,0,shift_phase\nmain,rz_1,Qubit 1,1393,0,shift_phase\nmain,sx_1,Qubit 1,1393,9,play\nmain,sx_1,Qubit 1,1397,0,shift_phase\nmain,rz_1,Qubit 1,1402,0,shift_phase\nmain,measure_0,Qubit 0,1402,64,play\nmain,measure_0,Qubit 0,1466,108,play\nmain,measure_0,AWGR0_0,1523,325,capture\nmain,measure_0,Qubit 0,1574,64,play\nmain,measure_0,Qubit 0,1638,64,play\nmain,measure_1,Qubit 1,1402,64,play\nmain,measure_1,Qubit 1,1466,108,play\nmain,measure_1,AWGR0_1,1523,325,capture\nmain,measure_1,Qubit 1,1574,64,play\nmain,measure_1,Qubit 1,1638,64,play\nmain,measure_2,Qubit 2,1402,64,play\nmain,measure_2,Qubit 2,1466,108,play\nmain,measure_2,AWGR0_2,1523,325,capture\nmain,measure_2,Qubit 2,1574,64,play\nmain,measure_2,Qubit 2,1638,64,play\nmain,barrier,Qubit 0,2073,0,barrier\nmain,barrier,Qubit 1,2073,0,barrier\nmain,barrier,Qubit 2,2073,0,barrier\nmain,FINI_0,Qubit 0,2073,64,play\nmain,FINI_0,Qubit 0,2137,108,play\nmain,FINI_0,AWGR0_0,2194,325,capture\nmain,FINI_0,Qubit 0,2245,64,play\nmain,FINI_0,Qubit 0,2309,64,play\nmain,FINI_0,Qubit 0,2744,9,play\nmain,FINI_0,Qubit 0,2753,64,play\nmain,FINI_0,Qubit 0,2817,108,play\nmain,FINI_0,AWGR0_0,2874,325,capture\nmain,FINI_0,Qubit 0,2925,64,play\nmain,FINI_0,Qubit 0,2989,64,play\nmain,FINI_0,Qubit 0,3424,9,play\nmain,FINI_1,Qubit 1,2073,64,play\nmain,FINI_1,Qubit 1,2137,108,play\nmain,FINI_1,AWGR0_1,2194,325,capture\nmain,FINI_1,Qubit 1,2245,64,play\nmain,FINI_1,Qubit 1,2309,64,play\nmain,FINI_1,Qubit 1,2744,9,play\nmain,FINI_1,Qubit 1,2753,64,play\nmain,FINI_1,Qubit 1,2817,108,play\nmain,FINI_1,AWGR0_1,2874,325,capture\nmain,FINI_1,Qubit 1,2925,64,play\nmain,FINI_1,Qubit 1,2989,64,play\nmain,FINI_1,Qubit 1,3424,9,play\nmain,FINI_2,Qubit 2,2073,64,play\nmain,FINI_2,Qubit 2,2137,108,play\nmain,FINI_2,AWGR0_2,2194,325,capture\nmain,FINI_2,Qubit 2,2245,64,play\nmain,FINI_2,Qubit 2,2309,64,play\nmain,FINI_2,Qubit 2,2744,9,play\nmain,FINI_2,Qubit 2,2753,64,play\nmain,FINI_2,Qubit 2,2817,108,play\nmain,FINI_2,AWGR0_2,2874,325,capture\nmain,FINI_2,Qubit 2,2925,64,play\nmain,FINI_2,Qubit 2,2989,64,play\nmain,FINI_2,Qubit 2,3424,9,play\nmain,barrier,Qubit 0,3433,0,barrier\nmain,barrier,Qubit 1,3433,0,barrier\nmain,barrier,Qubit 2,3433,0,barrier\n",
+                "circuit_duration": 3433
+              },
+              "stretch_values": null
+            }
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "execution": {
+        "execution_spans": {
+          "__type__": "ExecutionSpans",
+          "__value__": {
+            "spans": [
+              {
+                "__type__": "DoubleSliceSpan",
+                "__value__": {
+                  "start": {
+                    "__type__": "datetime",
+                    "__value__": "2026-08-03T02:12:46.322032"
+                  },
+                  "stop": {
+                    "__type__": "datetime",
+                    "__value__": "2026-08-03T02:12:58.190287"
+                  },
+                  "data_slices": {
+                    "0": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "1": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "2": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "3": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "4": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "5": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "6": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ],
+                    "7": [
+                      [
+                        4096
+                      ],
+                      0,
+                      1,
+                      0,
+                      4096
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "version": 2
+    }
+  }
+}

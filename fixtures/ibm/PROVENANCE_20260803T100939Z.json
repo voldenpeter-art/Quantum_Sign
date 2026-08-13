@@ -1,0 +1,70 @@
+{
+  "sanitizerVersion": "sanitize-export-0.1",
+  "sanitizationLevel": 1,
+  "levelDescription": "Endast user_id borttaget. Jobb-ID, tidsstamplar och kalibreringssnapshot behallna som proveniens.",
+  "removedKeys": [
+    "access_token",
+    "api_key",
+    "apikey",
+    "crn",
+    "email",
+    "instance_crn",
+    "password",
+    "secret",
+    "token",
+    "user_id",
+    "userid"
+  ],
+  "verifiedAgainst": [
+    "IBMid-identifierare",
+    "IBM Cloud CRN",
+    "e-postadress"
+  ],
+  "sanitized_utc": "20260803T100939Z",
+  "files": [
+    {
+      "sourceFile": "job-d9o0usgqs0bc73e3v17g-info.json",
+      "sourceSha256": "23c411d674c7401d944a653a980cb6d0ba8f623954ca79ef9c2ad291914ea6bc",
+      "sanitizedFile": "sanitized_job-d9o0usgqs0bc73e3v17g-info.json",
+      "sanitizedSha256": "28f39df5c4c5692ce03087b06eb223bfb544d863af9a6a6574e169e937cb113a",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9o0usgqs0bc73e3v17g-result.json",
+      "sourceSha256": "10c120abc8d9663b30a611d4dbcc319951c1ae326b72558184b4eb00deff220d",
+      "sanitizedFile": "sanitized_job-d9o0usgqs0bc73e3v17g-result.json",
+      "sanitizedSha256": "10c120abc8d9663b30a611d4dbcc319951c1ae326b72558184b4eb00deff220d",
+      "removed": [],
+      "removedCount": 0
+    },
+    {
+      "sourceFile": "job-d9o1dpeij12s73fuebh0-info.json",
+      "sourceSha256": "64e62e9478937fa32952c1b4d9e38ecc8d146b6b2275bb344e8f37459cf231ab",
+      "sanitizedFile": "sanitized_job-d9o1dpeij12s73fuebh0-info.json",
+      "sanitizedSha256": "1c6c2d09e8d1b7eb3f4ceac8e90a9effd80a16e285dc7a22546693ba9e1c2ee1",
+      "removed": [
+        {
+          "path": "user_id",
+          "key": "user_id",
+          "type": "str"
+        }
+      ],
+      "removedCount": 1
+    },
+    {
+      "sourceFile": "job-d9o1dpeij12s73fuebh0-result.json",
+      "sourceSha256": "2ec81c17d319f018e38879aeb7d815af94d22a8636e9f09133e17ac5e9d9eb74",
+      "sanitizedFile": "sanitized_job-d9o1dpeij12s73fuebh0-result.json",
+      "sanitizedSha256": "2ec81c17d319f018e38879aeb7d815af94d22a8636e9f09133e17ac5e9d9eb74",
+      "removed": [],
+      "removedCount": 0
+    }
+  ]
+}
